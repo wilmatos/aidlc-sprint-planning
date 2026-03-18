@@ -150,6 +150,88 @@ Ask 2-5 focused, tactical questions about this unit. Categories:
 5. Record answers in the elaboration log under `## Spec Elaboration: {Unit Name}`.
 ```
 
+**File: `.kiro/agents/aidlc-requirements-validator.md`**
+
+```markdown
+---
+name: aidlc-requirements-validator
+description: >
+  Validates a completed requirements.md file against its source AI-DLC unit definition
+  to ensure no features, user stories, NFRs, or risks were missed during spec creation.
+  Invoked automatically after requirements.md is written. Use when validating spec
+  requirements against unit definitions.
+tools: ["read"]
+---
+
+# AI-DLC Requirements Validator
+
+You validate that a spec's requirements.md fully covers everything defined in its
+source AI-DLC unit file.
+
+## Input
+
+- The `requirements.md` file that was just created or updated
+- The corresponding unit file from `aidlc/units/`
+- Relevant sections of `aidlc/elaboration-log.md` (including any spec elaboration notes)
+
+## Matching Logic
+
+Identify the corresponding unit file by matching the spec name/path to a unit file
+in `aidlc/units/`. Use the spec directory name, requirement references, or content
+similarity to find the match.
+
+## Validation Checks
+
+1. **User Story Coverage** — Every user story (WHEN/IF/WHILE/THE SYSTEM SHALL) from
+   the unit file has at least one corresponding requirement in requirements.md.
+2. **NFR Coverage** — Every NFR listed in the unit file has a corresponding
+   non-functional requirement in requirements.md.
+3. **Risk Coverage** — Risks listed in the unit file are addressed by defensive
+   requirements or explicitly acknowledged in requirements.md.
+4. **Scope Fidelity** — requirements.md does not introduce features or scope beyond
+   what the unit file defines (no scope creep).
+5. **Elaboration Answers** — Any answers from the spec elaboration questioning
+   (`## Spec Elaboration: {Unit Name}` in the log) are reflected in the requirements.
+
+## Report Format
+
+Present results as a coverage report:
+
+```markdown
+## 📋 Requirements vs Unit Validation
+
+**Unit:** {unit file name}
+**Spec:** {spec path}
+
+### Coverage Summary
+| Category | Unit Items | Covered | Missing | Status |
+|----------|-----------|---------|---------|--------|
+| User Stories | {N} | {N} | {N} | ✅ / ⚠️ |
+| NFRs | {N} | {N} | {N} | ✅ / ⚠️ |
+| Risks | {N} | {N} | {N} | ✅ / ⚠️ |
+| Spec Elaboration | {N} | {N} | {N} | ✅ / ⚠️ |
+
+### Missing Items
+{List each missing item with its source in the unit file}
+
+### Scope Additions
+{List any requirements that go beyond the unit file scope, if any}
+
+### Verdict
+{✅ Full coverage — no gaps detected / ⚠️ Gaps found — review recommended}
+```
+
+## Rules
+
+1. Be thorough but fair — a requirement doesn't need to use identical wording to
+   "cover" a user story, just capture the same intent and behavior.
+2. If a user story is split across multiple requirements, that counts as covered.
+3. If a requirement consolidates multiple related stories, that's fine as long as
+   all behaviors are testable.
+4. Don't flag scope additions as errors — just note them for the user's awareness.
+5. If gaps are found, suggest specific requirements that could be added to close them.
+```
+
 ### Step 2: Create Steering File
 
 Create `.kiro/steering/aidlc-spec-elaboration.md`:
@@ -199,9 +281,9 @@ If AI-DLC unit files exist:
 - [ ] Dependencies on other units are noted in the introduction
 ```
 
-### Step 3: Create Hook
+### Step 3: Create Hooks
 
-Create `.kiro/hooks/aidlc-spec-requirements-check.json`:
+Create `.kiro/hooks/aidlc-spec-requirements-check.kiro.hook`:
 
 ```json
 {
@@ -218,12 +300,30 @@ Create `.kiro/hooks/aidlc-spec-requirements-check.json`:
 }
 ```
 
+Create `.kiro/hooks/aidlc-requirements-unit-validation.json`:
+
+```json
+{
+  "name": "AI-DLC Requirements vs Unit Validation",
+  "version": "1.0.0",
+  "description": "After a spec task completes that produces or updates requirements.md, validate it against the source AI-DLC unit definition to ensure no features or requirements were missed.",
+  "when": {
+    "type": "postTaskExecution"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check if an aidlc/ directory exists in the project root and if the task that just completed involved writing or updating a requirements.md file. If both are true, run a requirements-vs-unit validation: 1) Identify which unit file in aidlc/units/ corresponds to the current spec by matching the spec name/path to a unit filename. 2) Read both the requirements.md that was just written and the matching unit file. 3) Also read any '## Spec Elaboration' sections for this unit in aidlc/elaboration-log.md. 4) Compare them and report: (a) every user story from the unit file that does NOT have a corresponding requirement — list each missing story, (b) every NFR from the unit file not reflected in requirements — list each, (c) every risk from the unit file not addressed by a defensive requirement — list each, (d) any spec elaboration answers not captured. Present a coverage summary table and a verdict. If gaps are found, suggest specific requirements to add. Do NOT auto-fix — present findings for the user to review. If no aidlc/ directory exists or the task didn't touch requirements.md, do nothing."
+  }
+}
+```
+
 ### Step 4: Verify Installation
 
 After creating all files, verify:
-- [ ] Three agent files exist in `.kiro/agents/`
+- [ ] Four agent files exist in `.kiro/agents/`
 - [ ] Steering file exists in `.kiro/steering/aidlc-spec-elaboration.md`
 - [ ] Hook file exists in `.kiro/hooks/aidlc-spec-requirements-check.json`
+- [ ] Hook file exists in `.kiro/hooks/aidlc-requirements-unit-validation.json`
 
 ## Available Steering Files
 
@@ -257,8 +357,9 @@ or when they want to resume an existing AI-DLC session.
    clear section headers. The user should always know where they are.
 
 5. **Delegate to subagents.** Use `aidlc-decomposer` for unit generation,
-   `aidlc-validator` for cross-validation, and `aidlc-spec-elaborator` for per-spec
-   requirements elaboration.
+   `aidlc-validator` for cross-validation, `aidlc-spec-elaborator` for per-spec
+   requirements elaboration, and `aidlc-requirements-validator` for post-requirements
+   coverage checks against unit definitions.
 
 6. **Never invent features.** Only include what the user asked for. If something is
    strongly recommended, raise it as a question. Let the user decide.
@@ -529,3 +630,9 @@ Verify `.kiro/steering/aidlc-spec-elaboration.md` exists with the correct frontm
 
 ### Hook not firing before spec tasks
 Verify `.kiro/hooks/aidlc-spec-requirements-check.json` exists with valid JSON.
+
+### Requirements validation not running after requirements.md is written
+Verify `.kiro/hooks/aidlc-requirements-unit-validation.json` exists with valid JSON.
+Also confirm the task that wrote requirements.md completed (the hook fires on
+`postTaskExecution`). Check that `aidlc/units/` contains a unit file whose name
+can be matched to the current spec.
