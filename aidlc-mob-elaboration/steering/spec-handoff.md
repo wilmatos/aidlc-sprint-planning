@@ -66,7 +66,8 @@ It instructs the agent to:
 
 ### Step 3b: Requirements vs Unit Validation
 After `requirements.md` is written, the `aidlc-requirements-unit-validation` hook
-fires automatically via `postTaskExecution`. It triggers a coverage validation that:
+fires automatically via `postTaskExecution`. It activates the
+`aidlc-requirements-validation` steering file, which runs a coverage validation that:
 
 1. Identifies the corresponding unit file in `aidlc/units/`
 2. Compares every user story, NFR, and risk from the unit against the requirements
@@ -75,8 +76,10 @@ fires automatically via `postTaskExecution`. It triggers a coverage validation t
 5. Presents a coverage summary table and verdict to the user
 
 If gaps are found, the agent suggests specific requirements to add but does not
-auto-fix — the user reviews and decides. This ensures nothing from the unit
-definition falls through the cracks during spec creation.
+auto-fix — the user reviews and decides.
+
+The user can also trigger this validation manually at any time by referencing
+`#aidlc-requirements-validation` in chat.
 
 ### Step 4: Design and Tasks
 After requirements are approved, Kiro's standard spec workflow handles design.md
