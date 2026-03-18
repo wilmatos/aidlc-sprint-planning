@@ -402,13 +402,13 @@ Create `.kiro/hooks/aidlc-requirements-unit-validation.kiro.hook`:
 {
   "name": "AI-DLC Requirements vs Unit Validation",
   "version": "1.1.0",
-  "description": "After a spec task completes that produces or updates requirements.md, validate it against the source AI-DLC unit definition to ensure no features or requirements were missed.",
+  "description": "After a request to create a spec from a unit definition file completes that produces or updates requirements.md, validate it against the source AI-DLC unit definition to ensure no features or requirements were missed.",
   "when": {
-    "type": "postTaskExecution"
+    "type": "agentStop"
   },
   "then": {
     "type": "askAgent",
-    "prompt": "If the task that just completed involved writing or updating a requirements.md file, activate the #aidlc-requirements-validation steering file and follow its instructions to validate the requirements against the source unit definition. If the task didn't touch requirements.md, do nothing."
+    "prompt": "If the agent activity that just completed involved writing or updating a requirements.md file, activate the #aidlc-requirements-validation steering file and follow its instructions to validate the requirements against the source unit definition. If the task didn't touch requirements.md, do nothing."
   }
 }
 ```
