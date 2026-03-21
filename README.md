@@ -36,8 +36,9 @@ A [Kiro Power](https://kiro.dev/docs/powers/) — the native extension format fo
 
 ```
 AgentDevAidlcPower/
-├── POWER.md                        # Agent instructions, onboarding steps, phase reference
+├── POWER.md                        # Agent instructions, onboarding steps, subagent delegation
 └── steering/
+    ├── workflow.md                 # Execution rules, phase quick reference, per-phase instructions
     ├── complexity-rubric.md        # Complexity assessment rubric and question strategy
     ├── decomposer.md               # Unit generation rules and decomposition principles
     ├── plan-generator.md           # Plan generation guidance
@@ -91,6 +92,7 @@ AgentDevAidlcSkill/
     │   ├── status-template.md          # Starting template for aidlc/status.md
     │   └── unit-template.md            # Template for individual unit files
     └── references/
+        ├── workflow.md             # Execution rules, phase quick reference, per-phase instructions
         ├── complexity-rubric.md        # Complexity assessment rubric and question strategy
         ├── decomposer.md               # Unit generation rules and decomposition principles
         ├── requirements-validation.md  # Validates requirements.md against unit definitions
@@ -128,7 +130,8 @@ AgentDevAidlcCLI/
     │   ├── aidlc-spec-elaborator.json          # Per-unit requirements elaboration
     │   └── aidlc-validator.json                # Cross-validates unit files
     ├── steering/
-    │   ├── aidlc-mob-elaboration.md            # Core workflow (inclusion: always)
+    │   ├── aidlc-mob-elaboration.md            # Core workflow — CLI formatting, delegates to aidlc-workflow.md
+    │   ├── aidlc-workflow.md                   # Execution rules and per-phase instructions (inclusion: manual)
     │   ├── aidlc-complexity-rubric.md          # Complexity assessment (inclusion: manual)
     │   ├── aidlc-decomposer.md                 # Unit generation rules (inclusion: manual)
     │   ├── aidlc-plan-generator.md             # Plan generation (inclusion: manual)
@@ -178,6 +181,7 @@ Then run `kiro-cli chat` in that project directory.
 ```
 /
 ├── common/                        # Single source of truth for all logic files
+│   ├── workflow.md
 │   ├── complexity-rubric.md
 │   ├── decomposer.md
 │   ├── plan-generator.md

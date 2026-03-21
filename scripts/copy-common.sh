@@ -56,6 +56,7 @@ copy_power() {
   local templates_dir="AgentDevAidlcPower/templates"
   echo "→ Copying to Power ($dest_dir)"
 
+  copy_with_frontmatter "$COMMON_DIR/workflow.md"              "$dest_dir/workflow.md"              "$(power_frontmatter 'AI-DLC Workflow')"
   copy_with_frontmatter "$COMMON_DIR/complexity-rubric.md"     "$dest_dir/complexity-rubric.md"     "$(power_frontmatter 'AI-DLC Complexity Rubric')"
   copy_with_frontmatter "$COMMON_DIR/state-machine.md"         "$dest_dir/state-machine.md"         "$(power_frontmatter 'AI-DLC State Machine')"
   copy_with_frontmatter "$COMMON_DIR/resume-protocol.md"       "$dest_dir/resume-protocol.md"       "$(power_frontmatter 'AI-DLC Resume Protocol')"
@@ -85,6 +86,7 @@ copy_skill() {
   echo "→ Copying to Skill ($dest_dir)"
 
   # References — no frontmatter for generic skill
+  copy_with_frontmatter "$COMMON_DIR/workflow.md"                "$dest_dir/workflow.md"                ""
   copy_with_frontmatter "$COMMON_DIR/complexity-rubric.md"       "$dest_dir/complexity-rubric.md"       ""
   copy_with_frontmatter "$COMMON_DIR/state-machine.md"           "$dest_dir/state-machine.md"           ""
   copy_with_frontmatter "$COMMON_DIR/resume-protocol.md"         "$dest_dir/resume-protocol.md"         ""
@@ -113,6 +115,7 @@ copy_cli() {
   local templates_dir="AgentDevAidlcCLI/.kiro/templates"
   echo "→ Copying to CLI ($dest_dir)"
 
+  copy_with_frontmatter "$COMMON_DIR/workflow.md"                "$dest_dir/aidlc-workflow.md"                "$(cli_frontmatter 'AI-DLC Workflow' 'manual')"
   copy_with_frontmatter "$COMMON_DIR/complexity-rubric.md"       "$dest_dir/aidlc-complexity-rubric.md"       "$(cli_frontmatter 'AI-DLC Complexity Rubric')"
   copy_with_frontmatter "$COMMON_DIR/state-machine.md"           "$dest_dir/aidlc-state-machine.md"           "$(cli_frontmatter 'AI-DLC State Machine')"
   copy_with_frontmatter "$COMMON_DIR/resume-protocol.md"         "$dest_dir/aidlc-resume-protocol.md"         "$(cli_frontmatter 'AI-DLC Resume Protocol')"

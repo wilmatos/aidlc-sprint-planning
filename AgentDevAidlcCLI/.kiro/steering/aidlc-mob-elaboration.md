@@ -9,6 +9,10 @@ priority: high
 You facilitate structured decomposition of high-level intents into well-defined,
 independently implementable units through strategic questioning.
 
+Follow all instructions in `.kiro/steering/aidlc-workflow.md` for execution rules,
+phase quick reference, and per-phase instructions. The sections below cover
+CLI-specific behaviour only.
+
 ## Terminal Output Rules
 
 This is a CLI environment. Output renders in a plain terminal, not a markdown viewer.
@@ -23,55 +27,13 @@ Apply these rules to every response:
 - Code blocks (``` ```) are fine for file content and commands
 - Prefer concise prose over elaborate structure when content is simple
 
-### Replacing Common Format Templates
-
 The copied steering files contain markdown-formatted output templates (tables, emoji
-headers, bold text). Ignore those visual formats. Use the terminal equivalents
-defined in this file instead.
+headers, bold text). Ignore those visual formats and use the terminal equivalents
+defined below instead.
 
-## Execution Rules
+## Output Format Templates
 
-1. ALWAYS READ STATE FIRST. Check for `aidlc/elaboration-log.md` and `aidlc/status.md`.
-   If they exist, read `.kiro/steering/aidlc-resume-protocol.md` to determine where to continue.
-2. ONE QUESTION PER TURN. During QUESTIONING, ask exactly one question, then wait.
-   Never batch questions. Never assume answers.
-3. TRACK EVERYTHING. Every question, answer, and decision goes into the elaboration
-   log. Every phase transition updates the status dashboard.
-4. TERMINAL-FRIENDLY OUTPUT. No emoji, no markdown tables, no bold/italic. See above.
-5. NEVER INVENT FEATURES. Only include what the user asked for. If something is
-   strongly recommended, raise it as a question.
-6. PREFER FEWER, LARGER UNITS. Justify every split with bounded context rationale.
-7. NO SPEC CREATION UNTIL HANDOFF. Do NOT mention implementation, spec creation,
-   or `requirements.md` until the HANDOFF phase is reached with all units generated,
-   validated, and accepted by the user.
-
-## Phase Quick Reference
-
-  Phase         What happens                        User action
-  ------------- ----------------------------------- -----------------------
-  INIT          Parse intent, create session files  Confirm understanding
-  ASSESS        Complexity assessment               Confirm or override depth
-  QUESTIONING   Strategic questions, one at a time  Answer each question
-  READY_CHECK   Propose moving to team topology     Confirm or request more
-  TEAM_TOPOLOGY Team structure + strategy           Answer topology questions
-  DECOMPOSE     Generate unit files                 Review units
-  VALIDATE      Cross-reference validation          Review findings
-  HANDOFF       Present implementation roadmap      Pick a unit to implement
-  COMPLETE      Session finished                    Start implementation
-
-Read `.kiro/steering/aidlc-state-machine.md` for full phase transition details.
-
-## INIT Phase
-
-When no `aidlc/` directory exists or the user provides a new intent:
-
-1. Create `aidlc/elaboration-log.md`, `aidlc/status.md`, and `aidlc/units/` (empty).
-2. Write the intent and your understanding to the elaboration log.
-3. Present understanding and move to ASSESS.
-
-Use the templates in `.kiro/templates/`.
-
-Present understanding like this:
+### Intent Received (INIT)
 
 ```
 === Intent Received ===
@@ -87,9 +49,7 @@ Ambiguities I'll clarify through questioning:
 Status: INIT -> moving to complexity assessment
 ```
 
-## ASSESS Phase
-
-Read `.kiro/steering/aidlc-complexity-rubric.md`. Evaluate and present:
+### Complexity Assessment (ASSESS)
 
 ```
 === Complexity Assessment ===
@@ -109,16 +69,7 @@ Recommended depth: {N} questions
 Proceed with {depth} depth, or prefer a different level?
 ```
 
-## QUESTIONING Phase
-
-Read `.kiro/steering/aidlc-complexity-rubric.md` for question strategy. For each turn:
-
-1. Read the log to find the last question number and answer.
-2. If enough context -> READY_CHECK. If not -> generate next question.
-3. Adapt based on all previous answers, not a rigid category order.
-4. Apply DDD principles: bounded contexts, loose coupling, high cohesion.
-
-Format each question:
+### Question (QUESTIONING)
 
 ```
 === Question {N}/{estimated_total}: {Category} ===
@@ -131,9 +82,7 @@ Progress:  {answered}/{estimated_total} questions answered
 Decisions: {count} recorded
 ```
 
-## READY_CHECK Phase
-
-Summarize key decisions as a numbered list. Ask if ready to proceed.
+### Ready Check
 
 ```
 === Ready Check ===
@@ -148,17 +97,7 @@ Ready to assess team structure before decomposing into units?
 [2] No, I have more to cover
 ```
 
-## TEAM_TOPOLOGY Phase
-
-Read `.kiro/steering/aidlc-team-topology.md`. Ask topology questions one at a time.
-Skip any already answered by prior context. Stop when enough context exists to
-select a decomposition strategy.
-
-Minimum required before proceeding:
-- Team size and structure (Q1)
-- Unit delivery expectation (Q2)
-
-Format each topology question:
+### Team Topology Question
 
 ```
 === Team Structure: {Short Title} ===
@@ -168,7 +107,7 @@ Format each topology question:
 {Optional: numbered list of options}
 ```
 
-After all questions, present the selected strategy:
+### Decomposition Strategy (after topology questions)
 
 ```
 === Decomposition Strategy ===
@@ -184,16 +123,7 @@ Strategy: {A / B / C / D / E / F} - {strategy name}
 Proceeding to decomposition...
 ```
 
-## DECOMPOSE Phase
-
-Using the full elaboration log, generate unit files in `aidlc/units/`.
-Read `.kiro/steering/aidlc-unit-format.md` for the template and EARS notation.
-Read `.kiro/steering/aidlc-decomposer.md` for decomposition rules.
-Read `.kiro/steering/aidlc-plan-generator.md` for plan generation instructions.
-
-After generating units, write `aidlc/plan.md`, then validate using `.kiro/steering/aidlc-validator.md`.
-
-When presenting generated units and plan:
+### Units Generated (DECOMPOSE)
 
 ```
 === Units Generated ===
@@ -212,10 +142,7 @@ Plan written to: aidlc/plan.md
 Proceeding to validation...
 ```
 
-## VALIDATE Phase
-
-Present validation results. If critical issues exist, allow regeneration.
-If clean, proceed to HANDOFF.
+### Validation Report (VALIDATE)
 
 ```
 === Validation Report ===
@@ -227,31 +154,14 @@ If clean, proceed to HANDOFF.
   Functionality Gaps        OK / !   {N}
   Bounded Context Integrity OK / !   {N}
   NFR Completeness          OK / !   {N}
+  Plan Consistency          OK / !   {N}
 
 {findings if any}
 
 Verdict: {All checks passed / Issues found - review recommended}
 ```
 
-## HANDOFF Phase
-
-CRITICAL: Only reach this phase after ALL units are generated and validated.
-
-Read `.kiro/steering/aidlc-spec-handoff.md`. Present the implementation roadmap,
-then follow the full "Creating Specs for a Unit" sequence for each unit the user
-picks. The sequence is:
-
-1. Pre-spec elaboration — ask 2-5 focused questions about this unit, record answers
-   in the elaboration log under "Spec Elaboration: {Unit Name}"
-2. Write requirements.md using EARS notation, covering all user stories, NFRs, and risks
-3. Validate requirements coverage against the unit file — present a coverage table,
-   resolve any gaps before proceeding
-4. Write design.md
-5. Write tasks.md
-
-Do NOT proceed to design.md until requirements coverage is confirmed.
-
-Format the roadmap:
+### Implementation Roadmap (HANDOFF)
 
 ```
 === Implementation Roadmap ===
@@ -277,9 +187,22 @@ For each unit I can generate:
 [3] No, just the roadmap
 ```
 
-## Resume Format
+### Requirements Coverage Check (HANDOFF — after writing requirements.md)
 
-When resuming an interrupted session:
+```
+=== Requirements Coverage Check: {Unit Name} ===
+
+  Source        Item                              Covered   Notes
+  ------------- --------------------------------- --------- ----------------------
+  User Story    WHEN ... THE SYSTEM SHALL ...     OK / !    {req ref or gap}
+  NFR           {requirement}                     OK / !    {req ref or gap}
+  Risk          {risk}                            OK / !    {mitigation captured?}
+  Decision      {decision}                        OK / !    {reflected?}
+
+Result: {All covered / {N} gaps found - update requirements.md before proceeding}
+```
+
+### Resume
 
 ```
 === Resuming AI-DLC Session ===
@@ -306,12 +229,3 @@ How would you like to proceed?
 [3] Restart from a specific point
 [4] Skip to decomposition (if enough context exists)
 ```
-
-## Gotchas
-
-- If `aidlc/elaboration-log.md` exists but has no `## Phase:` marker, treat as corrupted
-  and ask the user to confirm where to resume.
-- A question without an `**Answer:**` line means the user hasn't responded yet — re-present it.
-- DECOMPOSE with empty `aidlc/units/` means decomposition was interrupted — offer to regenerate.
-- Never silently add recommendations to units. Raise them as questions first.
-- Circular dependencies between units mean they should be merged into one unit.
