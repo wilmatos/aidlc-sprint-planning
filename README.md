@@ -6,8 +6,8 @@ This repository contains three implementations of the same workflow, each tailor
 
 | Implementation | Client | Format |
 |---|---|---|
-| [AgentDevAidlcPower](#agentdevaidlcpower) | Kiro (IDE) | `POWER.md` + `steering/` |
-| [AgentDevAidlcSkill](#agentdevaidlcskill) | Generic / any agent | `SKILL.md` + `references/` |
+| [AgentDevAidlcPower](#agentdevaidlcpower) | Kiro IDE | `POWER.md` + `steering/` |
+| [AgentDevAidlcSkill](#agentdevaidlcskill) | Generic / any agent | `SKILL.md` + `references/` + `assets/` |
 | [AgentDevAidlcCLI](#agentdevaidlccli) | Kiro CLI | `.kiro/steering/` + `.kiro/agents/*.json` |
 
 All three implement the same state machine and elaboration logic — they differ only in how they integrate with their target client. Core logic lives in `common/` and is copied into each implementation by the CI pipeline.
@@ -20,45 +20,183 @@ All three implement the same state machine and elaboration logic — they differ
 4. Validates units for completeness, dependency ordering, and coverage
 5. Hands off each unit for implementation — optionally generating `requirements.md`, `design.md`, and `tasks.md` for each
 
-State machine: `INIT → ASSESS → QUESTIONING → READY_CHECK → DECOMPOSE → VALIDATE → HANDOFF → COMPLETE`
+State machine: `INIT → ASSESS → QUESTIONING → READY_CHECK → TEAM_TOPOLOGY → DECOMPOSE → VALIDATE → HANDOFF → COMPLETE`
 
-## Implementations
+---
 
-### AgentDevAidlcPower
+## AgentDevAidlcPower
 
-## Repository Structure
+A [Kiro Power](https://kiro.dev/docs/powers/) — the native extension format for Kiro IDE.
+
+- Entry point is `POWER.md`, which contains the full agent instructions and onboarding steps
+- On first activation, onboards the workspace by creating subagent files, steering files, and hooks
+- Supports Kiro-specific features: subagent `.md` files, `fileMatch` steering, and hooks
+
+### Package contents
+
+```
+AgentDevAidlcPower/
+├── POWER.md                        # Agent instructions, onboarding steps, phase reference
+└── steering/
+    ├── complexity-rubric.md        # Complexity assessment rubric and question strategy
+    ├── decomposer.md               # Unit generation rules and decomposition principles
+    ├── plan-generator.md           # Plan generation guidance
+    ├── requirements-validation.md  # Validates requirements.md against unit definitions
+    ├── resume-protocol.md          # Session state detection and recovery
+    ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
+    ├── state-machine.md            # Phase transitions, edge cases, error recovery
+    ├── team-topology.md            # Team structure and decomposition strategy
+    ├── unit-format.md              # EARS notation, unit file template, scaling rules
+    └── validator.md                # Cross-validation checks for unit files
+```
+
+The `POWER.md` onboarding installs these artifacts into the target workspace:
+
+| Artifact | Path | Purpose |
+|---|---|---|
+| Subagent | `.kiro/agents/aidlc-decomposer.md` | Generates unit files from elaboration log |
+| Subagent | `.kiro/agents/aidlc-validator.md` | Cross-validates unit files |
+| Subagent | `.kiro/agents/aidlc-spec-elaborator.md` | Per-unit requirements elaboration |
+| Subagent | `.kiro/agents/aidlc-requirements-validator.md` | Validates requirements against units |
+| Steering | `.kiro/steering/aidlc-spec-elaboration.md` | Auto-loads on `requirements.md` (fileMatch) |
+| Steering | `.kiro/steering/aidlc-requirements-validation.md` | Manual-trigger requirements validation |
+| Hook | `.kiro/hooks/aidlc-spec-requirements-check.kiro.hook` | Pre-task: checks elaboration context before spec work |
+| Hook | `.kiro/hooks/aidlc-requirements-unit-validation.kiro.hook` | Post-task: validates requirements.md after it's written |
+
+### Installation
+
+- **Kiro Powers panel (recommended):** Add Custom Power → Import from GitHub → provide this repo URL
+- **Local path:** Add power from Local Path → point to the `AgentDevAidlcPower` directory
+- **CI artifact:** Download `aidlc-mob-elaboration-power.zip` from pipeline artifacts, extract, and import via Local Path
+
+---
+
+## AgentDevAidlcSkill
+
+A generic Skill — client-agnostic, no file copying to client-specific folders.
+
+- Entry point is `SKILL.md`, which contains the full agent instructions
+- Sub-concern logic lives in `references/`, templates in `assets/`
+- No hooks, no workspace onboarding — works with any agent host that supports the skills format
+
+### Package contents
+
+```
+AgentDevAidlcSkill/
+└── aidlc-mob-elaboration/
+    ├── SKILL.md                        # Agent instructions and phase reference
+    ├── assets/
+    │   ├── elaboration-log-template.md # Starting template for aidlc/elaboration-log.md
+    │   ├── plan-template.md            # Starting template for aidlc/plan.md
+    │   ├── status-template.md          # Starting template for aidlc/status.md
+    │   └── unit-template.md            # Template for individual unit files
+    └── references/
+        ├── complexity-rubric.md        # Complexity assessment rubric and question strategy
+        ├── decomposer.md               # Unit generation rules and decomposition principles
+        ├── requirements-validation.md  # Validates requirements.md against unit definitions
+        ├── resume-protocol.md          # Session state detection and recovery
+        ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
+        ├── state-machine.md            # Phase transitions, edge cases, error recovery
+        ├── team-topology.md            # Team structure and decomposition strategy
+        ├── unit-format.md              # EARS notation, unit file template, scaling rules
+        └── validator.md                # Cross-validation checks for unit files
+```
+
+### Installation
+
+Copy the `AgentDevAidlcSkill/aidlc-mob-elaboration/` directory into your skills folder and activate it from your agent host.
+
+---
+
+## AgentDevAidlcCLI
+
+A configuration package for [Kiro CLI](https://kiro.dev/docs/cli/).
+
+- Main steering file (`aidlc-mob-elaboration.md`) loads automatically via `inclusion: always`
+- All other steering files are `inclusion: manual` — reference them with `#` in chat as needed
+- Agents use `.json` format (Kiro CLI does not support `.md` subagents or hooks)
+
+### Package contents
+
+```
+AgentDevAidlcCLI/
+├── README.md
+└── .kiro/
+    ├── agents/
+    │   ├── aidlc-decomposer.json               # Generates unit files from elaboration log
+    │   ├── aidlc-requirements-validator.json   # Validates requirements against units
+    │   ├── aidlc-spec-elaborator.json          # Per-unit requirements elaboration
+    │   └── aidlc-validator.json                # Cross-validates unit files
+    ├── steering/
+    │   ├── aidlc-mob-elaboration.md            # Core workflow (inclusion: always)
+    │   ├── aidlc-complexity-rubric.md          # Complexity assessment (inclusion: manual)
+    │   ├── aidlc-decomposer.md                 # Unit generation rules (inclusion: manual)
+    │   ├── aidlc-plan-generator.md             # Plan generation (inclusion: manual)
+    │   ├── aidlc-requirements-validation.md    # Requirements validation (inclusion: manual)
+    │   ├── aidlc-resume-protocol.md            # Session recovery (inclusion: manual)
+    │   ├── aidlc-spec-handoff.md               # Spec creation and handoff (inclusion: manual)
+    │   ├── aidlc-state-machine.md              # Phase transitions (inclusion: manual)
+    │   ├── aidlc-team-topology.md              # Team topology (inclusion: manual)
+    │   ├── aidlc-terminal-format.md            # Terminal output formatting (inclusion: manual)
+    │   ├── aidlc-unit-format.md                # EARS notation and unit template (inclusion: manual)
+    │   └── aidlc-validator.md                  # Cross-validation checks (inclusion: manual)
+    └── templates/
+        ├── elaboration-log-template.md         # Starting template for aidlc/elaboration-log.md
+        ├── plan-template.md                    # Starting template for aidlc/plan.md
+        ├── status-template.md                  # Starting template for aidlc/status.md
+        └── unit-template.md                    # Template for individual unit files
+```
+
+### Installation
+
+Copy the `.kiro/` directory into your project root:
+
+```bash
+cp -r AgentDevAidlcCLI/.kiro/ /path/to/your/project/.kiro/
+```
+
+Then run `kiro-cli chat` in that project directory.
+
+---
+
+## Implementation differences
+
+| Capability | Power (Kiro IDE) | Skill (Generic) | CLI (Kiro CLI) |
+|---|---|---|---|
+| Entry point | `POWER.md` | `SKILL.md` | `aidlc-mob-elaboration.md` (steering) |
+| Sub-concern files | `steering/*.md` | `references/*.md` | `.kiro/steering/*.md` |
+| Templates | Embedded in `POWER.md` onboarding | `assets/` | `.kiro/templates/` |
+| Agent/subagent format | `.md` (Kiro subagents) | N/A | `.json` |
+| Hooks support | ✅ (2 hooks installed on onboarding) | ❌ | ❌ |
+| Workspace onboarding | ✅ (installs agents, steering, hooks) | ❌ | Manual `cp` |
+| Activation | Keyword-triggered | Client-dependent | `inclusion: always` on main steering file |
+
+---
+
+## Repository structure
 
 ```
 /
 ├── common/                        # Single source of truth for all logic files
 │   ├── complexity-rubric.md
-│   ├── state-machine.md
-│   ├── resume-protocol.md
-│   ├── unit-format.md
 │   ├── decomposer.md
-│   ├── validator.md
-│   ├── spec-handoff.md
+│   ├── plan-generator.md
 │   ├── requirements-validation.md
+│   ├── resume-protocol.md
+│   ├── spec-handoff.md
+│   ├── state-machine.md
+│   ├── team-topology.md
+│   ├── unit-format.md
+│   ├── validator.md
 │   └── templates/
 │       ├── elaboration-log-template.md
+│       ├── plan-template.md
 │       ├── status-template.md
 │       └── unit-template.md
 │
-├── AgentDevAidlcPower/            # Kiro Power implementation
-│   ├── POWER.md                   # Entry point + onboarding (implementation-specific)
-│   └── steering/                  # Populated from common/ by CI
-│
-├── AgentDevAidlcSkill/            # Generic Skill implementation
-│   └── aidlc-mob-elaboration/
-│       ├── SKILL.md               # Entry point (implementation-specific)
-│       ├── assets/                # Templates — populated from common/templates/ by CI
-│       └── references/            # Populated from common/ by CI (no frontmatter)
-│
+├── AgentDevAidlcPower/            # Kiro IDE power implementation
+├── AgentDevAidlcSkill/            # Generic skill implementation
 ├── AgentDevAidlcCLI/              # Kiro CLI implementation
-│   └── .kiro/
-│       ├── agents/                # JSON agent definitions (implementation-specific)
-│       ├── steering/              # Populated from common/ by CI (with frontmatter)
-│       └── templates/             # Populated from common/templates/ by CI
 │
 ├── scripts/
 │   └── copy-common.sh             # Copies common/ into each implementation
@@ -66,10 +204,9 @@ State machine: `INIT → ASSESS → QUESTIONING → READY_CHECK → DECOMPOSE �
 └── .gitlab-ci.yml                 # Runs copy-common.sh then packages each artifact
 ```
 
-### Editing Logic Files
+### Editing logic files
 
-All core logic lives in `common/`. **Never edit the copied files directly** — they
-will be overwritten by the next CI run or `scripts/copy-common.sh` invocation.
+All core logic lives in `common/`. Never edit the copied files directly — they will be overwritten by the next CI run.
 
 To update logic:
 1. Edit the file in `common/`
@@ -81,113 +218,7 @@ To update implementation-specific behavior:
 - Skill: edit `AgentDevAidlcSkill/aidlc-mob-elaboration/SKILL.md`
 - CLI: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-mob-elaboration.md` or the agent JSON files
 
-
-
-A [Kiro Power](https://kiro.dev/docs/powers/) — the native extension format for Kiro IDE.
-
-- Uses `POWER.md` as the entry point with `steering/` files for sub-concerns
-- Supports Kiro-specific features: `.kiro/` folder, hooks, subagent `.md` files, and steering files placed in Kiro-specific locations
-- On first activation, onboards the workspace by creating subagent files, steering files, and hooks
-
-```
-AgentDevAidlcPower/
-├── POWER.md
-└── steering/
-    ├── complexity-rubric.md
-    ├── requirements-validation.md
-    ├── resume-protocol.md
-    ├── spec-handoff.md
-    ├── state-machine.md
-    └── unit-format.md
-```
-
-#### Installation
-
-- **Kiro Powers panel (recommended):** Add Custom Power → Import from GitHub → provide this repo URL
-- **Local path:** Add power from Local Path → point to the `AgentDevAidlcPower` directory
-- **CI artifact:** Download `aidlc-mob-elaboration.zip` from pipeline artifacts, extract, and import via Local Path
-
-### AgentDevAidlcSkill
-
-A generic Skill — client-agnostic, no file copying to client-specific folders.
-
-- Uses `SKILL.md` as the entry point with `references/` for sub-concerns and `assets/` for templates
-- Follows the standard skills definition format — no assumptions about the host client's folder structure
-- Does not create hooks or copy files into client-specific directories
-
-```
-AgentDevAidlcSkill/
-└── aidlc-mob-elaboration/
-    ├── SKILL.md
-    ├── assets/
-    │   ├── elaboration-log-template.md
-    │   ├── status-template.md
-    │   └── unit-template.md
-    └── references/
-        ├── complexity-rubric.md
-        ├── decomposer.md
-        ├── requirements-validation.md
-        ├── resume-protocol.md
-        ├── spec-handoff.md
-        ├── state-machine.md
-        ├── unit-format.md
-        └── validator.md
-```
-
-### AgentDevAidlcCLI
-
-A configuration package for [Kiro CLI](https://kiro.dev/docs/cli/).
-
-- Uses `.kiro/steering/` markdown files (with `inclusion` metadata) and `.kiro/agents/*.json` for subagents
-- Kiro CLI has `.kiro/` folders like Kiro IDE but agents use `.json` format instead of `.md`
-- Does **not** support hooks
-
-```
-AgentDevAidlcCLI/
-├── README.md
-└── .kiro/
-    ├── agents/
-    │   ├── aidlc-decomposer.json
-    │   ├── aidlc-requirements-validator.json
-    │   ├── aidlc-spec-elaborator.json
-    │   └── aidlc-validator.json
-    ├── steering/
-    │   ├── aidlc-mob-elaboration.md        # inclusion: always
-    │   ├── aidlc-complexity-rubric.md      # inclusion: manual
-    │   ├── aidlc-decomposer.md
-    │   ├── aidlc-requirements-validation.md
-    │   ├── aidlc-resume-protocol.md
-    │   ├── aidlc-spec-handoff.md
-    │   ├── aidlc-state-machine.md
-    │   ├── aidlc-unit-format.md
-    │   └── aidlc-validator.md
-    └── templates/
-        ├── elaboration-log-template.md
-        ├── status-template.md
-        └── unit-template.md
-```
-
-#### Installation
-
-Copy the `.kiro/` directory into your project root:
-
-```bash
-cp -r AgentDevAidlcCLI/.kiro/ /path/to/your/project/.kiro/
-```
-
-Then run `kiro-cli chat` in that project directory.
-
-## Implementation differences
-
-| Capability | Power (Kiro IDE) | Skill (Generic) | CLI (Kiro CLI) |
-|---|---|---|---|
-| Entry point | `POWER.md` | `SKILL.md` | `aidlc-mob-elaboration.md` (steering) |
-| Sub-concern files | `steering/*.md` | `references/*.md` | `.kiro/steering/*.md` |
-| Agent/subagent format | `.md` (Kiro subagents) | N/A | `.json` |
-| Hooks support | ✅ | N/A | ❌ |
-| File copying on install | ✅ (onboarding) | ❌ | Manual `cp` |
-| Templates | Embedded in POWER.md | `assets/` | `.kiro/templates/` |
-| Activation | Keyword-triggered | Client-dependent | `inclusion: always` on main steering file |
+---
 
 ## Keywords
 
