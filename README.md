@@ -226,7 +226,7 @@ To update implementation-specific behavior:
 
 ## Keywords
 
-`plan` · `decompose` · `elaborate` · `break down` · `scope` · `build` · `design` · `architect` · `specs` · `requirements` · `feature` · `project` · `discovery` · `prd` · `aidlc`
+`plan` · `decompose` · `elaborate` · `break down` · `scope` · `build` · `design` · `architect` · `specs` · `requirements` · `feature` · `project` · `discovery` · `prd` · `aidlc` · `roadmap` · `breakdown` · `map out` · `outline` · `structure` · `strategy` · `approach` · `proposal` · `implement` · `create` · `develop` · `new feature` · `new app` · `new application` · `new service` · `new system` · `refactor` · `migrate` · `integrate` · `epic` · `milestone` · `mvp` · `where do i start` · `how do i approach` · `help me think` · `not sure how to`
 
 ## Learn more
 

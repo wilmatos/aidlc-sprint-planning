@@ -2,7 +2,7 @@
 name: "aidlc-mob-elaboration"
 displayName: "AI-DLC Mob Elaboration"
 description: "Structured feature planning that decomposes intents into implementation units through strategic questioning. Use when starting a new feature, project, or system to produce specs ready for Kiro's Spec-Driven Development."
-keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "think through", "figure out"]
+keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to"]
 author: "workspace"
 ---
 
