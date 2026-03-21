@@ -238,8 +238,18 @@ Verdict: {All checks passed / Issues found - review recommended}
 CRITICAL: Only reach this phase after ALL units are generated and validated.
 
 Read `.kiro/steering/aidlc-spec-handoff.md`. Present the implementation roadmap,
-then offer to create specification documents for each unit following the
-"Spec Creation Offer" section in that file.
+then follow the full "Creating Specs for a Unit" sequence for each unit the user
+picks. The sequence is:
+
+1. Pre-spec elaboration — ask 2-5 focused questions about this unit, record answers
+   in the elaboration log under "Spec Elaboration: {Unit Name}"
+2. Write requirements.md using EARS notation, covering all user stories, NFRs, and risks
+3. Validate requirements coverage against the unit file — present a coverage table,
+   resolve any gaps before proceeding
+4. Write design.md
+5. Write tasks.md
+
+Do NOT proceed to design.md until requirements coverage is confirmed.
 
 Format the roadmap:
 

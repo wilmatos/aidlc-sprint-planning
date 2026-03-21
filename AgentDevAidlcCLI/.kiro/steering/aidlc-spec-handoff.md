@@ -82,7 +82,11 @@ If the user chooses to create specs, proceed unit by unit following the steps be
 
 ## Creating Specs for a Unit
 
-### Step 1: Per-Unit Elaboration
+For each unit the user picks to implement, follow this sequence in order. Do not
+skip steps or reorder them.
+
+### Step 1: Pre-Spec Elaboration
+
 Before writing any spec document, ask 2-5 focused, tactical questions about this
 specific unit. These are implementation-detail questions not covered in mob elaboration:
 - Specific API contracts and response shapes
@@ -95,15 +99,45 @@ specific unit. These are implementation-detail questions not covered in mob elab
 Ask one question at a time. Record answers in the elaboration log under
 `## Spec Elaboration: {Unit Name}`.
 
-### Step 2: requirements.md
-Write a requirements document using EARS notation:
+### Step 2: Write requirements.md
+
+Using the unit definition, elaboration log, and spec elaboration answers, write
+a requirements document using EARS notation:
 - Map every user story from the unit to at least one requirement
 - Add testable acceptance criteria (specific, measurable, clear pass/fail)
 - Include NFRs with measurable targets
 - Address risks with defensive requirements
 - Do not add scope beyond the unit file
 
-### Step 3: design.md
+### Step 3: Validate Requirements Coverage
+
+Immediately after writing requirements.md, validate it against the source unit file
+before proceeding to design. Cross-check against:
+- Every user story in the unit file
+- Every NFR in the unit file
+- Every risk and its mitigation strategy
+- All decisions recorded in the elaboration log that apply to this unit
+
+Present the result as a coverage table:
+
+```
+## Requirements Coverage Check — {Unit Name}
+
+| Source | Item | Covered | Notes |
+|--------|------|---------|-------|
+| User Story | WHEN ... THE SYSTEM SHALL ... | ✅ / ❌ | {req ref or gap} |
+| NFR | {requirement} | ✅ / ❌ | {req ref or gap} |
+| Risk | {risk} | ✅ / ❌ | {mitigation captured?} |
+| Decision | {decision} | ✅ / ❌ | {reflected in requirements?} |
+
+Result: {All covered ✅ / {N} gaps found ❌}
+```
+
+If gaps are found, update requirements.md to address them and re-run the check
+until the result is fully covered. Do NOT proceed to Step 4 until coverage is confirmed.
+
+### Step 4: Write design.md
+
 Write a technical design document:
 - Architecture decisions and component breakdown
 - Data models and API contracts
@@ -111,22 +145,14 @@ Write a technical design document:
 - Key technical risks and mitigations
 - Technology choices with rationale
 
-### Step 4: tasks.md
+### Step 5: Write tasks.md
+
 Break the unit into concrete, independently executable implementation tasks:
 - Each task has: clear scope, acceptance criteria, and a validation checkpoint
 - Order tasks by dependency
 - Flag tasks that can be parallelized
 - Group related tasks with a checkpoint after each group
 - Checkpoints should be verifiable (e.g., "all tests pass", "API endpoint returns expected shape")
-
-### Step 5: Validate Requirements Coverage
-After `requirements.md` is written, validate it against the unit file:
-- Every user story from the unit has a corresponding requirement
-- Every NFR is covered
-- No scope creep introduced
-- Spec elaboration answers are reflected
-
-Present the validation report and wait for user confirmation before proceeding to design.
 
 ## Updating Status
 

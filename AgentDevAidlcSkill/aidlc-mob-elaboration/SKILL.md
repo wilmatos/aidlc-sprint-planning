@@ -134,8 +134,9 @@ If clean, proceed to HANDOFF.
 **CRITICAL: Only reach this phase after ALL units are generated and validated.**
 
 Read [spec handoff](references/spec-handoff.md). Present the implementation roadmap,
-then offer to create specification documents for each unit following the
-"Spec Creation Offer" section in spec-handoff.
+then follow the full "Creating Specs for a Unit" sequence for each unit the user
+picks — including pre-spec elaboration, writing requirements.md, validating coverage
+against the unit file, and only then proceeding to design.md and tasks.md.
 
 ## Gotchas
 
