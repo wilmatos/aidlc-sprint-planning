@@ -26,15 +26,30 @@ generation via subagents, and rich status tracking throughout.
 
 ## Onboarding
 
-On first activation, install the workspace artifacts that this power depends on.
-These enable subagent delegation, spec-mode integration, and task execution hooks.
+On first activation, ask the user where to install the workspace artifacts:
+
+```
+Where would you like to install the AI-DLC Mob Elaboration artifacts?
+
+1. **Local** — installs into this workspace only (`.kiro/` in the current project root)
+2. **Global** — installs for all projects (`~/.kiro/` in your home directory)
+
+> Local or global?
+```
+
+- If **local**, use `.kiro/` as the base path for all files below.
+- If **global**, use `~/.kiro/` as the base path for all files below.
+
+Referred to as `{base}` in the steps that follow.
+
+These artifacts enable subagent delegation, spec-mode integration, and task execution hooks.
 
 ### Step 1: Create Subagent Files
 
-Create four subagent files in `.kiro/agents/`. Each file has a frontmatter header
+Create four subagent files in `{base}/agents/`. Each file has a frontmatter header
 followed by instructions that reference the corresponding steering file for its logic.
 
-**File: `.kiro/agents/aidlc-decomposer.md`**
+**File: `{base}/agents/aidlc-decomposer.md`**
 
 ```markdown
 ---
@@ -52,10 +67,10 @@ tools: ["read", "write"]
 You generate implementation unit files from a completed mob elaboration session.
 Follow all instructions in the `decomposer` steering file.
 
-#[[file:.kiro/steering/decomposer.md]]
+#[[file:{base}/steering/decomposer.md]]
 ```
 
-**File: `.kiro/agents/aidlc-validator.md`**
+**File: `{base}/agents/aidlc-validator.md`**
 
 ```markdown
 ---
@@ -73,10 +88,10 @@ tools: ["read"]
 You validate a set of AI-DLC unit files for completeness and consistency.
 Follow all instructions in the `validator` steering file.
 
-#[[file:.kiro/steering/validator.md]]
+#[[file:{base}/steering/validator.md]]
 ```
 
-**File: `.kiro/agents/aidlc-spec-elaborator.md`**
+**File: `{base}/agents/aidlc-spec-elaborator.md`**
 
 ```markdown
 ---
@@ -94,10 +109,10 @@ tools: ["read", "write"]
 You facilitate focused requirements elaboration for a single AI-DLC unit.
 Follow the per-unit elaboration steps in the `spec-handoff` steering file.
 
-#[[file:.kiro/steering/spec-handoff.md]]
+#[[file:{base}/steering/spec-handoff.md]]
 ```
 
-**File: `.kiro/agents/aidlc-requirements-validator.md`**
+**File: `{base}/agents/aidlc-requirements-validator.md`**
 
 ```markdown
 ---
@@ -115,12 +130,12 @@ tools: ["read"]
 You validate that requirements fully cover everything defined in the source AI-DLC unit.
 Follow all instructions in the `requirements-validation` steering file.
 
-#[[file:.kiro/steering/requirements-validation.md]]
+#[[file:{base}/steering/requirements-validation.md]]
 ```
 
 ### Step 2: Create Steering Files
 
-Create `.kiro/steering/aidlc-spec-elaboration.md`:
+Create `{base}/steering/aidlc-spec-elaboration.md`:
 
 ```markdown
 ---
@@ -149,10 +164,10 @@ If AI-DLC unit files exist:
 4. Check for spec elaboration notes (`## Spec Elaboration: {Unit Name}` in the log).
 5. Ask clarifying questions if needed before writing.
 
-#[[file:.kiro/steering/spec-handoff.md]]
+#[[file:{base}/steering/spec-handoff.md]]
 ```
 
-Create `.kiro/steering/aidlc-requirements-validation.md`:
+Create `{base}/steering/aidlc-requirements-validation.md`:
 
 ```markdown
 ---
@@ -161,12 +176,12 @@ inclusion: manual
 
 # Requirements vs Unit Validation
 
-#[[file:.kiro/steering/requirements-validation.md]]
+#[[file:{base}/steering/requirements-validation.md]]
 ```
 
 ### Step 3: Create Hooks
 
-Create `.kiro/hooks/aidlc-spec-requirements-check.kiro.hook`:
+Create `{base}/hooks/aidlc-spec-requirements-check.kiro.hook`:
 
 ```json
 {
@@ -183,7 +198,7 @@ Create `.kiro/hooks/aidlc-spec-requirements-check.kiro.hook`:
 }
 ```
 
-Create `.kiro/hooks/aidlc-requirements-unit-validation.kiro.hook`:
+Create `{base}/hooks/aidlc-requirements-unit-validation.kiro.hook`:
 
 ```json
 {
@@ -203,11 +218,11 @@ Create `.kiro/hooks/aidlc-requirements-unit-validation.kiro.hook`:
 ### Step 4: Verify Installation
 
 After creating all files, verify:
-- [ ] Four agent files exist in `.kiro/agents/`
-- [ ] Steering file exists in `.kiro/steering/aidlc-spec-elaboration.md`
-- [ ] Steering file exists in `.kiro/steering/aidlc-requirements-validation.md`
-- [ ] Hook file exists in `.kiro/hooks/aidlc-spec-requirements-check.kiro.hook`
-- [ ] Hook file exists in `.kiro/hooks/aidlc-requirements-unit-validation.kiro.hook`
+- [ ] Four agent files exist in `{base}/agents/`
+- [ ] Steering file exists in `{base}/steering/aidlc-spec-elaboration.md`
+- [ ] Steering file exists in `{base}/steering/aidlc-requirements-validation.md`
+- [ ] Hook file exists in `{base}/hooks/aidlc-spec-requirements-check.kiro.hook`
+- [ ] Hook file exists in `{base}/hooks/aidlc-requirements-unit-validation.kiro.hook`
 
 ## Available Steering Files
 
@@ -504,20 +519,20 @@ Read the resume-protocol steering file. Check that `aidlc/elaboration-log.md` ex
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
-Verify the onboarding step completed. Check `.kiro/agents/` for the three agent files.
+Verify the onboarding step completed. Check `{base}/agents/` for the three agent files.
 
 ### Steering file not activating on requirements.md
-Verify `.kiro/steering/aidlc-spec-elaboration.md` exists with the correct frontmatter
+Verify `{base}/steering/aidlc-spec-elaboration.md` exists with the correct frontmatter
 (`inclusion: fileMatch`, `fileMatchPattern: "**/requirements.md"`).
 
 ### Hook not firing before spec tasks
-Verify `.kiro/hooks/aidlc-spec-requirements-check.kiro.hook` exists with valid JSON.
+Verify `{base}/hooks/aidlc-spec-requirements-check.kiro.hook` exists with valid JSON.
 
 ### Requirements validation not running after requirements.md is written
-Verify `.kiro/hooks/aidlc-requirements-unit-validation.kiro.hook` exists with valid JSON.
+Verify `{base}/hooks/aidlc-requirements-unit-validation.kiro.hook` exists with valid JSON.
 Also confirm the task that wrote requirements.md completed (the hook fires on
 `postTaskExecution`). Check that `aidlc/units/` contains a unit file whose name
 can be matched to the current spec. For manual validation, use
 `#aidlc-requirements-validation` in chat and verify
-`.kiro/steering/aidlc-requirements-validation.md` exists with `inclusion: manual`
+`{base}/steering/aidlc-requirements-validation.md` exists with `inclusion: manual`
 in its frontmatter.
