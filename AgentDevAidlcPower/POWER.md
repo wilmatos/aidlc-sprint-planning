@@ -42,7 +42,10 @@ Where would you like to install the AI-DLC Mob Elaboration artifacts?
 
 Referred to as `{base}` in the steps that follow.
 
-These artifacts enable subagent delegation, spec-mode integration, and task execution hooks.
+These artifacts enable subagent delegation and spec-mode integration.
+
+Note: hooks are not installed during onboarding — requirements validation and spec
+elaboration context are enforced directly in the workflow (see HANDOFF phase).
 
 ### Step 1: Create Subagent Files
 
@@ -139,8 +142,7 @@ Create `{base}/steering/aidlc-spec-elaboration.md`:
 
 ```markdown
 ---
-inclusion: fileMatch
-fileMatchPattern: "**/requirements.md"
+inclusion: manual
 ---
 
 # AI-DLC Spec Elaboration Enforcement
@@ -179,50 +181,12 @@ inclusion: manual
 #[[file:{base}/steering/requirements-validation.md]]
 ```
 
-### Step 3: Create Hooks
-
-Create `{base}/hooks/aidlc-spec-requirements-check.kiro.hook`:
-
-```json
-{
-  "name": "AI-DLC Spec Requirements Check",
-  "version": "1.0.1",
-  "description": "Before executing a spec task, check if AI-DLC elaboration context exists and all units are finalized before informing spec work.",
-  "when": {
-    "type": "preTaskExecution"
-  },
-  "then": {
-    "type": "askAgent",
-    "prompt": "Before starting this task, check if an aidlc/ directory exists in the project root. If it does, read aidlc/status.md. IMPORTANT: If the current phase is NOT 'HANDOFF' or 'COMPLETE', do NOT proceed with spec-related work — all units must be defined and validated first. If the phase IS 'HANDOFF' or 'COMPLETE', identify which unit corresponds to the current spec, read that unit file and the relevant sections of aidlc/elaboration-log.md, and use this context to inform your work. If the task involves writing requirements.md and no spec elaboration questions have been asked for this unit yet, ask 2-3 focused clarifying questions before proceeding."
-  }
-}
-```
-
-Create `{base}/hooks/aidlc-requirements-unit-validation.kiro.hook`:
-
-```json
-{
-  "name": "AI-DLC Requirements vs Unit Validation",
-  "version": "1.1.0",
-  "description": "After a request to create a spec from a unit definition file completes that produces or updates requirements.md, validate it against the source AI-DLC unit definition to ensure no features or requirements were missed.",
-  "when": {
-    "type": "agentStop"
-  },
-  "then": {
-    "type": "askAgent",
-    "prompt": "If the agent activity that just completed involved writing or updating a requirements.md file, activate the #aidlc-requirements-validation steering file and follow its instructions to validate the requirements against the source unit definition. If the task didn't touch requirements.md, do nothing."
-  }
-}
-```
-
-### Step 4: Verify Installation
+### Step 3: Verify Installation
 
 After creating all files, verify:
 - [ ] Four agent files exist in `{base}/agents/`
 - [ ] Steering file exists in `{base}/steering/aidlc-spec-elaboration.md`
 - [ ] Steering file exists in `{base}/steering/aidlc-requirements-validation.md`
-- [ ] Hook file exists in `{base}/hooks/aidlc-spec-requirements-check.kiro.hook`
-- [ ] Hook file exists in `{base}/hooks/aidlc-requirements-unit-validation.kiro.hook`
 
 ## Available Steering Files
 
@@ -232,8 +196,13 @@ This power includes detailed workflow guides loaded on-demand:
 - **complexity-rubric** — Complexity assessment rubric, question depth, question categories and strategy
 - **unit-format** — EARS notation, unit file template, decomposition principles, scaling by depth
 - **spec-handoff** — Creating specs from units, reference linking, parallel opportunities, per-spec elaboration
-- **requirements-validation** — Manual-trigger validation of requirements.md against unit definitions (also used by the post-task hook)
+- **requirements-validation** — Validates requirements.md coverage against unit definitions; invoke manually with `#aidlc-requirements-validation` after writing requirements
 - **resume-protocol** — Session state detection, resume presentation, recovery scenarios
+
+Both `aidlc-spec-elaboration` and `aidlc-requirements-validation` are installed as
+`inclusion: manual` steering files. Reference them explicitly in chat when needed:
+- `#aidlc-spec-elaboration` — before writing requirements.md for a unit
+- `#aidlc-requirements-validation` — after writing requirements.md to validate coverage
 
 ## Core Workflow
 
@@ -259,7 +228,8 @@ or when they want to resume an existing AI-DLC session.
 5. **Delegate to subagents.** Use `aidlc-decomposer` for unit generation,
    `aidlc-validator` for cross-validation, `aidlc-spec-elaborator` for per-spec
    requirements elaboration, and `aidlc-requirements-validator` for post-requirements
-   coverage checks against unit definitions.
+   coverage checks against unit definitions. Invoke subagents directly — do not rely
+   on hooks for any part of this workflow.
 
 6. **Never invent features.** Only include what the user asked for. If something is
    strongly recommended, raise it as a question. Let the user decide.
@@ -283,7 +253,7 @@ or when they want to resume an existing AI-DLC session.
 | TEAM_TOPOLOGY | Team structure and decomposition strategy | Answer topology questions |
 | DECOMPOSE | Generate unit files via subagents | Review units |
 | VALIDATE | Cross-reference validation | Review findings |
-| HANDOFF | Present spec creation instructions | Pick a unit to implement |
+| HANDOFF | Present spec creation instructions, write specs with validation | Pick a unit to implement |
 | COMPLETE | Session finished | Start spec work |
 
 ### INIT Phase
@@ -397,6 +367,47 @@ Read the spec-handoff steering file. Present the implementation roadmap, then of
 to create specification documents (requirements.md, design.md, tasks.md) for each unit.
 Follow the "Spec Creation Offer" and "Creating Specs for a Unit" sections in spec-handoff.
 
+#### Creating specs for a unit
+
+For each unit the user picks to implement, follow this sequence:
+
+1. **Pre-spec elaboration.** Before writing requirements.md, invoke the
+   `aidlc-spec-elaborator` subagent. It will ask 2-3 focused clarifying questions
+   about implementation details specific to that unit. Record answers in the
+   elaboration log under `## Spec Elaboration: {Unit Name}`.
+
+2. **Write requirements.md.** Using the unit definition, elaboration log, and
+   spec elaboration answers, create the requirements.md for the spec. Follow the
+   instructions in the spec-handoff steering file.
+
+3. **Validate requirements coverage.** Immediately after writing requirements.md,
+   invoke the `aidlc-requirements-validator` subagent. It will cross-check the
+   written requirements against:
+   - Every user story in the unit file
+   - Every NFR in the unit file
+   - Every risk and its mitigation strategy
+   - All decisions recorded in the elaboration log that apply to this unit
+
+   Present the validation result as a coverage table:
+
+   ```markdown
+   ## ✅ Requirements Coverage Check — {Unit Name}
+
+   | Source | Item | Covered | Notes |
+   |--------|------|---------|-------|
+   | User Story | WHEN ... THE SYSTEM SHALL ... | ✅ / ❌ | {req ref or gap} |
+   | NFR | {requirement} | ✅ / ❌ | {req ref or gap} |
+   | Risk | {risk} | ✅ / ❌ | {mitigation captured?} |
+   | Decision | {decision} | ✅ / ❌ | {reflected in requirements?} |
+
+   **Result:** {All covered ✅ / {N} gaps found ❌}
+   ```
+
+4. **Resolve gaps.** If any gaps are found, update requirements.md to address them,
+   then re-run the validator until the result is fully covered.
+
+5. **Proceed to design.md and tasks.md** only after requirements coverage is confirmed.
+
 ## Status Dashboard
 
 The `aidlc/status.md` file tracks session state. Update it on every phase transition.
@@ -507,7 +518,8 @@ See the spec-handoff steering file for detailed instructions on each document.
 - Add features the user didn't ask for
 - Skip the complexity assessment
 - Generate units without user confirmation
-- Write requirements.md without checking for elaboration context
+- Write requirements.md without first running pre-spec elaboration via `aidlc-spec-elaborator`
+- Skip requirements coverage validation after writing requirements.md — always invoke `aidlc-requirements-validator` before moving to design.md
 - **Mention Spec mode before ALL units are defined and validated** — no references to
   "Switch to Spec mode", spec creation, or `requirements.md` until the HANDOFF phase
   is reached with all units generated, validated, and accepted by the user
@@ -519,20 +531,14 @@ Read the resume-protocol steering file. Check that `aidlc/elaboration-log.md` ex
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
-Verify the onboarding step completed. Check `{base}/agents/` for the three agent files.
+Verify the onboarding step completed. Check `{base}/agents/` for the four agent files.
 
-### Steering file not activating on requirements.md
-Verify `{base}/steering/aidlc-spec-elaboration.md` exists with the correct frontmatter
-(`inclusion: fileMatch`, `fileMatchPattern: "**/requirements.md"`).
+### Steering file not loading for spec elaboration
+Verify `{base}/steering/aidlc-spec-elaboration.md` exists with `inclusion: manual`
+in its frontmatter. Reference it explicitly in chat with `#aidlc-spec-elaboration`.
 
-### Hook not firing before spec tasks
-Verify `{base}/hooks/aidlc-spec-requirements-check.kiro.hook` exists with valid JSON.
-
-### Requirements validation not running after requirements.md is written
-Verify `{base}/hooks/aidlc-requirements-unit-validation.kiro.hook` exists with valid JSON.
-Also confirm the task that wrote requirements.md completed (the hook fires on
-`postTaskExecution`). Check that `aidlc/units/` contains a unit file whose name
-can be matched to the current spec. For manual validation, use
-`#aidlc-requirements-validation` in chat and verify
-`{base}/steering/aidlc-requirements-validation.md` exists with `inclusion: manual`
-in its frontmatter.
+### Requirements validation not running
+Invoke the `aidlc-requirements-validator` subagent directly, or reference
+`#aidlc-requirements-validation` in chat. Verify `{base}/steering/aidlc-requirements-validation.md`
+exists with `inclusion: manual`. Check that `aidlc/units/` contains a unit file
+whose name matches the current spec.
