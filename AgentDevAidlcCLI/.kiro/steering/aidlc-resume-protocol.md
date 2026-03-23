@@ -47,43 +47,54 @@ On activation, check for `aidlc/elaboration-log.md`:
 | Units generated | {count or "not yet"} |
 
 ### Key Decisions So Far
+
 {numbered list of important decisions}
 
 ### Where We Left Off
+
 {what was happening when interrupted}
 
 ---
 
 > **How would you like to proceed?**
+>
 > 1. **Continue** from where we left off
+>
 > 2. **Review** decisions made so far
+>
 > 3. **Restart** from a specific point
+>
 > 4. **Skip to decomposition** (if enough context exists)
 ```
 
 ## Recovery Scenarios
 
 ### Interrupted During Questioning
+
 1. Check if last question has an answer
 2. If no answer: re-present the last question
 3. If answer exists but no next question: generate the next one
 
 ### Interrupted During Decomposition
+
 1. Check `aidlc/units/` for generated files
 2. If partial: list what was generated and what's missing
 3. Offer to regenerate all or just missing units
 
 ### Interrupted During Handoff
+
 1. Check `aidlc/status.md` for progress
 2. Present roadmap with current status
 3. Ask which unit to work on next
 
 ### Corrupted Log
+
 1. Present what you can determine
 2. Ask user to confirm current state
 3. Append recovery note:
 
 ```markdown
 ## Recovery Note
+
 Session resumed. Previous state: {detected}. User confirmed: {phase}.
 ```

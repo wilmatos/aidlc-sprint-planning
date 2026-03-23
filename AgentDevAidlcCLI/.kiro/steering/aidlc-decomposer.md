@@ -37,14 +37,19 @@ Apply the selected strategy when determining unit boundaries, ordering, and nami
 
 - **Strategy A (Vertical Slices):** Each unit is a full vertical slice ordered by
   user value. Foundation unit first, then demoable capabilities.
+
 - **Strategy B (Horizontal Layers):** Add a contract unit before parallel streams.
   Frontend units include mock setup instructions. Add an integration unit to close streams.
+
 - **Strategy C (Risk-First):** Spike units come first with explicit time-boxes and
   a clear question to answer. Remaining units are planned after the spike.
+
 - **Strategy D (Parallel Streams):** Identify independent streams. Number parallel
   units with a lane suffix (e.g., 02a, 02b). Add sync units at merge points.
+
 - **Strategy E (Complexity-Calibrated):** Size each unit to the target duration from
   the topology profile. Split any area that would exceed 2x the target.
+
 - **Strategy F (Domain-Team Alignment):** Map units to team ownership boundaries.
   Minimize cross-unit dependencies. Shared capabilities become platform units.
 

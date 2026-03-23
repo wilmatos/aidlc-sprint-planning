@@ -39,11 +39,14 @@ the user didn't ask for.
 | Plan Consistency | ✅ / ⚠️ | {count} |
 
 ### Findings
+
 {detailed findings}
 
 ### Recommendations
+
 {specific recommendations}
 
 ### Verdict
+
 {✅ All checks passed / ⚠️ Issues found — review recommended}
 ```

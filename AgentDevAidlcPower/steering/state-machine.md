@@ -35,6 +35,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Entry:** No `aidlc/elaboration-log.md` exists, or user starts a new session.
 
 **Actions:**
+
 1. Create `aidlc/` directory structure
 2. Create `aidlc/elaboration-log.md` with intent and understanding
 3. Create `aidlc/status.md` with initial state
@@ -43,13 +44,16 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Exit:** User confirms or corrects understanding.
 
 **Log format:**
+
 ```markdown
 # Mob Elaboration Log
 
 ## Intent
+
 {raw intent from user}
 
 ## Understanding
+
 {your interpretation}
 
 ## Phase: INIT
@@ -60,6 +64,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Entry:** User confirmed understanding from INIT.
 
 **Actions:**
+
 1. Evaluate complexity using the rubric
 2. Record assessment in log
 3. Present assessment with depth recommendation
@@ -72,6 +77,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Entry:** User confirmed depth, or returned from READY_CHECK.
 
 **Actions per turn:**
+
 1. Read the log to find the last question number and answer
 2. If previous question has no answer, wait
 3. If answer exists, evaluate whether enough context exists
@@ -79,6 +85,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 5. If not → generate next question, append to log, present
 
 **Question selection strategy:**
+
 - Adapt based on all previous answers, not a rigid category order
 - Follow threads opened by user answers
 - If an answer closes a category, skip remaining questions in it
@@ -88,13 +95,16 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Exit:** Enough context (→ READY_CHECK) or user asks to decompose.
 
 **Log format (per question):**
+
 ```markdown
 ## Question {N}: {Short Title}
+
 {question text}
 
 {optional suggested answers}
 
 ## Phase: QUESTIONING ({N})
+
 **Answer:** {user's answer, appended after they respond}
 ```
 
@@ -103,6 +113,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Entry:** Facilitator determines enough context exists.
 
 **Actions:**
+
 1. Summarize key decisions
 2. Ask user if ready to proceed
 
@@ -113,6 +124,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Entry:** User confirmed ready from READY_CHECK.
 
 **Actions:**
+
 1. Read the team-topology reference for the full question set and strategies
 2. Ask topology questions one at a time — skip any already answered
 3. Stop when enough context exists to select a decomposition strategy
@@ -120,6 +132,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 5. Transition to DECOMPOSE
 
 **Minimum required before proceeding:**
+
 - Team size and structure (Q1)
 - Unit delivery expectation (Q2)
 
@@ -128,11 +141,14 @@ All other questions are conditional on the answers to Q1 and Q2.
 **Exit:** Topology profile recorded → DECOMPOSE.
 
 **Log format:**
+
 ```markdown
 ## Team Topology Question: {Short Title}
+
 {question text}
 
 ## Phase: TEAM_TOPOLOGY
+
 **Answer:** {user's answer}
 ```
 
@@ -143,6 +159,7 @@ Followed by the full topology profile block after all questions are answered.
 **Entry:** Topology profile recorded.
 
 **Actions:**
+
 1. Generate unit files from the elaboration log, applying the topology strategy
 2. Generate `aidlc/plan.md` using the plan-generator reference
 3. Update status dashboard
@@ -155,6 +172,7 @@ Followed by the full topology profile block after all questions are answered.
 **Entry:** DECOMPOSE completed.
 
 **Validation checks:**
+
 - Every user decision reflected in at least one unit
 - Dependency ordering is a valid DAG
 - No functionality gaps
@@ -169,6 +187,7 @@ Followed by the full topology profile block after all questions are answered.
 **Entry:** Validation accepted.
 
 **CRITICAL GATE:** Before presenting implementation instructions, verify:
+
 1. ALL unit files exist in `aidlc/units/`
 2. The VALIDATE phase completed successfully with no critical issues
 3. The user has explicitly reviewed and accepted the full set of units
@@ -189,5 +208,6 @@ If the log is inconsistent (question without answer, phase marker without conten
 
 ```markdown
 ## Recovery Note
+
 Session resumed. Previous state: {detected}. User confirmed: {phase}.
 ```

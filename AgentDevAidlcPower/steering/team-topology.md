@@ -94,17 +94,20 @@ in the elaboration log under `## Team Topology` before generating units.
 ### Strategy A: Vertical Slices (Full-Stack, Demo-Driven)
 
 **When to use:**
+
 - Single full-stack team
 - Each unit should be demoable end-to-end
 - Team prefers seeing working software at each milestone
 
 **How to decompose:**
+
 - Each unit delivers a complete user-facing capability: UI + API + data layer
 - Units are ordered by user value, not technical dependency
 - A unit is "done" when a user can interact with it in a running system
 - Shared infrastructure (auth, observability) gets its own foundational unit first
 
 **Example shape:**
+
 ```
 01-foundation        (auth, DB schema, shared infra)
 02-user-onboarding   (registration UI + API + email)
@@ -115,11 +118,13 @@ in the elaboration log under `## Team Topology` before generating units.
 ### Strategy B: Horizontal Layers (Specialized Teams, Contract-First)
 
 **When to use:**
+
 - Separate frontend and backend teams (or mobile + API, etc.)
 - Teams need to work in parallel without blocking each other
 - Integration happens at a defined point, not continuously
 
 **How to decompose:**
+
 - Add a CONTRACT unit before any parallel work begins
 - The contract unit defines: API shape, request/response schemas, error codes,
   auth model, and any shared data types
@@ -128,6 +133,7 @@ in the elaboration log under `## Team Topology` before generating units.
 - Each parallel stream gets its own numbered units
 
 **Example shape:**
+
 ```
 01-foundation        (shared infra, auth)
 02-api-contract      (OpenAPI spec, shared types, error model)
@@ -137,6 +143,7 @@ in the elaboration log under `## Team Topology` before generating units.
 ```
 
 **Contract unit contents:**
+
 - OpenAPI or GraphQL schema (or equivalent)
 - Request/response examples for every endpoint
 - Error response shapes and codes
@@ -147,17 +154,20 @@ in the elaboration log under `## Team Topology` before generating units.
 ### Strategy C: Risk-First (Spike Units)
 
 **When to use:**
+
 - One or more parts of the system have high uncertainty
 - A technical approach needs validation before committing to a full unit
 - Experimental integrations or unfamiliar technology
 
 **How to decompose:**
+
 - Isolate uncertain areas into spike units with a time-box and a clear question to answer
 - Spike units produce a decision and a proof-of-concept, not production code
 - Remaining units are planned after the spike resolves the uncertainty
 - Spike units are always unit 01 or 02 — they unblock everything else
 
 **Example shape:**
+
 ```
 01-spike-realtime    (validate WebSocket approach, time-boxed 3 days)
 02-foundation        (built on validated approach from spike)
@@ -167,17 +177,20 @@ in the elaboration log under `## Team Topology` before generating units.
 ### Strategy D: Parallel Streams with Synchronization Points
 
 **When to use:**
+
 - Multiple developers or sub-teams working simultaneously
 - Some units are independent, others have hard dependencies
 - Team wants to maximize parallelism without losing coordination
 
 **How to decompose:**
+
 - Identify the dependency graph first
 - Group independent units into parallel streams
 - Add explicit synchronization units where streams must merge
 - Each stream is numbered within its lane; sync points get their own unit
 
 **Example shape:**
+
 ```
 01-foundation        (everyone depends on this)
 02a-user-auth        (stream A)
@@ -189,11 +202,13 @@ in the elaboration log under `## Team Topology` before generating units.
 ### Strategy E: Complexity-Calibrated Units
 
 **When to use:**
+
 - Mixed-complexity feature set (some parts are simple CRUD, others are complex)
 - Team has varying experience levels
 - Want to match unit size to developer capacity
 
 **How to decompose:**
+
 - Assess each functional area's complexity independently
 - Simple areas: combine into larger units (less overhead)
 - Complex areas: split into smaller units (more checkpoints, less risk)
@@ -201,6 +216,7 @@ in the elaboration log under `## Team Topology` before generating units.
 - If a unit would take more than 2x the target duration, split it
 
 **Sizing heuristics:**
+
 | Target duration | Max user stories | Max tasks |
 |----------------|-----------------|-----------|
 | 2-3 days       | 3-4             | 5-8       |
@@ -210,11 +226,13 @@ in the elaboration log under `## Team Topology` before generating units.
 ### Strategy F: Domain-Team Alignment
 
 **When to use:**
+
 - Teams are organized around business domains (not technical layers)
 - Each team owns a domain end-to-end
 - Minimizing cross-team coordination is a priority
 
 **How to decompose:**
+
 - Map units to team ownership boundaries
 - A unit should be ownable by a single team with minimal external dependencies
 - Shared capabilities (auth, notifications, payments) become platform units
@@ -260,9 +278,11 @@ Append to `aidlc/elaboration-log.md` after each topology question:
 
 ```markdown
 ## Team Topology Question: {Short Title}
+
 {question text}
 
 ## Phase: TEAM_TOPOLOGY
+
 **Answer:** {user's answer}
 ```
 

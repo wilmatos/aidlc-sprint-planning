@@ -99,6 +99,7 @@ See the state-machine reference for full phase transition logic and error recove
 ## INIT Phase
 
 **What I'll do:**
+
 1. Parse your intent and write my understanding to the elaboration log
 2. Create the session files (`aidlc/elaboration-log.md`, `aidlc/status.md`, `aidlc/units/`)
 3. Present my understanding and ask you to confirm before moving on
@@ -113,9 +114,11 @@ Present understanding like this:
 **Your intent:** {quoted intent}
 
 ### My Understanding
+
 {2-3 paragraph interpretation covering scope, users, and key concerns}
 
 ### Open Questions
+
 {Brief note on ambiguities that will be clarified through questioning}
 
 ---
@@ -126,6 +129,7 @@ Present understanding like this:
 ## ASSESS Phase
 
 **What I'll do:**
+
 1. Evaluate your intent against six complexity factors
 2. Present the assessment with a recommended elaboration depth
 3. Ask you to confirm the depth or choose a different level
@@ -147,19 +151,23 @@ Present the assessment like this:
 | Clarity | {rating} | {why} |
 
 **Overall:** {Lightweight / Standard / Comprehensive}
+
 **Recommended depth:** {N} questions — {rationale}
 
 ---
 > How would you like to proceed?
 >
 > **1.** ✅ Proceed with **{depth}** depth ({N} questions)
+>
 > **2.** 🔼 Go **deeper** — more thorough, more questions
+>
 > **3.** 🔽 Go **lighter** — faster, fewer questions
 ```
 
 ## QUESTIONING Phase
 
 **What I'll do each turn:**
+
 1. Review all previous answers and decisions
 2. Determine whether enough context exists to proceed, or generate the next question
 3. Present one focused question and wait for your answer
@@ -188,6 +196,7 @@ Format each question:
 ## READY_CHECK Phase
 
 **What I'll do:**
+
 1. Summarise all key decisions made so far
 2. Ask whether you are ready to move to team topology, or want more questions
 
@@ -202,12 +211,14 @@ I've gathered solid context across {N} questions. Here's what I know:
 > Ready to move on?
 >
 > **1.** ➡️ **Yes, proceed** to team structure assessment
+>
 > **2.** ➕ **No, keep going** — I have more to cover
 ```
 
 ## TEAM_TOPOLOGY Phase
 
 **What I'll do:**
+
 1. Ask focused questions about your team structure and delivery expectations
 2. Select a decomposition strategy based on your answers
 3. Present the strategy and ask you to confirm before decomposing
@@ -222,6 +233,7 @@ Minimum required before proceeding:
 ## DECOMPOSE Phase
 
 **What I'll do — and I'll tell you before I start:**
+
 1. Summarise the decomposition approach I plan to take
 2. Ask you to confirm before generating any files
 3. Generate unit files in `aidlc/units/` following the decomposer reference
@@ -241,18 +253,21 @@ Based on our session, here's my plan:
 - **Approach:** {brief description}
 
 **Steps I'll follow:**
+
 1. Generate unit files in `aidlc/units/`
 2. Write execution plan to `aidlc/plan.md`
 3. Present units for your review
 
 ---
 > **1.** ✅ **Proceed** with decomposition
+>
 > **2.** ✏️ **Adjust** — I want to change something first
 ```
 
 ## VALIDATE Phase
 
 **What I'll do:**
+
 1. Run all validation checks against the generated units and plan
 2. Present the full validation report
 3. If issues exist, offer to regenerate — otherwise ask you to confirm before HANDOFF
@@ -265,6 +280,7 @@ Read the validator reference for all checks.
 the user has explicitly reviewed and accepted the complete set of units.**
 
 **What I'll do:**
+
 1. Present the full implementation roadmap
 2. Ask which unit(s) you want to create specs for
 3. For each unit, follow the full spec creation sequence:
@@ -280,7 +296,7 @@ Read the spec-handoff reference for the full sequence and coverage validation fo
 Before starting specs, present:
 
 ```markdown
-## 🚀 Implementation Roadmap
+## � Implementation Roadmap
 
 All {N} units have been defined and validated. Full execution plan: `aidlc/plan.md`
 
@@ -293,7 +309,9 @@ All {N} units have been defined and validated. Full execution plan: `aidlc/plan.
 > Would you like to create specification documents for your units?
 >
 > **1.** 📄 **All units** — generate specs in dependency order
+>
 > **2.** 🔍 **One at a time** — guide me through each unit individually
+>
 > **3.** 🗺️ **Roadmap only** — stop here, I'll implement directly
 ```
 

@@ -43,6 +43,7 @@ If ambiguous, ask the user which unit file to validate against.
 **Unit:** {unit file name}
 
 ### Coverage Summary
+
 | Category | Unit Items | Covered | Missing | Status |
 |----------|-----------|---------|---------|--------|
 | User Stories | {N} | {N} | {N} | ✅ / ⚠️ |
@@ -51,12 +52,15 @@ If ambiguous, ask the user which unit file to validate against.
 | Elaboration Answers | {N} | {N} | {N} | ✅ / ⚠️ |
 
 ### Missing Items
+
 {List each missing item with its source in the unit file}
 
 ### Scope Additions
+
 {List any requirements that go beyond the unit file scope, if any}
 
 ### Verdict
+
 {✅ Full coverage — no gaps detected / ⚠️ Gaps found — review recommended}
 ```
 

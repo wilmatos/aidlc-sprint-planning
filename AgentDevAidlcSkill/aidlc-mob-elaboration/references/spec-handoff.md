@@ -44,9 +44,11 @@ written to `aidlc/plan.md`. That document contains:
 | 2 | {name} | `aidlc/units/02-xxx.md` | Unit 1 | ⬜ Not started |
 
 ### Parallel Opportunities
+
 Units {X} and {Y} have no mutual dependencies and can be implemented simultaneously.
 
 ### Sequential Requirements
+
 Unit {Z} depends on Unit {X} — implement {X} first.
 ```
 
@@ -67,8 +69,11 @@ For each unit, I can generate three specification documents:
 | `tasks.md` | Implementation task breakdown with checkpoints and validation steps |
 
 > Would you like me to create specifications for your units?
+>
 > 1. **Yes, all units** — generate specs for every unit in dependency order
+>
 > 2. **Yes, one at a time** — I'll guide you through each unit individually
+>
 > 3. **No, just the roadmap** — I'll stop here and you can implement directly
 ```
 
@@ -162,6 +167,7 @@ If multiple units have no mutual dependencies:
 
 ```markdown
 ### Parallel Opportunities
+
 These units can be implemented simultaneously:
 - Units {X} and {Y}: no mutual dependencies
 
