@@ -74,18 +74,21 @@ When ready to implement this unit (after HANDOFF), create three specification do
 ## Scaling Detail by Depth
 
 ### Lightweight Units
+
 - 2-3 user stories (happy path only)
 - Brief NFRs (1-2 lines)
 - Key risks listed without detailed mitigations
 - 1-2 suggested bolts
 
 ### Standard Units
+
 - 4-8 user stories (happy path + key error cases)
 - NFRs with measurable targets
 - Risks with mitigation strategies
 - 2-4 suggested bolts
 
 ### Comprehensive Units
+
 - Full user stories (happy path + edge cases + error handling)
 - Detailed NFR targets with measurement methods
 - Risk register with likelihood/impact/mitigation

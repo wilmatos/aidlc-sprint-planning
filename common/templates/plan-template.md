@@ -21,12 +21,14 @@ elaboration session.}
 {Repeat the following block for each unit}
 
 #### Unit {N}: {Name}
+
 **File:** `aidlc/units/NN-{name}.md`
 **Branch:** `feature/NN-{name}`
 **Description:** {one sentence}
 **Key deliverables:**
 - {what is tangibly done when this unit is complete}
 - {another deliverable}
+
 **Dependencies:** {unit numbers and names, or "None — can start immediately"}
 **Suggested assignee:** {role or team}
 **Estimated duration:** {from topology profile target}
@@ -83,6 +85,7 @@ Stream A ({team})           Stream B ({team})
 {Repeat for each merge}
 
 **Merge {N}: Unit {NN} → main**
+
 - Who merges: {role}
 - Prerequisite: {what must be true before this merge}
 - Unblocks: {which units can start after this}

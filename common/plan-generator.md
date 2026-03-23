@@ -31,6 +31,7 @@ For each unit, a concise summary block:
 
 ```markdown
 #### Unit {N}: {Name}
+
 **File:** `aidlc/units/NN-name.md`
 **Branch:** `feature/NN-name` (suggested)
 **Description:** {one sentence from the unit's Description field}
@@ -100,18 +101,21 @@ List the exact merge sequence with the responsible party and any prerequisites:
 
 ```markdown
 **Merge 1: Unit 01 → main**
+
 - Who merges: {role or "any team lead"}
 - Prerequisite: Unit 01 complete, all tests pass, code reviewed
 - Unblocks: Units 02 and 03 (both teams can branch from main after this)
 - Notes: {any special instructions, e.g., "run DB migrations after merge"}
 
 **Merge 2a: Unit 02 → main** (parallel with Merge 2b)
+
 - Who merges: {role}
 - Prerequisite: Unit 01 merged, Unit 02 complete and reviewed
 - Unblocks: Unit 04
 - Notes: {e.g., "backend team merges independently of frontend"}
 
 **Merge 2b: Unit 03 → main** (parallel with Merge 2a)
+
 - Who merges: {role}
 - Prerequisite: Unit 01 merged, Unit 03 complete and reviewed
 - Unblocks: Unit 05
@@ -193,5 +197,6 @@ Append a note to `aidlc/elaboration-log.md`:
 
 ```markdown
 ## Plan Generated
+
 `aidlc/plan.md` written. {N} units, {N} merge sequences, strategy {X}.
 ```
