@@ -26,12 +26,12 @@ generation via subagents, and rich status tracking throughout.
 
 ## Onboarding
 
-On first activation, create four subagent files in `.kiro/agents/`. These enable
-subagent delegation for decomposition, validation, and spec elaboration.
+On first activation, create four subagent files in `~/.kiro/agents/`. Installing
+globally makes these agents available across all your workspaces.
 
 ### Step 1: Create Subagent Files
 
-**File: `.kiro/agents/aidlc-decomposer.md`**
+**File: `~/.kiro/agents/aidlc-decomposer.md`**
 
 ```markdown
 ---
@@ -127,7 +127,7 @@ After writing all unit files, generate `aidlc/plan.md` with the following sectio
 7. **Definition of Done** — checklist that applies to every unit before merge
 ```
 
-**File: `.kiro/agents/aidlc-validator.md`**
+**File: `~/.kiro/agents/aidlc-validator.md`**
 
 ```markdown
 ---
@@ -187,7 +187,7 @@ the user didn't ask for.
 ```
 ```
 
-**File: `.kiro/agents/aidlc-spec-elaborator.md`**
+**File: `~/.kiro/agents/aidlc-spec-elaborator.md`**
 
 ```markdown
 ---
@@ -228,7 +228,7 @@ implementation-detail questions not covered in mob elaboration:
 5. Stop after 2-5 questions or when enough detail exists to write requirements.md.
 ```
 
-**File: `.kiro/agents/aidlc-requirements-validator.md`**
+**File: `~/.kiro/agents/aidlc-requirements-validator.md`**
 
 ```markdown
 ---
@@ -307,10 +307,10 @@ If ambiguous, ask the user which unit file to validate against.
 ### Step 2: Verify Installation
 
 After creating all files, verify:
-- [ ] `.kiro/agents/aidlc-decomposer.md` exists
-- [ ] `.kiro/agents/aidlc-validator.md` exists
-- [ ] `.kiro/agents/aidlc-spec-elaborator.md` exists
-- [ ] `.kiro/agents/aidlc-requirements-validator.md` exists
+- [ ] `~/.kiro/agents/aidlc-decomposer.md` exists
+- [ ] `~/.kiro/agents/aidlc-validator.md` exists
+- [ ] `~/.kiro/agents/aidlc-spec-elaborator.md` exists
+- [ ] `~/.kiro/agents/aidlc-requirements-validator.md` exists
 
 ## Available Steering Files
 
@@ -393,7 +393,7 @@ Read the resume-protocol steering file. Check that `aidlc/elaboration-log.md` ex
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
-Verify the onboarding step completed. Check `.kiro/agents/` for the four agent files.
+Verify the onboarding step completed. Check `~/.kiro/agents/` for the four agent files.
 
 ### Requirements validation not running
 Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/units/`

@@ -55,10 +55,10 @@ The `POWER.md` onboarding installs these artifacts into the target workspace:
 
 | Artifact | Path | Purpose |
 |---|---|---|
-| Subagent | `.kiro/agents/aidlc-decomposer.md` | Generates unit files from elaboration log |
-| Subagent | `.kiro/agents/aidlc-validator.md` | Cross-validates unit files |
-| Subagent | `.kiro/agents/aidlc-spec-elaborator.md` | Per-unit requirements elaboration |
-| Subagent | `.kiro/agents/aidlc-requirements-validator.md` | Validates requirements against units |
+| Subagent | `~/.kiro/agents/aidlc-decomposer.md` | Generates unit files from elaboration log |
+| Subagent | `~/.kiro/agents/aidlc-validator.md` | Cross-validates unit files |
+| Subagent | `~/.kiro/agents/aidlc-spec-elaborator.md` | Per-unit requirements elaboration |
+| Subagent | `~/.kiro/agents/aidlc-requirements-validator.md` | Validates requirements against units |
 
 ### Installation
 
