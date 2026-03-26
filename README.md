@@ -59,8 +59,6 @@ The `POWER.md` onboarding installs these artifacts into the target workspace:
 | Subagent | `.kiro/agents/aidlc-validator.md` | Cross-validates unit files |
 | Subagent | `.kiro/agents/aidlc-spec-elaborator.md` | Per-unit requirements elaboration |
 | Subagent | `.kiro/agents/aidlc-requirements-validator.md` | Validates requirements against units |
-| Steering | `.kiro/steering/aidlc-spec-elaboration.md` | Manual-trigger spec elaboration enforcement |
-| Steering | `.kiro/steering/aidlc-requirements-validation.md` | Manual-trigger requirements validation |
 
 ### Installation
 
@@ -165,8 +163,8 @@ Then run `kiro-cli chat` in that project directory.
 | Capability | Power (Kiro IDE) | Skill (Generic) | CLI (Kiro CLI) |
 |---|---|---|---|
 | Entry point | `POWER.md` | `SKILL.md` | `aidlc-mob-elaboration.md` (steering) |
-| Sub-concern files | `steering/*.md` | `references/*.md` | `.kiro/steering/*.md` |
-| Templates | Embedded in `POWER.md` onboarding | `assets/` | `.kiro/templates/` |
+| Sub-concern files | `steering/*.md` (power-loaded) | `references/*.md` | `.kiro/steering/*.md` |
+| Templates | `templates/` (power-loaded) | `assets/` | `.kiro/templates/` |
 | Agent/subagent format | `.md` (Kiro subagents) | N/A | `.json` |
 | Hooks support | ❌ (not installed during onboarding) | ❌ | ❌ |
 | Workspace onboarding | ✅ (installs agents and steering files) | ❌ | Manual `cp` |

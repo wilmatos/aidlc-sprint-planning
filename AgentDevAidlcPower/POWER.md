@@ -26,33 +26,12 @@ generation via subagents, and rich status tracking throughout.
 
 ## Onboarding
 
-On first activation, ask the user where to install the workspace artifacts:
-
-```
-Where would you like to install the AI-DLC Mob Elaboration artifacts?
-
-1. **Local** — installs into this workspace only (`.kiro/` in the current project root)
-2. **Global** — installs for all projects (`~/.kiro/` in your home directory)
-
-> Local or global?
-```
-
-- If **local**, use `.kiro/` as the base path for all files below.
-- If **global**, use `~/.kiro/` as the base path for all files below.
-
-Referred to as `{base}` in the steps that follow.
-
-These artifacts enable subagent delegation and spec-mode integration.
-
-Note: hooks are not installed during onboarding — requirements validation and spec
-elaboration context are enforced directly in the workflow (see HANDOFF phase).
+On first activation, create four subagent files in `.kiro/agents/`. These enable
+subagent delegation for decomposition, validation, and spec elaboration.
 
 ### Step 1: Create Subagent Files
 
-Create four subagent files in `{base}/agents/`. Each file has a frontmatter header
-followed by instructions that reference the corresponding steering file for its logic.
-
-**File: `{base}/agents/aidlc-decomposer.md`**
+**File: `.kiro/agents/aidlc-decomposer.md`**
 
 ```markdown
 ---
@@ -89,10 +68,30 @@ Sequence units so dependencies are built before dependents.
 6. Before generating units, read the `## Team Topology` section of the elaboration
    log and apply the selected strategy (A–F) to unit boundaries and ordering.
    If no topology section exists, default to Strategy A (vertical slices).
-7. After writing all unit files, generate `aidlc/plan.md` following the
-   `plan-generator` steering file from the AI-DLC Mob Elaboration power.
+7. After writing all unit files, generate `aidlc/plan.md` (see Plan Generation below).
 8. After writing units and plan, update `aidlc/status.md` and append a
    decomposition summary to `aidlc/elaboration-log.md`.
+
+## Applying Team Topology
+
+Before generating units, read the `## Team Topology` section of the elaboration log.
+Apply the selected strategy when determining unit boundaries, ordering, and naming.
+
+- **Strategy A (Vertical Slices):** Each unit is a full vertical slice ordered by
+  user value. Foundation unit first, then demoable capabilities.
+- **Strategy B (Horizontal Layers):** Add a contract unit before parallel streams.
+  Frontend units include mock setup instructions. Add an integration unit to close streams.
+- **Strategy C (Risk-First):** Spike units come first with explicit time-boxes and
+  a clear question to answer. Remaining units are planned after the spike.
+- **Strategy D (Parallel Streams):** Identify independent streams. Number parallel
+  units with a lane suffix (e.g., 02a, 02b). Add sync units at merge points.
+- **Strategy E (Complexity-Calibrated):** Size each unit to the target duration from
+  the topology profile. Split any area that would exceed 2x the target.
+- **Strategy F (Domain-Team Alignment):** Map units to team ownership boundaries.
+  Minimize cross-unit dependencies. Shared capabilities become platform units.
+
+If no `## Team Topology` section exists in the log, default to Strategy A and note
+the assumption in the decomposition summary.
 
 ## Scale Detail by Depth
 
@@ -111,9 +110,24 @@ Each unit file must include:
 - Dependencies (other units by number and name, or "None")
 - Suggested Bolts (logical sub-chunks of implementation work within the unit)
 - Spec Reference section (boilerplate — do not act on it during decomposition)
+
+## Plan Generation
+
+After writing all unit files, generate `aidlc/plan.md` with the following sections:
+
+1. **Project Summary** — one paragraph: intent, complexity rating, decomposition strategy
+2. **Unit Catalogue** — for each unit: file, branch, description, key deliverables,
+   dependencies, suggested assignee, estimated duration, demo checkpoint
+3. **Dependency Graph** — plain-text DAG showing what blocks what
+4. **Execution Order and Assignment** — table with wave, unit, assignee, parallel-with,
+   gate before starting
+5. **Branch and Merge Guide** — branch naming, merge sequence with prerequisites and
+   who merges, merge conflict hotspots
+6. **Risk and Coordination Notes** — cross-unit risks the team should watch for
+7. **Definition of Done** — checklist that applies to every unit before merge
 ```
 
-**File: `{base}/agents/aidlc-validator.md`**
+**File: `.kiro/agents/aidlc-validator.md`**
 
 ```markdown
 ---
@@ -173,7 +187,7 @@ the user didn't ask for.
 ```
 ```
 
-**File: `{base}/agents/aidlc-spec-elaborator.md`**
+**File: `.kiro/agents/aidlc-spec-elaborator.md`**
 
 ```markdown
 ---
@@ -214,16 +228,15 @@ implementation-detail questions not covered in mob elaboration:
 5. Stop after 2-5 questions or when enough detail exists to write requirements.md.
 ```
 
-**File: `{base}/agents/aidlc-requirements-validator.md`**
+**File: `.kiro/agents/aidlc-requirements-validator.md`**
 
 ```markdown
 ---
 name: aidlc-requirements-validator
 description: >
   Validates a completed requirements.md file against its source AI-DLC unit definition
-  to ensure no features, user stories, NFRs, or risks were missed. Invoked automatically
-  after requirements.md is written. Use when validating spec requirements against unit
-  definitions.
+  to ensure no features, user stories, NFRs, or risks were missed. Use when validating
+  spec requirements against unit definitions.
 tools: ["read"]
 ---
 
@@ -240,7 +253,8 @@ You validate that requirements fully cover everything defined in the source AI-D
 ## Matching Logic
 
 Identify the corresponding unit file by matching the current spec name to a unit
-file in `aidlc/units/`. If ambiguous, ask the user which unit file to validate against.
+file in `aidlc/units/`. Use directory names, references, or content similarity.
+If ambiguous, ask the user which unit file to validate against.
 
 ## Validation Checks
 
@@ -249,16 +263,19 @@ file in `aidlc/units/`. If ambiguous, ask the user which unit file to validate a
 2. **NFR Coverage** — Every NFR listed in the unit file has a corresponding requirement.
 3. **Risk Coverage** — Risks listed in the unit file are addressed by defensive
    requirements or explicitly acknowledged.
-4. **Scope Fidelity** — Requirements do not introduce features beyond the unit file.
-5. **Elaboration Answers** — Spec elaboration answers are reflected in requirements.
+4. **Scope Fidelity** — Requirements do not introduce features or scope beyond
+   what the unit file defines (no scope creep).
+5. **Elaboration Answers** — Any answers from elaboration questioning are reflected
+   in the requirements.
 
 ## Rules
 
-1. Same intent counts as covered — wording doesn't need to be identical.
-2. A story split across multiple requirements counts as covered.
-3. Don't flag scope additions as errors — just note them for awareness.
-4. Suggest specific requirements to close any gaps found.
-5. Do NOT auto-fix — present findings for the user to review and decide.
+1. A requirement doesn't need identical wording to "cover" a user story — just the same intent.
+2. If a user story is split across multiple requirements, that counts as covered.
+3. If a requirement consolidates multiple related stories, that's fine if all behaviors are testable.
+4. Don't flag scope additions as errors — just note them for awareness.
+5. If gaps are found, suggest specific requirements to add.
+6. Do NOT auto-fix — present findings for the user to review and decide.
 
 ## Report Format
 
@@ -287,75 +304,13 @@ file in `aidlc/units/`. If ambiguous, ask the user which unit file to validate a
 ```
 ```
 
-### Step 2: Create Steering Files
-
-Create `{base}/steering/aidlc-spec-elaboration.md`:
-
-```markdown
----
-inclusion: manual
----
-
-# AI-DLC Spec Elaboration Enforcement
-
-When working on a `requirements.md` file for a Kiro spec, check whether this spec
-was created from an AI-DLC unit file. If so, enforce elaboration-informed requirements
-generation by following the spec creation steps in the `spec-handoff` steering file
-from the AI-DLC Mob Elaboration power.
-
-## Detection
-
-Check for the existence of `aidlc/units/` in the project root.
-
-## Before Writing Requirements
-
-If AI-DLC unit files exist:
-
-1. Identify the corresponding unit. Match the spec name to a unit file in
-   `aidlc/units/` (e.g., spec `authentication-system` maps to `01-authentication-system.md`).
-2. Read the unit file. Extract user stories, NFRs, risks, and dependencies.
-3. Read the elaboration log. Find questions/answers that informed this unit.
-4. Check for spec elaboration notes (`## Spec Elaboration: {Unit Name}` in the log).
-5. Ask clarifying questions if needed before writing.
-```
-
-Create `{base}/steering/aidlc-requirements-validation.md`:
-
-```markdown
----
-inclusion: manual
----
-
-# Requirements vs Unit Validation
-
-Validate that the current requirements document fully covers everything defined
-in the corresponding AI-DLC unit file.
-
-## Matching
-
-Identify the unit file by matching the current spec name to a file in `aidlc/units/`.
-If ambiguous, ask the user which unit file to validate against.
-
-## Checks
-
-1. Every user story (WHEN/IF/WHILE/THE SYSTEM SHALL) from the unit has a requirement.
-2. Every NFR from the unit has a corresponding requirement.
-3. Every risk from the unit is addressed or explicitly acknowledged.
-4. No scope creep — requirements don't introduce features beyond the unit file.
-5. Spec elaboration answers (from `## Spec Elaboration:` in the log) are reflected.
-
-## Report Format
-
-Present a coverage table, then list any missing items, then give a verdict.
-Same intent counts as covered. Don't auto-fix — present findings for user review.
-```
-
-### Step 3: Verify Installation
+### Step 2: Verify Installation
 
 After creating all files, verify:
-- [ ] Four agent files exist in `{base}/agents/`
-- [ ] Steering file exists in `{base}/steering/aidlc-spec-elaboration.md`
-- [ ] Steering file exists in `{base}/steering/aidlc-requirements-validation.md`
+- [ ] `.kiro/agents/aidlc-decomposer.md` exists
+- [ ] `.kiro/agents/aidlc-validator.md` exists
+- [ ] `.kiro/agents/aidlc-spec-elaborator.md` exists
+- [ ] `.kiro/agents/aidlc-requirements-validator.md` exists
 
 ## Available Steering Files
 
@@ -372,11 +327,6 @@ This power includes detailed workflow guides loaded on-demand:
 - **spec-handoff** — Creating specs from units, per-unit elaboration, requirements coverage validation
 - **requirements-validation** — Validates requirements.md coverage against unit definitions
 - **resume-protocol** — Session state detection, resume presentation, recovery scenarios
-
-Both `aidlc-spec-elaboration` and `aidlc-requirements-validation` are installed as
-`inclusion: manual` steering files. Reference them explicitly in chat when needed:
-- `#aidlc-spec-elaboration` — before writing requirements.md for a unit
-- `#aidlc-requirements-validation` — after writing requirements.md to validate coverage
 
 ## Core Workflow
 
@@ -443,16 +393,8 @@ Read the resume-protocol steering file. Check that `aidlc/elaboration-log.md` ex
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
-Verify the onboarding step completed. Check `.kiro/agents/` (local) or `~/.kiro/agents/`
-(global) for the four agent files.
-
-### Steering file not loading for spec elaboration
-Verify `aidlc-spec-elaboration.md` exists in `.kiro/steering/` or `~/.kiro/steering/`
-with `inclusion: manual` in its frontmatter. Reference it explicitly in chat with
-`#aidlc-spec-elaboration`.
+Verify the onboarding step completed. Check `.kiro/agents/` for the four agent files.
 
 ### Requirements validation not running
-Invoke the `aidlc-requirements-validator` subagent directly, or reference
-`#aidlc-requirements-validation` in chat. Verify `aidlc-requirements-validation.md`
-exists in `.kiro/steering/` or `~/.kiro/steering/` with `inclusion: manual`.
-Check that `aidlc/units/` contains a unit file whose name matches the current spec.
+Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/units/`
+contains a unit file whose name matches the current spec.
