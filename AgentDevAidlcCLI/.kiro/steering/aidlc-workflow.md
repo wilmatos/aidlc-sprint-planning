@@ -1,7 +1,7 @@
 ---
 title: "AI-DLC Workflow"
-inclusion: manual
-priority: medium
+inclusion: always
+priority: high
 ---
 
 # AI-DLC Mob Elaboration — Core Workflow
@@ -302,7 +302,7 @@ Read the spec-handoff reference for the full sequence and coverage validation fo
 Before starting specs, present:
 
 ```markdown
-## � Implementation Roadmap
+## 🚀 Implementation Roadmap
 
 All {N} units have been defined and validated. Full execution plan: `aidlc/plan.md`
 

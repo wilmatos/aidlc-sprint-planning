@@ -19,11 +19,15 @@ The main steering file (`aidlc-mob-elaboration.md`) loads automatically via `inc
 
 | File | Inclusion | Purpose |
 |------|-----------|---------|
-| `aidlc-mob-elaboration.md` | always | Core workflow — loaded on every conversation |
+| `aidlc-mob-elaboration.md` | always | CLI entry point — terminal formatting rules and spec output location |
+| `aidlc-workflow.md` | always | Core workflow — execution rules and per-phase instructions |
+| `aidlc-terminal-format.md` | always | Terminal output format overrides for all phases |
 | `aidlc-state-machine.md` | manual | Phase transitions and state detection |
 | `aidlc-complexity-rubric.md` | manual | Complexity assessment and question strategy |
+| `aidlc-team-topology.md` | manual | Team structure assessment and decomposition strategy |
 | `aidlc-unit-format.md` | manual | EARS notation and unit templates |
 | `aidlc-decomposer.md` | manual | Unit generation rules |
+| `aidlc-plan-generator.md` | manual | Execution plan generation |
 | `aidlc-validator.md` | manual | Cross-validation checks |
 | `aidlc-spec-handoff.md` | manual | Implementation roadmap and handoff |
 | `aidlc-resume-protocol.md` | manual | Session resumption and recovery |

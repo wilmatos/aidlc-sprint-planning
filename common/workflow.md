@@ -296,7 +296,7 @@ Read the spec-handoff reference for the full sequence and coverage validation fo
 Before starting specs, present:
 
 ```markdown
-## � Implementation Roadmap
+## 🚀 Implementation Roadmap
 
 All {N} units have been defined and validated. Full execution plan: `aidlc/plan.md`
 

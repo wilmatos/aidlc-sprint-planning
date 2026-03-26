@@ -20,6 +20,11 @@ bounded context with its own data ownership, change frequency, or scaling needs}
 **Suggested Bolts:**
 - Bolt 1: {Scope — a logical chunk of implementation work within this unit}
 
+> A "Bolt" is a logical sub-chunk of work within the unit — a grouping of related
+> tasks that can be reviewed or merged independently. Bolts are not separate units;
+> they are implementation checkpoints within one unit. Use them to break large units
+> into reviewable increments without splitting the bounded context.
+
 ## Spec Reference
 
 > ⚠️ **Do not act on this section until all units are defined and validated.**

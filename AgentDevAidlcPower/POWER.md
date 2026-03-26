@@ -68,9 +68,49 @@ tools: ["read", "write"]
 # AI-DLC Unit Decomposer
 
 You generate implementation unit files from a completed mob elaboration session.
-Follow all instructions in the `decomposer` steering file.
 
-#[[file:{base}/steering/decomposer.md]]
+## Input
+
+Read the full content of `aidlc/elaboration-log.md` and `aidlc/status.md`.
+
+## Output
+
+Write numbered unit files to `aidlc/units/` using EARS notation for user stories.
+Each file uses a two-digit prefix for build order (e.g., `01-user-identity.md`).
+Sequence units so dependencies are built before dependents.
+
+## Rules
+
+1. Every user decision must appear in at least one unit.
+2. Use EARS notation: WHEN/IF/WHILE/THE SYSTEM SHALL patterns.
+3. Number files for dependency order. Unit 01 has no dependencies.
+4. Prefer fewer, larger units. Justify every split with bounded context rationale.
+5. Only include what the user asked for.
+6. Before generating units, read the `## Team Topology` section of the elaboration
+   log and apply the selected strategy (A–F) to unit boundaries and ordering.
+   If no topology section exists, default to Strategy A (vertical slices).
+7. After writing all unit files, generate `aidlc/plan.md` following the
+   `plan-generator` steering file from the AI-DLC Mob Elaboration power.
+8. After writing units and plan, update `aidlc/status.md` and append a
+   decomposition summary to `aidlc/elaboration-log.md`.
+
+## Scale Detail by Depth
+
+- Lightweight: 2-3 stories, brief NFRs, key risks
+- Standard: 4-8 stories, NFRs with targets, risks with mitigations
+- Comprehensive: Full stories with edge cases, detailed NFRs, risk register
+
+## Unit File Structure
+
+Each unit file must include:
+- Description (one paragraph)
+- Bounded Context Rationale (why this is a separate unit)
+- User Stories (EARS notation)
+- NFRs (with measurable targets)
+- Risks (with mitigation strategies)
+- Dependencies (other units by number and name, or "None")
+- Suggested Bolts (logical sub-chunks of implementation work within the unit)
+- Spec Reference section (boilerplate — do not act on it during decomposition)
 ```
 
 **File: `{base}/agents/aidlc-validator.md`**
@@ -89,9 +129,48 @@ tools: ["read"]
 # AI-DLC Unit Validator
 
 You validate a set of AI-DLC unit files for completeness and consistency.
-Follow all instructions in the `validator` steering file.
 
-#[[file:{base}/steering/validator.md]]
+## Input
+
+All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
+
+## Validation Checks
+
+1. **Decision Coverage** — Every question/answer from the log is reflected in a unit.
+2. **Dependency Ordering** — Unit 01 has no deps, no circular deps, valid DAG.
+3. **Functionality Gaps** — All intent functionality is covered by units.
+4. **Bounded Context Integrity** — No significant overlap between units.
+5. **NFR Completeness** — All NFR targets from questioning appear in units.
+6. **Plan Consistency** — `aidlc/plan.md` exists; merge sequence matches the
+   dependency graph; every unit appears in the execution order table.
+
+## Report Format
+
+Return a summary table (check / status / issue count) followed by detailed findings
+and recommendations. Be thorough but not pedantic. Don't suggest adding features
+the user didn't ask for.
+
+```markdown
+## 📋 Validation Report
+
+| Check | Status | Issues |
+|-------|--------|--------|
+| Decision Coverage | ✅ / ⚠️ | {count} |
+| Dependency Ordering | ✅ / ⚠️ | {count} |
+| Functionality Gaps | ✅ / ⚠️ | {count} |
+| Bounded Context Integrity | ✅ / ⚠️ | {count} |
+| NFR Completeness | ✅ / ⚠️ | {count} |
+| Plan Consistency | ✅ / ⚠️ | {count} |
+
+### Findings
+{detailed findings}
+
+### Recommendations
+{specific recommendations}
+
+### Verdict
+{✅ All checks passed / ⚠️ Issues found — review recommended}
+```
 ```
 
 **File: `{base}/agents/aidlc-spec-elaborator.md`**
@@ -110,9 +189,29 @@ tools: ["read", "write"]
 # AI-DLC Spec Elaborator
 
 You facilitate focused requirements elaboration for a single AI-DLC unit.
-Follow the per-unit elaboration steps in the `spec-handoff` steering file.
 
-#[[file:{base}/steering/spec-handoff.md]]
+## Input
+
+A specific unit file from `aidlc/units/` and relevant sections of the elaboration log.
+
+## Questioning Strategy
+
+Ask 2-5 focused, tactical questions about this specific unit. These are
+implementation-detail questions not covered in mob elaboration:
+- Specific API contracts and response shapes
+- Error handling and recovery behavior
+- Data validation rules and edge cases
+- Integration specifics with dependent units
+- Security and authorization details
+- Testability and observable outcomes
+
+## Rules
+
+1. Ask one question at a time. Ask, wait for the answer, then ask the next.
+2. Stay scoped to this unit only — don't re-ask mob elaboration questions.
+3. Focus on testability — every answer should help write testable acceptance criteria.
+4. Record answers in the elaboration log under `## Spec Elaboration: {Unit Name}`.
+5. Stop after 2-5 questions or when enough detail exists to write requirements.md.
 ```
 
 **File: `{base}/agents/aidlc-requirements-validator.md`**
@@ -131,9 +230,61 @@ tools: ["read"]
 # AI-DLC Requirements Validator
 
 You validate that requirements fully cover everything defined in the source AI-DLC unit.
-Follow all instructions in the `requirements-validation` steering file.
 
-#[[file:{base}/steering/requirements-validation.md]]
+## Input
+
+- The requirements document for the current spec
+- The corresponding unit file from `aidlc/units/`
+- Relevant sections of `aidlc/elaboration-log.md`
+
+## Matching Logic
+
+Identify the corresponding unit file by matching the current spec name to a unit
+file in `aidlc/units/`. If ambiguous, ask the user which unit file to validate against.
+
+## Validation Checks
+
+1. **User Story Coverage** — Every user story (WHEN/IF/WHILE/THE SYSTEM SHALL) from
+   the unit file has at least one corresponding requirement.
+2. **NFR Coverage** — Every NFR listed in the unit file has a corresponding requirement.
+3. **Risk Coverage** — Risks listed in the unit file are addressed by defensive
+   requirements or explicitly acknowledged.
+4. **Scope Fidelity** — Requirements do not introduce features beyond the unit file.
+5. **Elaboration Answers** — Spec elaboration answers are reflected in requirements.
+
+## Rules
+
+1. Same intent counts as covered — wording doesn't need to be identical.
+2. A story split across multiple requirements counts as covered.
+3. Don't flag scope additions as errors — just note them for awareness.
+4. Suggest specific requirements to close any gaps found.
+5. Do NOT auto-fix — present findings for the user to review and decide.
+
+## Report Format
+
+```markdown
+## 📋 Requirements vs Unit Validation
+
+**Unit:** {unit file name}
+
+### Coverage Summary
+
+| Category | Unit Items | Covered | Missing | Status |
+|----------|-----------|---------|---------|--------|
+| User Stories | {N} | {N} | {N} | ✅ / ⚠️ |
+| NFRs | {N} | {N} | {N} | ✅ / ⚠️ |
+| Risks | {N} | {N} | {N} | ✅ / ⚠️ |
+| Elaboration Answers | {N} | {N} | {N} | ✅ / ⚠️ |
+
+### Missing Items
+{List each missing item with its source in the unit file}
+
+### Scope Additions
+{List any requirements that go beyond the unit file scope, if any}
+
+### Verdict
+{✅ Full coverage — no gaps detected / ⚠️ Gaps found — review recommended}
+```
 ```
 
 ### Step 2: Create Steering Files
@@ -149,7 +300,8 @@ inclusion: manual
 
 When working on a `requirements.md` file for a Kiro spec, check whether this spec
 was created from an AI-DLC unit file. If so, enforce elaboration-informed requirements
-generation by following the spec creation steps in the spec-handoff steering file.
+generation by following the spec creation steps in the `spec-handoff` steering file
+from the AI-DLC Mob Elaboration power.
 
 ## Detection
 
@@ -165,8 +317,6 @@ If AI-DLC unit files exist:
 3. Read the elaboration log. Find questions/answers that informed this unit.
 4. Check for spec elaboration notes (`## Spec Elaboration: {Unit Name}` in the log).
 5. Ask clarifying questions if needed before writing.
-
-#[[file:{base}/steering/spec-handoff.md]]
 ```
 
 Create `{base}/steering/aidlc-requirements-validation.md`:
@@ -178,7 +328,26 @@ inclusion: manual
 
 # Requirements vs Unit Validation
 
-#[[file:{base}/steering/requirements-validation.md]]
+Validate that the current requirements document fully covers everything defined
+in the corresponding AI-DLC unit file.
+
+## Matching
+
+Identify the unit file by matching the current spec name to a file in `aidlc/units/`.
+If ambiguous, ask the user which unit file to validate against.
+
+## Checks
+
+1. Every user story (WHEN/IF/WHILE/THE SYSTEM SHALL) from the unit has a requirement.
+2. Every NFR from the unit has a corresponding requirement.
+3. Every risk from the unit is addressed or explicitly acknowledged.
+4. No scope creep — requirements don't introduce features beyond the unit file.
+5. Spec elaboration answers (from `## Spec Elaboration:` in the log) are reflected.
+
+## Report Format
+
+Present a coverage table, then list any missing items, then give a verdict.
+Same intent counts as covered. Don't auto-fix — present findings for user review.
 ```
 
 ### Step 3: Verify Installation
@@ -213,6 +382,23 @@ Both `aidlc-spec-elaboration` and `aidlc-requirements-validation` are installed 
 
 Read the workflow steering file for execution rules, phase quick reference, and
 per-phase instructions. The sections below cover Power-specific behaviour only.
+
+### Session State on Activation
+
+Before doing anything else on activation, check for `aidlc/elaboration-log.md`
+in the current workspace. If it exists, read the resume-protocol steering file
+and follow the resume flow before proceeding. Do not start a new session if one
+is already in progress.
+
+### Templates
+
+When creating session files during INIT, use the templates from the power's
+`templates/` directory:
+
+- `templates/elaboration-log-template.md` → `aidlc/elaboration-log.md`
+- `templates/status-template.md` → `aidlc/status.md`
+- `templates/unit-template.md` → each `aidlc/units/NN-name.md`
+- `templates/plan-template.md` → `aidlc/plan.md`
 
 ### Subagent Delegation
 
@@ -257,14 +443,16 @@ Read the resume-protocol steering file. Check that `aidlc/elaboration-log.md` ex
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
-Verify the onboarding step completed. Check `{base}/agents/` for the four agent files.
+Verify the onboarding step completed. Check `.kiro/agents/` (local) or `~/.kiro/agents/`
+(global) for the four agent files.
 
 ### Steering file not loading for spec elaboration
-Verify `{base}/steering/aidlc-spec-elaboration.md` exists with `inclusion: manual`
-in its frontmatter. Reference it explicitly in chat with `#aidlc-spec-elaboration`.
+Verify `aidlc-spec-elaboration.md` exists in `.kiro/steering/` or `~/.kiro/steering/`
+with `inclusion: manual` in its frontmatter. Reference it explicitly in chat with
+`#aidlc-spec-elaboration`.
 
 ### Requirements validation not running
 Invoke the `aidlc-requirements-validator` subagent directly, or reference
-`#aidlc-requirements-validation` in chat. Verify `{base}/steering/aidlc-requirements-validation.md`
-exists with `inclusion: manual`. Check that `aidlc/units/` contains a unit file
-whose name matches the current spec.
+`#aidlc-requirements-validation` in chat. Verify `aidlc-requirements-validation.md`
+exists in `.kiro/steering/` or `~/.kiro/steering/` with `inclusion: manual`.
+Check that `aidlc/units/` contains a unit file whose name matches the current spec.
