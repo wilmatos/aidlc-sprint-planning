@@ -11,9 +11,9 @@
 # Targets: power, skill, cli, all (default: all)
 #
 # Output:
-#   dist/power/   — assembled Power package  → dist/aidlc-mob-elaboration-power.zip
-#   dist/skill/   — assembled Skill package  → dist/aidlc-mob-elaboration-skill.zip
-#   dist/cli/     — assembled CLI package    → dist/aidlc-mob-elaboration-cli.zip
+#   dist/aidlc-mob-elaboration-power/   — staging → dist/aidlc-mob-elaboration-power.zip
+#   dist/aidlc-mob-elaboration-skill/   — staging → dist/aidlc-mob-elaboration-skill.zip
+#   dist/aidlc-mob-elaboration-cli/     — staging → dist/aidlc-mob-elaboration-cli.zip
 
 set -euo pipefail
 
@@ -72,10 +72,11 @@ write_file() {
 }
 
 # ---------------------------------------------------------------------------
-# Power — assembles into dist/power/
+# Power — assembles into dist/aidlc-mob-elaboration-power/
 # ---------------------------------------------------------------------------
 build_power() {
-  local stage="$DIST_DIR/power"
+  local folder="aidlc-mob-elaboration-power"
+  local stage="$DIST_DIR/$folder"
   local src_dir="$ROOT_DIR/AgentDevAidlcPower"
   echo "→ Building Power → $stage"
 
@@ -102,16 +103,17 @@ build_power() {
     echo "  ✓ templates/$filename"
   done
 
-  # Zip
-  (cd "$stage" && find . -not -name ".DS_Store" | zip -q "$DIST_DIR/aidlc-mob-elaboration-power.zip" -@)
+  # Zip with top-level folder name preserved
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-power.zip" -@)
   echo "  ✓ → dist/aidlc-mob-elaboration-power.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-power.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------
-# Skill — assembles into dist/skill/
+# Skill — assembles into dist/aidlc-mob-elaboration-skill/
 # ---------------------------------------------------------------------------
 build_skill() {
-  local stage="$DIST_DIR/skill"
+  local folder="aidlc-mob-elaboration-skill"
+  local stage="$DIST_DIR/$folder"
   local src_dir="$ROOT_DIR/AgentDevAidlcSkill/aidlc-mob-elaboration"
   echo "→ Building Skill → $stage"
 
@@ -138,16 +140,17 @@ build_skill() {
     echo "  ✓ assets/$filename"
   done
 
-  # Zip
-  (cd "$stage" && find . -not -name ".DS_Store" | zip -q "$DIST_DIR/aidlc-mob-elaboration-skill.zip" -@)
+  # Zip with top-level folder name preserved
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-skill.zip" -@)
   echo "  ✓ → dist/aidlc-mob-elaboration-skill.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-skill.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------
-# CLI — assembles into dist/cli/
+# CLI — assembles into dist/aidlc-mob-elaboration-cli/
 # ---------------------------------------------------------------------------
 build_cli() {
-  local stage="$DIST_DIR/cli"
+  local folder="aidlc-mob-elaboration-cli"
+  local stage="$DIST_DIR/$folder"
   local src_dir="$ROOT_DIR/AgentDevAidlcCLI"
   echo "→ Building CLI → $stage"
 
@@ -188,8 +191,8 @@ build_cli() {
     echo "  ✓ agents/$filename"
   done
 
-  # Zip
-  (cd "$stage" && find . -not -name ".DS_Store" | zip -q "$DIST_DIR/aidlc-mob-elaboration-cli.zip" -@)
+  # Zip with top-level folder name preserved
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-cli.zip" -@)
   echo "  ✓ → dist/aidlc-mob-elaboration-cli.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-cli.zip" | cut -f1))"
 }
 
