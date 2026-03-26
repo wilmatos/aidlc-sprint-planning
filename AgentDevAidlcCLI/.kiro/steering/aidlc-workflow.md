@@ -1,7 +1,7 @@
 ---
 title: "AI-DLC Workflow"
-inclusion: always
-priority: high
+inclusion: manual
+priority: medium
 ---
 
 # AI-DLC Mob Elaboration — Core Workflow
