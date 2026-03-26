@@ -206,17 +206,24 @@ Then run `kiro-cli chat` in that project directory.
 
 ### Editing logic files
 
-All core logic lives in `common/`. Never edit the copied files directly — they will be overwritten by the next CI run.
+All core logic lives in `common/`. The copied files in each package are generated
+by `scripts/copy-common.sh` and are excluded from version control via `.gitignore`.
+Never edit the generated files directly — they will be overwritten.
 
 To update logic:
 1. Edit the file in `common/`
-2. Run `bash scripts/copy-common.sh all` to sync locally
-3. Commit both the `common/` change and the synced copies
+2. Run `bash scripts/copy-common.sh all` to sync locally and verify output
+3. Commit only the `common/` change
 
 To update implementation-specific behavior:
 - Power: edit `AgentDevAidlcPower/POWER.md`
 - Skill: edit `AgentDevAidlcSkill/aidlc-mob-elaboration/SKILL.md`
-- CLI: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-mob-elaboration.md` or the agent JSON files
+- CLI entry point: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-mob-elaboration.md`
+- CLI terminal format: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-terminal-format.md`
+- CLI agents: edit files in `AgentDevAidlcCLI/.kiro/agents/`
+
+To add a new frontmatter override for a CLI file (e.g., change `inclusion` or `priority`),
+add a `case` entry in the `cli_frontmatter()` function in `scripts/copy-common.sh`.
 
 ---
 
