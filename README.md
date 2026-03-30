@@ -55,14 +55,10 @@ The `POWER.md` onboarding installs these artifacts into the target workspace:
 
 | Artifact | Path | Purpose |
 |---|---|---|
-| Subagent | `.kiro/agents/aidlc-decomposer.md` | Generates unit files from elaboration log |
-| Subagent | `.kiro/agents/aidlc-validator.md` | Cross-validates unit files |
-| Subagent | `.kiro/agents/aidlc-spec-elaborator.md` | Per-unit requirements elaboration |
-| Subagent | `.kiro/agents/aidlc-requirements-validator.md` | Validates requirements against units |
-| Steering | `.kiro/steering/aidlc-spec-elaboration.md` | Auto-loads on `requirements.md` (fileMatch) |
-| Steering | `.kiro/steering/aidlc-requirements-validation.md` | Manual-trigger requirements validation |
-| Hook | `.kiro/hooks/aidlc-spec-requirements-check.kiro.hook` | Pre-task: checks elaboration context before spec work |
-| Hook | `.kiro/hooks/aidlc-requirements-unit-validation.kiro.hook` | Post-task: validates requirements.md after it's written |
+| Subagent | `~/.kiro/agents/aidlc-decomposer.md` | Generates unit files from elaboration log |
+| Subagent | `~/.kiro/agents/aidlc-validator.md` | Cross-validates unit files |
+| Subagent | `~/.kiro/agents/aidlc-spec-elaborator.md` | Per-unit requirements elaboration |
+| Subagent | `~/.kiro/agents/aidlc-requirements-validator.md` | Validates requirements against units |
 
 ### Installation
 
@@ -167,11 +163,11 @@ Then run `kiro-cli chat` in that project directory.
 | Capability | Power (Kiro IDE) | Skill (Generic) | CLI (Kiro CLI) |
 |---|---|---|---|
 | Entry point | `POWER.md` | `SKILL.md` | `aidlc-mob-elaboration.md` (steering) |
-| Sub-concern files | `steering/*.md` | `references/*.md` | `.kiro/steering/*.md` |
-| Templates | Embedded in `POWER.md` onboarding | `assets/` | `.kiro/templates/` |
+| Sub-concern files | `steering/*.md` (power-loaded) | `references/*.md` | `.kiro/steering/*.md` |
+| Templates | `templates/` (power-loaded) | `assets/` | `.kiro/templates/` |
 | Agent/subagent format | `.md` (Kiro subagents) | N/A | `.json` |
-| Hooks support | ✅ (2 hooks installed on onboarding) | ❌ | ❌ |
-| Workspace onboarding | ✅ (installs agents, steering, hooks) | ❌ | Manual `cp` |
+| Hooks support | ❌ (not installed during onboarding) | ❌ | ❌ |
+| Workspace onboarding | ✅ (installs agents and steering files) | ❌ | Manual `cp` |
 | Activation | Keyword-triggered | Client-dependent | `inclusion: always` on main steering file |
 
 ---
@@ -210,17 +206,24 @@ Then run `kiro-cli chat` in that project directory.
 
 ### Editing logic files
 
-All core logic lives in `common/`. Never edit the copied files directly — they will be overwritten by the next CI run.
+All core logic lives in `common/`. The copied files in each package are generated
+by `scripts/copy-common.sh` and are excluded from version control via `.gitignore`.
+Never edit the generated files directly — they will be overwritten.
 
 To update logic:
 1. Edit the file in `common/`
-2. Run `bash scripts/copy-common.sh all` to sync locally
-3. Commit both the `common/` change and the synced copies
+2. Run `bash scripts/copy-common.sh all` to sync locally and verify output
+3. Commit only the `common/` change
 
 To update implementation-specific behavior:
 - Power: edit `AgentDevAidlcPower/POWER.md`
 - Skill: edit `AgentDevAidlcSkill/aidlc-mob-elaboration/SKILL.md`
-- CLI: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-mob-elaboration.md` or the agent JSON files
+- CLI entry point: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-mob-elaboration.md`
+- CLI terminal format: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-terminal-format.md`
+- CLI agents: edit files in `AgentDevAidlcCLI/.kiro/agents/`
+
+To add a new frontmatter override for a CLI file (e.g., change `inclusion` or `priority`),
+add a `case` entry in the `cli_frontmatter()` function in `scripts/copy-common.sh`.
 
 ---
 

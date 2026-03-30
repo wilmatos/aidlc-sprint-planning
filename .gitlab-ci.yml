@@ -9,15 +9,11 @@ stages:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   before_script:
     - apk add --no-cache zip bash
-    - mkdir -p dist
 
 package-power:
   <<: *package-defaults
   script:
     - bash scripts/copy-common.sh power
-    - find AgentDevAidlcPower -name ".DS_Store" -delete
-    - cd AgentDevAidlcPower
-    - find . -not -name ".DS_Store" -not -path "./__MACOSX/*" | zip ../dist/aidlc-mob-elaboration-power.zip -@
   artifacts:
     name: aidlc-mob-elaboration-power
     paths:
@@ -28,9 +24,6 @@ package-skill:
   <<: *package-defaults
   script:
     - bash scripts/copy-common.sh skill
-    - find AgentDevAidlcSkill -name ".DS_Store" -delete
-    - cd AgentDevAidlcSkill
-    - find . -not -name ".DS_Store" -not -path "./__MACOSX/*" | zip ../dist/aidlc-mob-elaboration-skill.zip -@
   artifacts:
     name: aidlc-mob-elaboration-skill
     paths:
@@ -41,9 +34,6 @@ package-cli:
   <<: *package-defaults
   script:
     - bash scripts/copy-common.sh cli
-    - find AgentDevAidlcCLI -name ".DS_Store" -delete
-    - cd AgentDevAidlcCLI
-    - find . -not -name ".DS_Store" -not -path "./__MACOSX/*" | zip ../dist/aidlc-mob-elaboration-cli.zip -@
   artifacts:
     name: aidlc-mob-elaboration-cli
     paths:

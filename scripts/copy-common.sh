@@ -1,41 +1,66 @@
 #!/usr/bin/env bash
-# copy-common.sh — copies common/ files into each implementation package,
-# prepending the appropriate frontmatter for the target.
+# copy-common.sh — assembles distribution packages in dist/ by combining
+# source files with generated copies of common/ content.
+#
+# Nothing is written to the source directories (AgentDevAidlcPower/,
+# AgentDevAidlcSkill/, AgentDevAidlcCLI/). All output goes to dist/.
 #
 # Usage:
-#   ./scripts/copy-common.sh <target>
+#   ./scripts/copy-common.sh [target]
 #
-# Targets: power, skill, cli, all
+# Targets: power, skill, cli, all (default: all)
+#
+# Output:
+#   dist/aidlc-mob-elaboration-power/   — staging → dist/aidlc-mob-elaboration-power.zip
+#   dist/aidlc-mob-elaboration-skill/   — staging → dist/aidlc-mob-elaboration-skill.zip
+#   dist/aidlc-mob-elaboration-cli/     — staging → dist/aidlc-mob-elaboration-cli.zip
 
 set -euo pipefail
 
-COMMON_DIR="$(cd "$(dirname "$0")/../common" && pwd)"
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+COMMON_DIR="$ROOT_DIR/common"
+DIST_DIR="$ROOT_DIR/dist"
 
 # ---------------------------------------------------------------------------
-# Frontmatter definitions
+# Title derivation: kebab-case filename → Title Case display name
+# e.g. "complexity-rubric.md" → "AI-DLC Complexity Rubric"
+# ---------------------------------------------------------------------------
+derive_title() {
+  local stem="${1%.md}"
+  local words
+  words=$(echo "$stem" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
+  echo "AI-DLC $words"
+}
+
+# ---------------------------------------------------------------------------
+# Frontmatter builders
 # ---------------------------------------------------------------------------
 
-# Kiro Power steering frontmatter (title only — inclusion is managed by POWER.md)
 power_frontmatter() {
-  local title="$1"
+  local title
+  title=$(derive_title "$1")
   printf -- '---\ntitle: "%s"\n---\n' "$title"
 }
 
-# Kiro CLI steering frontmatter
 cli_frontmatter() {
-  local title="$1"
-  local inclusion="${2:-manual}"
-  local priority="${3:-medium}"
+  local filename="$1"
+  local title
+  title=$(derive_title "$filename")
+  local inclusion="manual"
+  local priority="medium"
+  case "$filename" in
+    workflow.md) inclusion="always"; priority="high" ;;
+  esac
   printf -- '---\ntitle: "%s"\ninclusion: %s\npriority: %s\n---\n' "$title" "$inclusion" "$priority"
 }
 
 # ---------------------------------------------------------------------------
-# Helper: prepend frontmatter and copy
+# Helper: write file with optional frontmatter prepended
 # ---------------------------------------------------------------------------
-copy_with_frontmatter() {
-  local src="$1"       # source file path
-  local dest="$2"      # destination file path
-  local frontmatter="$3"  # frontmatter string (empty = no frontmatter)
+write_file() {
+  local src="$1"
+  local dest="$2"
+  local frontmatter="$3"
 
   mkdir -p "$(dirname "$dest")"
 
@@ -44,111 +69,148 @@ copy_with_frontmatter() {
   else
     cp "$src" "$dest"
   fi
-
-  echo "  ✓ $(basename "$src") → $dest"
 }
 
 # ---------------------------------------------------------------------------
-# Power
+# Power — assembles into dist/aidlc-mob-elaboration-power/
 # ---------------------------------------------------------------------------
-copy_power() {
-  local dest_dir="AgentDevAidlcPower/steering"
-  local templates_dir="AgentDevAidlcPower/templates"
-  echo "→ Copying to Power ($dest_dir)"
+build_power() {
+  local folder="aidlc-mob-elaboration-power"
+  local stage="$DIST_DIR/$folder"
+  local src_dir="$ROOT_DIR/AgentDevAidlcPower"
+  echo "→ Building Power → $stage"
 
-  copy_with_frontmatter "$COMMON_DIR/workflow.md"              "$dest_dir/workflow.md"              "$(power_frontmatter 'AI-DLC Workflow')"
-  copy_with_frontmatter "$COMMON_DIR/complexity-rubric.md"     "$dest_dir/complexity-rubric.md"     "$(power_frontmatter 'AI-DLC Complexity Rubric')"
-  copy_with_frontmatter "$COMMON_DIR/state-machine.md"         "$dest_dir/state-machine.md"         "$(power_frontmatter 'AI-DLC State Machine')"
-  copy_with_frontmatter "$COMMON_DIR/resume-protocol.md"       "$dest_dir/resume-protocol.md"       "$(power_frontmatter 'AI-DLC Resume Protocol')"
-  copy_with_frontmatter "$COMMON_DIR/unit-format.md"           "$dest_dir/unit-format.md"           "$(power_frontmatter 'AI-DLC Unit Format')"
-  copy_with_frontmatter "$COMMON_DIR/team-topology.md"         "$dest_dir/team-topology.md"         "$(power_frontmatter 'AI-DLC Team Topology')"
-  copy_with_frontmatter "$COMMON_DIR/decomposer.md"            "$dest_dir/decomposer.md"            "$(power_frontmatter 'AI-DLC Decomposer')"
-  copy_with_frontmatter "$COMMON_DIR/plan-generator.md"        "$dest_dir/plan-generator.md"        "$(power_frontmatter 'AI-DLC Plan Generator')"
-  copy_with_frontmatter "$COMMON_DIR/validator.md"             "$dest_dir/validator.md"             "$(power_frontmatter 'AI-DLC Validator')"
-  copy_with_frontmatter "$COMMON_DIR/spec-handoff.md"          "$dest_dir/spec-handoff.md"          "$(power_frontmatter 'AI-DLC Spec Handoff')"
-  copy_with_frontmatter "$COMMON_DIR/requirements-validation.md" "$dest_dir/requirements-validation.md" "$(power_frontmatter 'AI-DLC Requirements Validation')"
+  rm -rf "$stage"
+  mkdir -p "$stage/steering" "$stage/templates"
 
-  # Templates — used during onboarding when the agent creates workspace files
-  copy_with_frontmatter "$COMMON_DIR/templates/unit-template.md"            "$templates_dir/unit-template.md"            ""
-  copy_with_frontmatter "$COMMON_DIR/templates/elaboration-log-template.md" "$templates_dir/elaboration-log-template.md" ""
-  copy_with_frontmatter "$COMMON_DIR/templates/status-template.md"          "$templates_dir/status-template.md"          ""
-  copy_with_frontmatter "$COMMON_DIR/templates/plan-template.md"            "$templates_dir/plan-template.md"            ""
+  # POWER.md (source file — no modification)
+  cp "$src_dir/POWER.md" "$stage/POWER.md"
+  echo "  ✓ POWER.md"
 
-  echo "  ✓ Power steering and template files updated"
+  # steering/ — common files with Power frontmatter
+  for src in "$COMMON_DIR"/*.md; do
+    local filename
+    filename=$(basename "$src")
+    write_file "$src" "$stage/steering/$filename" "$(power_frontmatter "$filename")"
+    echo "  ✓ steering/$filename"
+  done
+
+  # templates/ — straight copies from common/templates/
+  for src in "$COMMON_DIR"/templates/*.md; do
+    local filename
+    filename=$(basename "$src")
+    write_file "$src" "$stage/templates/$filename" ""
+    echo "  ✓ templates/$filename"
+  done
+
+  # Zip with top-level folder name preserved
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-power.zip" -@)
+  echo "  ✓ → dist/aidlc-mob-elaboration-power.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-power.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------
-# Skill
+# Skill — assembles into dist/aidlc-mob-elaboration-skill/
 # ---------------------------------------------------------------------------
-copy_skill() {
-  local dest_dir="AgentDevAidlcSkill/aidlc-mob-elaboration/references"
-  local assets_dir="AgentDevAidlcSkill/aidlc-mob-elaboration/assets"
-  echo "→ Copying to Skill ($dest_dir)"
+build_skill() {
+  local folder="aidlc-mob-elaboration-skill"
+  local stage="$DIST_DIR/$folder"
+  local src_dir="$ROOT_DIR/AgentDevAidlcSkill/aidlc-mob-elaboration"
+  echo "→ Building Skill → $stage"
 
-  # References — no frontmatter for generic skill
-  copy_with_frontmatter "$COMMON_DIR/workflow.md"                "$dest_dir/workflow.md"                ""
-  copy_with_frontmatter "$COMMON_DIR/complexity-rubric.md"       "$dest_dir/complexity-rubric.md"       ""
-  copy_with_frontmatter "$COMMON_DIR/state-machine.md"           "$dest_dir/state-machine.md"           ""
-  copy_with_frontmatter "$COMMON_DIR/resume-protocol.md"         "$dest_dir/resume-protocol.md"         ""
-  copy_with_frontmatter "$COMMON_DIR/unit-format.md"             "$dest_dir/unit-format.md"             ""
-  copy_with_frontmatter "$COMMON_DIR/team-topology.md"           "$dest_dir/team-topology.md"           ""
-  copy_with_frontmatter "$COMMON_DIR/decomposer.md"              "$dest_dir/decomposer.md"              ""
-  copy_with_frontmatter "$COMMON_DIR/plan-generator.md"          "$dest_dir/plan-generator.md"          ""
-  copy_with_frontmatter "$COMMON_DIR/validator.md"               "$dest_dir/validator.md"               ""
-  copy_with_frontmatter "$COMMON_DIR/spec-handoff.md"            "$dest_dir/spec-handoff.md"            ""
-  copy_with_frontmatter "$COMMON_DIR/requirements-validation.md" "$dest_dir/requirements-validation.md" ""
+  rm -rf "$stage"
+  mkdir -p "$stage/aidlc-mob-elaboration/references" "$stage/aidlc-mob-elaboration/assets"
 
-  # Templates → assets
-  copy_with_frontmatter "$COMMON_DIR/templates/unit-template.md"           "$assets_dir/unit-template.md"           ""
-  copy_with_frontmatter "$COMMON_DIR/templates/elaboration-log-template.md" "$assets_dir/elaboration-log-template.md" ""
-  copy_with_frontmatter "$COMMON_DIR/templates/status-template.md"         "$assets_dir/status-template.md"         ""
-  copy_with_frontmatter "$COMMON_DIR/templates/plan-template.md"           "$assets_dir/plan-template.md"           ""
+  # SKILL.md (source file — no modification)
+  cp "$src_dir/SKILL.md" "$stage/aidlc-mob-elaboration/SKILL.md"
+  echo "  ✓ SKILL.md"
 
-  echo "  ✓ Skill reference and asset files updated"
+  # references/ — straight copies from common/ (no frontmatter for generic skill)
+  for src in "$COMMON_DIR"/*.md; do
+    local filename
+    filename=$(basename "$src")
+    write_file "$src" "$stage/aidlc-mob-elaboration/references/$filename" ""
+    echo "  ✓ references/$filename"
+  done
+
+  # assets/ — straight copies from common/templates/
+  for src in "$COMMON_DIR"/templates/*.md; do
+    local filename
+    filename=$(basename "$src")
+    write_file "$src" "$stage/aidlc-mob-elaboration/assets/$filename" ""
+    echo "  ✓ assets/$filename"
+  done
+
+  # Zip with top-level folder name preserved
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-skill.zip" -@)
+  echo "  ✓ → dist/aidlc-mob-elaboration-skill.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-skill.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------
-# CLI
+# CLI — assembles into dist/aidlc-mob-elaboration-cli/
 # ---------------------------------------------------------------------------
-copy_cli() {
-  local dest_dir="AgentDevAidlcCLI/.kiro/steering"
-  local templates_dir="AgentDevAidlcCLI/.kiro/templates"
-  echo "→ Copying to CLI ($dest_dir)"
+build_cli() {
+  local folder="aidlc-mob-elaboration-cli"
+  local stage="$DIST_DIR/$folder"
+  local src_dir="$ROOT_DIR/AgentDevAidlcCLI"
+  echo "→ Building CLI → $stage"
 
-  copy_with_frontmatter "$COMMON_DIR/workflow.md"                "$dest_dir/aidlc-workflow.md"                "$(cli_frontmatter 'AI-DLC Workflow' 'manual')"
-  copy_with_frontmatter "$COMMON_DIR/complexity-rubric.md"       "$dest_dir/aidlc-complexity-rubric.md"       "$(cli_frontmatter 'AI-DLC Complexity Rubric')"
-  copy_with_frontmatter "$COMMON_DIR/state-machine.md"           "$dest_dir/aidlc-state-machine.md"           "$(cli_frontmatter 'AI-DLC State Machine')"
-  copy_with_frontmatter "$COMMON_DIR/resume-protocol.md"         "$dest_dir/aidlc-resume-protocol.md"         "$(cli_frontmatter 'AI-DLC Resume Protocol')"
-  copy_with_frontmatter "$COMMON_DIR/unit-format.md"             "$dest_dir/aidlc-unit-format.md"             "$(cli_frontmatter 'AI-DLC Unit Format')"
-  copy_with_frontmatter "$COMMON_DIR/team-topology.md"           "$dest_dir/aidlc-team-topology.md"           "$(cli_frontmatter 'AI-DLC Team Topology')"
-  copy_with_frontmatter "$COMMON_DIR/decomposer.md"              "$dest_dir/aidlc-decomposer.md"              "$(cli_frontmatter 'AI-DLC Decomposer')"
-  copy_with_frontmatter "$COMMON_DIR/plan-generator.md"          "$dest_dir/aidlc-plan-generator.md"          "$(cli_frontmatter 'AI-DLC Plan Generator')"
-  copy_with_frontmatter "$COMMON_DIR/validator.md"               "$dest_dir/aidlc-validator.md"               "$(cli_frontmatter 'AI-DLC Validator')"
-  copy_with_frontmatter "$COMMON_DIR/spec-handoff.md"            "$dest_dir/aidlc-spec-handoff.md"            "$(cli_frontmatter 'AI-DLC Spec Handoff')"
-  copy_with_frontmatter "$COMMON_DIR/requirements-validation.md" "$dest_dir/aidlc-requirements-validation.md" "$(cli_frontmatter 'AI-DLC Requirements Validation')"
+  rm -rf "$stage"
+  mkdir -p "$stage/.kiro/steering" "$stage/.kiro/templates" "$stage/.kiro/agents"
 
-  # Templates
-  copy_with_frontmatter "$COMMON_DIR/templates/unit-template.md"           "$templates_dir/unit-template.md"           ""
-  copy_with_frontmatter "$COMMON_DIR/templates/elaboration-log-template.md" "$templates_dir/elaboration-log-template.md" ""
-  copy_with_frontmatter "$COMMON_DIR/templates/status-template.md"         "$templates_dir/status-template.md"         ""
-  copy_with_frontmatter "$COMMON_DIR/templates/plan-template.md"           "$templates_dir/plan-template.md"           ""
+  # README.md (source file — no modification)
+  cp "$src_dir/README.md" "$stage/README.md"
+  echo "  ✓ README.md"
 
-  echo "  ✓ CLI steering and template files updated"
+  # CLI-specific steering files (source files — no modification)
+  cp "$src_dir/.kiro/steering/aidlc-mob-elaboration.md" "$stage/.kiro/steering/aidlc-mob-elaboration.md"
+  cp "$src_dir/.kiro/steering/aidlc-terminal-format.md" "$stage/.kiro/steering/aidlc-terminal-format.md"
+  echo "  ✓ steering/aidlc-mob-elaboration.md"
+  echo "  ✓ steering/aidlc-terminal-format.md"
+
+  # steering/ — common files with CLI frontmatter and aidlc- prefix
+  for src in "$COMMON_DIR"/*.md; do
+    local filename
+    filename=$(basename "$src")
+    write_file "$src" "$stage/.kiro/steering/aidlc-$filename" "$(cli_frontmatter "$filename")"
+    echo "  ✓ steering/aidlc-$filename"
+  done
+
+  # templates/ — straight copies from common/templates/
+  for src in "$COMMON_DIR"/templates/*.md; do
+    local filename
+    filename=$(basename "$src")
+    write_file "$src" "$stage/.kiro/templates/$filename" ""
+    echo "  ✓ templates/$filename"
+  done
+
+  # agents/ — source JSON files (no modification)
+  for src in "$src_dir/.kiro/agents"/*.json; do
+    local filename
+    filename=$(basename "$src")
+    cp "$src" "$stage/.kiro/agents/$filename"
+    echo "  ✓ agents/$filename"
+  done
+
+  # Zip with top-level folder name preserved
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-cli.zip" -@)
+  echo "  ✓ → dist/aidlc-mob-elaboration-cli.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-cli.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+mkdir -p "$DIST_DIR"
+
 TARGET="${1:-all}"
 
 case "$TARGET" in
-  power) copy_power ;;
-  skill) copy_skill ;;
-  cli)   copy_cli ;;
+  power) build_power ;;
+  skill) build_skill ;;
+  cli)   build_cli ;;
   all)
-    copy_power
-    copy_skill
-    copy_cli
+    build_power
+    build_skill
+    build_cli
     ;;
   *)
     echo "Unknown target: $TARGET. Use: power | skill | cli | all"

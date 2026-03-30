@@ -44,6 +44,11 @@ bounded context with its own data ownership, change frequency, or scaling needs}
 **Suggested Bolts:**
 - Bolt 1: {Scope — a logical chunk of implementation work within this unit}
 
+> A "Bolt" is a logical sub-chunk of work within the unit — a grouping of related
+> tasks that can be reviewed or merged independently. Bolts are not separate units;
+> they are implementation checkpoints within one unit. Use them to break large units
+> into reviewable increments without splitting the bounded context.
+
 ## Spec Reference
 
 > ⚠️ **Do not act on this section until all units are defined and validated.**
@@ -70,6 +75,13 @@ When ready to implement this unit (after HANDOFF), create three specification do
    - Flag tasks that can be parallelized
    - Include a checkpoint after each logical group of tasks
 ```
+
+## Bolts
+
+A "Bolt" is a logical sub-chunk of implementation work within a unit — a grouping
+of related tasks that can be reviewed or merged independently. Bolts are not separate
+units; they are checkpoints within one bounded context. Use them to break large units
+into reviewable increments.
 
 ## Scaling Detail by Depth
 
