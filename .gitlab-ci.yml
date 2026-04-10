@@ -15,9 +15,9 @@ package-power:
   script:
     - bash scripts/copy-common.sh power
   artifacts:
-    name: aidlc-mob-elaboration-power
+    name: aidlc-sprint-planning-power
     paths:
-      - dist/aidlc-mob-elaboration-power.zip
+      - dist/aidlc-sprint-planning-power.zip
     expire_in: never
 
 package-skill:
@@ -25,9 +25,9 @@ package-skill:
   script:
     - bash scripts/copy-common.sh skill
   artifacts:
-    name: aidlc-mob-elaboration-skill
+    name: aidlc-sprint-planning-skill
     paths:
-      - dist/aidlc-mob-elaboration-skill.zip
+      - dist/aidlc-sprint-planning-skill.zip
     expire_in: never
 
 package-cli:
@@ -35,7 +35,7 @@ package-cli:
   script:
     - bash scripts/copy-common.sh cli
   artifacts:
-    name: aidlc-mob-elaboration-cli
+    name: aidlc-sprint-planning-cli
     paths:
-      - dist/aidlc-mob-elaboration-cli.zip
+      - dist/aidlc-sprint-planning-cli.zip
     expire_in: never

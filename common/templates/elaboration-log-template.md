@@ -1,4 +1,4 @@
-# Mob Elaboration Log
+# Sprint Planning — Mob Elaboration Log
 
 ## Intent
 {raw intent from user}

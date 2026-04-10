@@ -1,14 +1,20 @@
-# AgentDevAidlc — AI-DLC Mob Elaboration
+# AIDLC-Sprint-Planning
 
-Structured feature planning through strategic questioning. Decomposes high-level intents into well-defined, independently implementable units using the AI-DLC Methodology's mob elaboration approach.
+Structured feature planning through strategic questioning. Applies the AI-DLC mob elaboration technique to sprint planning, decomposing high-level intents into well-defined, independently implementable units that teams can pick up and execute using Spec-Driven Development.
+
+## Methodology
+
+AIDLC Sprint Planning implements the **mob elaboration** approach from the [AI-DLC Methodology](https://github.com/awslabs/aidlc-workflows). Mob elaboration is a facilitated questioning technique where a group collectively refines a vague intent into concrete, bounded implementation units through structured, one-at-a-time questions.
+
+This project applies that technique specifically to sprint planning: the output is a set of units sized and ordered for sprint execution, each ready to be handed off to Kiro's Spec-Driven Development workflow. The result is an AI-DLC process that fits naturally into existing sprint workflows without competing with SDD — it feeds into it.
 
 This repository contains three implementations of the same workflow, each tailored to a different client:
 
 | Implementation | Client | Format |
 |---|---|---|
-| [AgentDevAidlcPower](#agentdevaidlcpower) | Kiro IDE | `POWER.md` + `steering/` |
-| [AgentDevAidlcSkill](#agentdevaidlcskill) | Generic / any agent | `SKILL.md` + `references/` + `assets/` |
-| [AgentDevAidlcCLI](#agentdevaidlccli) | Kiro CLI | `.kiro/steering/` + `.kiro/agents/*.json` |
+| [AIDLC-Sprint-Planning-Power](#aidlc-sprint-planning-power) | Kiro IDE | `POWER.md` + `steering/` |
+| [AIDLC-Sprint-Planning-Skill](#aidlc-sprint-planning-skill) | Generic / any agent | `SKILL.md` + `references/` + `assets/` |
+| [AIDLC-Sprint-Planning-CLI](#aidlc-sprint-planning-cli) | Kiro CLI | `.kiro/steering/` + `.kiro/agents/*.json` |
 
 All three implement the same state machine and elaboration logic — they differ only in how they integrate with their target client. Core logic lives in `common/` and is copied into each implementation by the CI pipeline.
 
@@ -24,7 +30,7 @@ State machine: `INIT → ASSESS → QUESTIONING → READY_CHECK → TEAM_TOPOLOG
 
 ---
 
-## AgentDevAidlcPower
+## AIDLC-Sprint-Planning-Power
 
 A [Kiro Power](https://kiro.dev/docs/powers/) — the native extension format for Kiro IDE.
 
@@ -35,7 +41,7 @@ A [Kiro Power](https://kiro.dev/docs/powers/) — the native extension format fo
 ### Package contents
 
 ```
-AgentDevAidlcPower/
+AIDLC-Sprint-Planning-Power/
 ├── POWER.md                        # Agent instructions, onboarding steps, subagent delegation
 └── steering/
     ├── workflow.md                 # Execution rules, phase quick reference, per-phase instructions
@@ -48,7 +54,11 @@ AgentDevAidlcPower/
     ├── state-machine.md            # Phase transitions, edge cases, error recovery
     ├── team-topology.md            # Team structure and decomposition strategy
     ├── unit-format.md              # EARS notation, unit file template, scaling rules
-    └── validator.md                # Cross-validation checks for unit files
+    ├── validator.md                # Cross-validation checks for unit files
+    ├── template-elaboration-log-template.md  # Starting template for aidlc/elaboration-log.md
+    ├── template-plan-template.md             # Starting template for aidlc/plan.md
+    ├── template-status-template.md           # Starting template for aidlc/status.md
+    └── template-unit-template.md             # Template for individual unit files
 ```
 
 The `POWER.md` onboarding installs these artifacts into the target workspace:
@@ -63,12 +73,12 @@ The `POWER.md` onboarding installs these artifacts into the target workspace:
 ### Installation
 
 - **Kiro Powers panel (recommended):** Add Custom Power → Import from GitHub → provide this repo URL
-- **Local path:** Add power from Local Path → point to the `AgentDevAidlcPower` directory
-- **CI artifact:** Download `aidlc-mob-elaboration-power.zip` from pipeline artifacts, extract, and import via Local Path
+- **Local path:** Add power from Local Path → point to the `AIDLC-Sprint-Planning-Power` directory
+- **CI artifact:** Download `aidlc-sprint-planning-power.zip` from pipeline artifacts, extract, and import via Local Path
 
 ---
 
-## AgentDevAidlcSkill
+## AIDLC-Sprint-Planning-Skill
 
 A generic Skill — client-agnostic, no file copying to client-specific folders.
 
@@ -79,8 +89,8 @@ A generic Skill — client-agnostic, no file copying to client-specific folders.
 ### Package contents
 
 ```
-AgentDevAidlcSkill/
-└── aidlc-mob-elaboration/
+AIDLC-Sprint-Planning-Skill/
+└── aidlc-sprint-planning/
     ├── SKILL.md                        # Agent instructions and phase reference
     ├── assets/
     │   ├── elaboration-log-template.md # Starting template for aidlc/elaboration-log.md
@@ -102,22 +112,22 @@ AgentDevAidlcSkill/
 
 ### Installation
 
-Copy the `AgentDevAidlcSkill/aidlc-mob-elaboration/` directory into your skills folder and activate it from your agent host.
+Copy the `AIDLC-Sprint-Planning-Skill/aidlc-sprint-planning/` directory into your skills folder and activate it from your agent host.
 
 ---
 
-## AgentDevAidlcCLI
+## AIDLC-Sprint-Planning-CLI
 
 A configuration package for [Kiro CLI](https://kiro.dev/docs/cli/).
 
-- Main steering file (`aidlc-mob-elaboration.md`) loads automatically via `inclusion: always`
+- Main steering file (`aidlc-sprint-planning.md`) loads automatically via `inclusion: always`
 - All other steering files are `inclusion: manual` — reference them with `#` in chat as needed
 - Agents use `.json` format (Kiro CLI does not support `.md` subagents or hooks)
 
 ### Package contents
 
 ```
-AgentDevAidlcCLI/
+AIDLC-Sprint-Planning-CLI/
 ├── README.md
 └── .kiro/
     ├── agents/
@@ -126,7 +136,7 @@ AgentDevAidlcCLI/
     │   ├── aidlc-spec-elaborator.json          # Per-unit requirements elaboration
     │   └── aidlc-validator.json                # Cross-validates unit files
     ├── steering/
-    │   ├── aidlc-mob-elaboration.md            # Core workflow — CLI formatting, delegates to aidlc-workflow.md
+    │   ├── aidlc-sprint-planning.md            # Core workflow — CLI formatting, delegates to aidlc-workflow.md
     │   ├── aidlc-workflow.md                   # Execution rules and per-phase instructions (inclusion: manual)
     │   ├── aidlc-complexity-rubric.md          # Complexity assessment (inclusion: manual)
     │   ├── aidlc-decomposer.md                 # Unit generation rules (inclusion: manual)
@@ -151,7 +161,7 @@ AgentDevAidlcCLI/
 Copy the `.kiro/` directory into your project root:
 
 ```bash
-cp -r AgentDevAidlcCLI/.kiro/ /path/to/your/project/.kiro/
+cp -r AIDLC-Sprint-Planning-CLI/.kiro/ /path/to/your/project/.kiro/
 ```
 
 Then run `kiro-cli chat` in that project directory.
@@ -162,7 +172,7 @@ Then run `kiro-cli chat` in that project directory.
 
 | Capability | Power (Kiro IDE) | Skill (Generic) | CLI (Kiro CLI) |
 |---|---|---|---|
-| Entry point | `POWER.md` | `SKILL.md` | `aidlc-mob-elaboration.md` (steering) |
+| Entry point | `POWER.md` | `SKILL.md` | `aidlc-sprint-planning.md` (steering) |
 | Sub-concern files | `steering/*.md` (power-loaded) | `references/*.md` | `.kiro/steering/*.md` |
 | Templates | `templates/` (power-loaded) | `assets/` | `.kiro/templates/` |
 | Agent/subagent format | `.md` (Kiro subagents) | N/A | `.json` |
@@ -176,7 +186,7 @@ Then run `kiro-cli chat` in that project directory.
 
 ```
 /
-├── common/                        # Single source of truth for all logic files
+├── common/                            # Single source of truth for all logic files
 │   ├── workflow.md
 │   ├── complexity-rubric.md
 │   ├── decomposer.md
@@ -194,14 +204,14 @@ Then run `kiro-cli chat` in that project directory.
 │       ├── status-template.md
 │       └── unit-template.md
 │
-├── AgentDevAidlcPower/            # Kiro IDE power implementation
-├── AgentDevAidlcSkill/            # Generic skill implementation
-├── AgentDevAidlcCLI/              # Kiro CLI implementation
+├── AIDLC-Sprint-Planning-Power/       # Kiro IDE power implementation
+├── AIDLC-Sprint-Planning-Skill/       # Generic skill implementation
+├── AIDLC-Sprint-Planning-CLI/         # Kiro CLI implementation
 │
 ├── scripts/
-│   └── copy-common.sh             # Copies common/ into each implementation
+│   └── copy-common.sh                # Copies common/ into each implementation
 │
-└── .gitlab-ci.yml                 # Runs copy-common.sh then packages each artifact
+└── .gitlab-ci.yml                     # Runs copy-common.sh then packages each artifact
 ```
 
 ### Editing logic files
@@ -216,11 +226,11 @@ To update logic:
 3. Commit only the `common/` change
 
 To update implementation-specific behavior:
-- Power: edit `AgentDevAidlcPower/POWER.md`
-- Skill: edit `AgentDevAidlcSkill/aidlc-mob-elaboration/SKILL.md`
-- CLI entry point: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-mob-elaboration.md`
-- CLI terminal format: edit `AgentDevAidlcCLI/.kiro/steering/aidlc-terminal-format.md`
-- CLI agents: edit files in `AgentDevAidlcCLI/.kiro/agents/`
+- Power: edit `AIDLC-Sprint-Planning-Power/POWER.md`
+- Skill: edit `AIDLC-Sprint-Planning-Skill/aidlc-sprint-planning/SKILL.md`
+- CLI entry point: edit `AIDLC-Sprint-Planning-CLI/.kiro/steering/aidlc-sprint-planning.md`
+- CLI terminal format: edit `AIDLC-Sprint-Planning-CLI/.kiro/steering/aidlc-terminal-format.md`
+- CLI agents: edit files in `AIDLC-Sprint-Planning-CLI/.kiro/agents/`
 
 To add a new frontmatter override for a CLI file (e.g., change `inclusion` or `priority`),
 add a `case` entry in the `cli_frontmatter()` function in `scripts/copy-common.sh`.
@@ -229,7 +239,7 @@ add a `case` entry in the `cli_frontmatter()` function in `scripts/copy-common.s
 
 ## Keywords
 
-`plan` · `decompose` · `elaborate` · `break down` · `scope` · `build` · `design` · `architect` · `specs` · `requirements` · `feature` · `project` · `discovery` · `prd` · `aidlc` · `roadmap` · `breakdown` · `map out` · `outline` · `structure` · `strategy` · `approach` · `proposal` · `implement` · `create` · `develop` · `new feature` · `new app` · `new application` · `new service` · `new system` · `refactor` · `migrate` · `integrate` · `epic` · `milestone` · `mvp` · `where do i start` · `how do i approach` · `help me think` · `not sure how to`
+`plan` · `decompose` · `elaborate` · `break down` · `scope` · `build` · `design` · `architect` · `specs` · `requirements` · `feature` · `project` · `discovery` · `prd` · `aidlc` · `mob elaboration` · `sprint planning` · `roadmap` · `breakdown` · `map out` · `outline` · `structure` · `strategy` · `approach` · `proposal` · `implement` · `create` · `develop` · `new feature` · `new app` · `new application` · `new service` · `new system` · `refactor` · `migrate` · `integrate` · `epic` · `milestone` · `mvp` · `where do i start` · `how do i approach` · `help me think` · `not sure how to`
 
 ## Learn more
 

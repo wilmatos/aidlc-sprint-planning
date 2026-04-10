@@ -42,7 +42,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 **Log format:**
 
 ```markdown
-# Mob Elaboration Log
+# Sprint Planning — Mob Elaboration Log
 
 ## Intent
 

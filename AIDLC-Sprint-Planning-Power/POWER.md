@@ -1,18 +1,19 @@
 ---
-name: "aidlc-mob-elaboration"
-displayName: "AI-DLC Mob Elaboration"
-description: "Structured feature planning that decomposes intents into implementation units through strategic questioning. Use when starting a new feature, project, or system to produce specs ready for Kiro's Spec-Driven Development."
-keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to"]
+name: "aidlc-sprint-planning"
+displayName: "AIDLC Sprint Planning"
+description: "Structured sprint planning using the AI-DLC mob elaboration technique. Decomposes intents into implementation units through strategic questioning, producing specs ready for Kiro's Spec-Driven Development."
+keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to"]
 author: "workspace"
 ---
 
-# AI-DLC Mob Elaboration
+# AIDLC Sprint Planning
 
 ## Overview
 
-This power facilitates structured decomposition of high-level intents into well-defined,
-independently implementable units through strategic questioning. It then hands off each
-unit to Kiro's Spec-Driven Development with full elaboration context.
+This power facilitates sprint planning using the AI-DLC mob elaboration technique —
+structured decomposition of high-level intents into well-defined, independently
+implementable units through strategic questioning. It then hands off each unit to
+Kiro's Spec-Driven Development with full elaboration context.
 
 The process follows a state machine:
 
@@ -21,8 +22,10 @@ INIT → ASSESS → QUESTIONING → READY_CHECK → TEAM_TOPOLOGY → DECOMPOSE 
 ```
 
 Use this power when you want to plan, decompose, elaborate, or break down a feature,
-project, or intent into specs. It supports resuming interrupted sessions, parallel unit
-generation via subagents, and rich status tracking throughout.
+project, or intent into specs for sprint planning. It uses the mob elaboration technique
+to gather context through structured questioning before decomposing into units. It
+supports resuming interrupted sessions, parallel unit generation via subagents, and
+rich status tracking throughout.
 
 ## Onboarding
 
@@ -37,14 +40,14 @@ globally makes these agents available across all your workspaces.
 ---
 name: aidlc-decomposer
 description: >
-  Generates AI-DLC unit files from a completed mob elaboration log. Invoked during
-  the DECOMPOSE phase. Reads the elaboration log and produces numbered,
-  dependency-ordered unit files in aidlc/units/. Use when decomposing an elaborated
-  intent into bounded implementation units.
+  Generates AIDLC unit files from a completed mob elaboration session during sprint
+  planning. Invoked during the DECOMPOSE phase. Reads the elaboration log and produces
+  numbered, dependency-ordered unit files in aidlc/units/. Use when decomposing an
+  elaborated intent into bounded implementation units.
 tools: ["read", "write"]
 ---
 
-# AI-DLC Unit Decomposer
+# AIDLC Unit Decomposer
 
 You generate implementation unit files from a completed mob elaboration session.
 
@@ -133,16 +136,16 @@ After writing all unit files, generate `aidlc/plan.md` with the following sectio
 ---
 name: aidlc-validator
 description: >
-  Cross-validates AI-DLC unit files for completeness, consistency, and dependency
+  Cross-validates AIDLC unit files for completeness, consistency, and dependency
   correctness. Invoked after unit decomposition. Checks that all user decisions are
   captured, dependencies are acyclic, and no functionality gaps exist. Use when
   validating elaboration unit files.
 tools: ["read"]
 ---
 
-# AI-DLC Unit Validator
+# AIDLC Unit Validator
 
-You validate a set of AI-DLC unit files for completeness and consistency.
+You validate a set of AIDLC unit files for completeness and consistency.
 
 ## Input
 
@@ -194,15 +197,15 @@ the user didn't ask for.
 name: aidlc-spec-elaborator
 description: >
   Handles per-unit elaboration questioning when a user starts creating specs from an
-  AI-DLC unit. Asks focused, tactical questions about implementation details specific
+  AIDLC unit. Asks focused, tactical questions about implementation details specific
   to one unit before requirements.md is written. Use when elaborating requirements
   for a specific unit.
 tools: ["read", "write"]
 ---
 
-# AI-DLC Spec Elaborator
+# AIDLC Spec Elaborator
 
-You facilitate focused requirements elaboration for a single AI-DLC unit.
+You facilitate focused requirements elaboration for a single AIDLC unit.
 
 ## Input
 
@@ -211,7 +214,7 @@ A specific unit file from `aidlc/units/` and relevant sections of the elaboratio
 ## Questioning Strategy
 
 Ask 2-5 focused, tactical questions about this specific unit. These are
-implementation-detail questions not covered in mob elaboration:
+implementation-detail questions not covered during mob elaboration:
 - Specific API contracts and response shapes
 - Error handling and recovery behavior
 - Data validation rules and edge cases
@@ -234,15 +237,15 @@ implementation-detail questions not covered in mob elaboration:
 ---
 name: aidlc-requirements-validator
 description: >
-  Validates a completed requirements.md file against its source AI-DLC unit definition
+  Validates a completed requirements.md file against its source AIDLC unit definition
   to ensure no features, user stories, NFRs, or risks were missed. Use when validating
   spec requirements against unit definitions.
 tools: ["read"]
 ---
 
-# AI-DLC Requirements Validator
+# AIDLC Requirements Validator
 
-You validate that requirements fully cover everything defined in the source AI-DLC unit.
+You validate that requirements fully cover everything defined in the source AIDLC unit.
 
 ## Input
 
@@ -343,12 +346,12 @@ is already in progress.
 ### Templates
 
 When creating session files during INIT, use the templates from the power's
-`templates/` directory:
+`steering/` directory:
 
-- `templates/elaboration-log-template.md` → `aidlc/elaboration-log.md`
-- `templates/status-template.md` → `aidlc/status.md`
-- `templates/unit-template.md` → each `aidlc/units/NN-name.md`
-- `templates/plan-template.md` → `aidlc/plan.md`
+- `steering/template-elaboration-log-template.md` → `aidlc/elaboration-log.md`
+- `steering/template-status-template.md` → `aidlc/status.md`
+- `steering/template-unit-template.md` → each `aidlc/units/NN-name.md`
+- `steering/template-plan-template.md` → `aidlc/plan.md`
 
 ### Subagent Delegation
 

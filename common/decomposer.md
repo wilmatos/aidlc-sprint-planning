@@ -1,6 +1,7 @@
 # Unit Decomposer
 
-Instructions for generating implementation unit files from a completed mob elaboration session.
+Instructions for generating implementation unit files from a completed mob elaboration
+session during sprint planning.
 
 ## Input
 

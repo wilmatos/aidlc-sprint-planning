@@ -2,7 +2,8 @@
 
 ## Overview
 
-After mob elaboration produces unit files, each unit becomes the input for implementation.
+After the mob elaboration process produces unit files during sprint planning, each unit
+becomes the input for implementation.
 This reference describes how to present the implementation roadmap and guide the user
 through creating specification documents for each unit.
 
@@ -87,7 +88,7 @@ skip steps or reorder them.
 ### Step 1: Pre-Spec Elaboration
 
 Before writing any spec document, ask 2-5 focused, tactical questions about this
-specific unit. These are implementation-detail questions not covered in mob elaboration:
+specific unit. These are implementation-detail questions not covered during mob elaboration:
 - Specific API contracts and response shapes
 - Error handling and recovery behavior
 - Data validation rules and edge cases
