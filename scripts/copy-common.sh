@@ -2,8 +2,8 @@
 # copy-common.sh — assembles distribution packages in dist/ by combining
 # source files with generated copies of common/ content.
 #
-# Nothing is written to the source directories (AgentDevAidlcPower/,
-# AgentDevAidlcSkill/, AgentDevAidlcCLI/). All output goes to dist/.
+# Nothing is written to the source directories (AIDLC-Sprint-Planning-Power/,
+# AIDLC-Sprint-Planning-Skill/, AIDLC-Sprint-Planning-CLI/). All output goes to dist/.
 #
 # Usage:
 #   ./scripts/copy-common.sh [target]
@@ -11,9 +11,9 @@
 # Targets: power, skill, cli, all (default: all)
 #
 # Output:
-#   dist/aidlc-mob-elaboration-power/   — staging → dist/aidlc-mob-elaboration-power.zip
-#   dist/aidlc-mob-elaboration-skill/   — staging → dist/aidlc-mob-elaboration-skill.zip
-#   dist/aidlc-mob-elaboration-cli/     — staging → dist/aidlc-mob-elaboration-cli.zip
+#   dist/aidlc-sprint-planning-power/   — staging → dist/aidlc-sprint-planning-power.zip
+#   dist/aidlc-sprint-planning-skill/   — staging → dist/aidlc-sprint-planning-skill.zip
+#   dist/aidlc-sprint-planning-cli/     — staging → dist/aidlc-sprint-planning-cli.zip
 
 set -euo pipefail
 
@@ -23,13 +23,13 @@ DIST_DIR="$ROOT_DIR/dist"
 
 # ---------------------------------------------------------------------------
 # Title derivation: kebab-case filename → Title Case display name
-# e.g. "complexity-rubric.md" → "AI-DLC Complexity Rubric"
+# e.g. "complexity-rubric.md" → "AIDLC Complexity Rubric"
 # ---------------------------------------------------------------------------
 derive_title() {
   local stem="${1%.md}"
   local words
   words=$(echo "$stem" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
-  echo "AI-DLC $words"
+  echo "AIDLC $words"
 }
 
 # ---------------------------------------------------------------------------
@@ -72,16 +72,16 @@ write_file() {
 }
 
 # ---------------------------------------------------------------------------
-# Power — assembles into dist/aidlc-mob-elaboration-power/
+# Power — assembles into dist/aidlc-sprint-planning-power/
 # ---------------------------------------------------------------------------
 build_power() {
-  local folder="aidlc-mob-elaboration-power"
+  local folder="aidlc-sprint-planning-power"
   local stage="$DIST_DIR/$folder"
-  local src_dir="$ROOT_DIR/AgentDevAidlcPower"
+  local src_dir="$ROOT_DIR/AIDLC-Sprint-Planning-Power"
   echo "→ Building Power → $stage"
 
   rm -rf "$stage"
-  mkdir -p "$stage/steering" "$stage/templates"
+  mkdir -p "$stage/steering"
 
   # POWER.md (source file — no modification)
   cp "$src_dir/POWER.md" "$stage/POWER.md"
@@ -95,40 +95,40 @@ build_power() {
     echo "  ✓ steering/$filename"
   done
 
-  # templates/ — straight copies from common/templates/
+  # steering/template-* — templates as steering files so the agent can read them
   for src in "$COMMON_DIR"/templates/*.md; do
     local filename
     filename=$(basename "$src")
-    write_file "$src" "$stage/templates/$filename" ""
-    echo "  ✓ templates/$filename"
+    write_file "$src" "$stage/steering/template-$filename" "$(power_frontmatter "template-$filename")"
+    echo "  ✓ steering/template-$filename"
   done
 
   # Zip with top-level folder name preserved
-  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-power.zip" -@)
-  echo "  ✓ → dist/aidlc-mob-elaboration-power.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-power.zip" | cut -f1))"
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-sprint-planning-power.zip" -@)
+  echo "  ✓ → dist/aidlc-sprint-planning-power.zip ($(du -sh "$DIST_DIR/aidlc-sprint-planning-power.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------
-# Skill — assembles into dist/aidlc-mob-elaboration-skill/
+# Skill — assembles into dist/aidlc-sprint-planning-skill/
 # ---------------------------------------------------------------------------
 build_skill() {
-  local folder="aidlc-mob-elaboration-skill"
+  local folder="aidlc-sprint-planning-skill"
   local stage="$DIST_DIR/$folder"
-  local src_dir="$ROOT_DIR/AgentDevAidlcSkill/aidlc-mob-elaboration"
+  local src_dir="$ROOT_DIR/AIDLC-Sprint-Planning-Skill/aidlc-sprint-planning"
   echo "→ Building Skill → $stage"
 
   rm -rf "$stage"
-  mkdir -p "$stage/aidlc-mob-elaboration/references" "$stage/aidlc-mob-elaboration/assets"
+  mkdir -p "$stage/aidlc-sprint-planning/references" "$stage/aidlc-sprint-planning/assets"
 
   # SKILL.md (source file — no modification)
-  cp "$src_dir/SKILL.md" "$stage/aidlc-mob-elaboration/SKILL.md"
+  cp "$src_dir/SKILL.md" "$stage/aidlc-sprint-planning/SKILL.md"
   echo "  ✓ SKILL.md"
 
   # references/ — straight copies from common/ (no frontmatter for generic skill)
   for src in "$COMMON_DIR"/*.md; do
     local filename
     filename=$(basename "$src")
-    write_file "$src" "$stage/aidlc-mob-elaboration/references/$filename" ""
+    write_file "$src" "$stage/aidlc-sprint-planning/references/$filename" ""
     echo "  ✓ references/$filename"
   done
 
@@ -136,22 +136,22 @@ build_skill() {
   for src in "$COMMON_DIR"/templates/*.md; do
     local filename
     filename=$(basename "$src")
-    write_file "$src" "$stage/aidlc-mob-elaboration/assets/$filename" ""
+    write_file "$src" "$stage/aidlc-sprint-planning/assets/$filename" ""
     echo "  ✓ assets/$filename"
   done
 
   # Zip with top-level folder name preserved
-  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-skill.zip" -@)
-  echo "  ✓ → dist/aidlc-mob-elaboration-skill.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-skill.zip" | cut -f1))"
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-sprint-planning-skill.zip" -@)
+  echo "  ✓ → dist/aidlc-sprint-planning-skill.zip ($(du -sh "$DIST_DIR/aidlc-sprint-planning-skill.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------
-# CLI — assembles into dist/aidlc-mob-elaboration-cli/
+# CLI — assembles into dist/aidlc-sprint-planning-cli/
 # ---------------------------------------------------------------------------
 build_cli() {
-  local folder="aidlc-mob-elaboration-cli"
+  local folder="aidlc-sprint-planning-cli"
   local stage="$DIST_DIR/$folder"
-  local src_dir="$ROOT_DIR/AgentDevAidlcCLI"
+  local src_dir="$ROOT_DIR/AIDLC-Sprint-Planning-CLI"
   echo "→ Building CLI → $stage"
 
   rm -rf "$stage"
@@ -162,9 +162,9 @@ build_cli() {
   echo "  ✓ README.md"
 
   # CLI-specific steering files (source files — no modification)
-  cp "$src_dir/.kiro/steering/aidlc-mob-elaboration.md" "$stage/.kiro/steering/aidlc-mob-elaboration.md"
+  cp "$src_dir/.kiro/steering/aidlc-sprint-planning.md" "$stage/.kiro/steering/aidlc-sprint-planning.md"
   cp "$src_dir/.kiro/steering/aidlc-terminal-format.md" "$stage/.kiro/steering/aidlc-terminal-format.md"
-  echo "  ✓ steering/aidlc-mob-elaboration.md"
+  echo "  ✓ steering/aidlc-sprint-planning.md"
   echo "  ✓ steering/aidlc-terminal-format.md"
 
   # steering/ — common files with CLI frontmatter and aidlc- prefix
@@ -192,8 +192,8 @@ build_cli() {
   done
 
   # Zip with top-level folder name preserved
-  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-mob-elaboration-cli.zip" -@)
-  echo "  ✓ → dist/aidlc-mob-elaboration-cli.zip ($(du -sh "$DIST_DIR/aidlc-mob-elaboration-cli.zip" | cut -f1))"
+  (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-sprint-planning-cli.zip" -@)
+  echo "  ✓ → dist/aidlc-sprint-planning-cli.zip ($(du -sh "$DIST_DIR/aidlc-sprint-planning-cli.zip" | cut -f1))"
 }
 
 # ---------------------------------------------------------------------------

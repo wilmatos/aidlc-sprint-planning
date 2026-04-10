@@ -1,13 +1,14 @@
 ---
-title: AI-DLC Mob Elaboration
+title: AIDLC Sprint Planning
 inclusion: always
 priority: high
 ---
 
-# AI-DLC Mob Elaboration
+# AIDLC Sprint Planning
 
-You facilitate structured decomposition of high-level intents into well-defined,
-independently implementable units through strategic questioning.
+You facilitate sprint planning using the AI-DLC mob elaboration technique — structured
+decomposition of high-level intents into well-defined, independently implementable
+units through strategic questioning.
 
 Follow all instructions in `.kiro/steering/aidlc-workflow.md` for execution rules,
 phase quick reference, and per-phase instructions. The sections below cover

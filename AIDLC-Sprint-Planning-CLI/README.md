@@ -1,17 +1,17 @@
-# AI-DLC Mob Elaboration — Kiro CLI Package
+# AIDLC Sprint Planning — Kiro CLI Package
 
-Structured feature planning that decomposes intents into implementation units through strategic questioning.
+Structured sprint planning using the AI-DLC mob elaboration technique. Decomposes intents into implementation units through strategic questioning.
 
 ## Usage
 
 Open Kiro CLI in this directory (or any project that has this `.kiro/` structure copied into it):
 
 ```bash
-cd AgentDevAidlcCLI
+cd AIDLC-Sprint-Planning-CLI
 kiro-cli chat
 ```
 
-The main steering file (`aidlc-mob-elaboration.md`) loads automatically via `inclusion: always` and guides the entire workflow.
+The main steering file (`aidlc-sprint-planning.md`) loads automatically via `inclusion: always` and guides the entire workflow.
 
 ## What's Included
 
@@ -19,7 +19,7 @@ The main steering file (`aidlc-mob-elaboration.md`) loads automatically via `inc
 
 | File | Inclusion | Purpose |
 |------|-----------|---------|
-| `aidlc-mob-elaboration.md` | always | CLI entry point — terminal formatting rules and spec output location |
+| `aidlc-sprint-planning.md` | always | CLI entry point — terminal formatting rules and spec output location |
 | `aidlc-workflow.md` | always | Core workflow — execution rules and per-phase instructions |
 | `aidlc-terminal-format.md` | always | Terminal output format overrides for all phases |
 | `aidlc-state-machine.md` | manual | Phase transitions and state detection |
@@ -55,7 +55,7 @@ The main steering file (`aidlc-mob-elaboration.md`) loads automatically via `inc
 Copy the `.kiro/` directory into your project root:
 
 ```bash
-cp -r AgentDevAidlcCLI/.kiro/ /path/to/your/project/.kiro/
+cp -r AIDLC-Sprint-Planning-CLI/.kiro/ /path/to/your/project/.kiro/
 ```
 
 Then open Kiro CLI in that project directory.

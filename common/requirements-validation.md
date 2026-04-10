@@ -3,7 +3,7 @@
 ## Purpose
 
 Validate that implementation requirements fully cover everything defined in a source
-AI-DLC unit file. This ensures no features, user stories, NFRs, or risks were missed.
+AIDLC unit file. This ensures no features, user stories, NFRs, or risks were missed.
 
 ## Preconditions
 

@@ -1,5 +1,5 @@
 ---
-title: AI-DLC Terminal Format Overrides
+title: AIDLC Terminal Format Overrides
 inclusion: always
 priority: high
 ---

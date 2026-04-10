@@ -67,3 +67,4 @@ coverage/
 *.tmp
 *.bak
 *.orig
+tmp/email-comm.md

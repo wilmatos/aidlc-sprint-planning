@@ -26,7 +26,7 @@ On activation, check for `aidlc/elaboration-log.md`:
 ## Resume Presentation
 
 ```markdown
-## 🔄 Resuming AI-DLC Session
+## 🔄 Resuming AIDLC Session
 
 **Intent:** {original intent, first 2 sentences}
 

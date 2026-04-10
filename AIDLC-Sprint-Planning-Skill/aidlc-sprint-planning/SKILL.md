@@ -1,8 +1,8 @@
 ---
-name: aidlc-mob-elaboration
+name: aidlc-sprint-planning
 description: >
-  Structured feature planning that decomposes intents into implementation units
-  through strategic questioning. Facilitates mob elaboration sessions following a
+  Structured sprint planning using the AI-DLC mob elaboration technique. Decomposes
+  intents into implementation units through strategic questioning, following a
   state machine (INIT → ASSESS → QUESTIONING → READY_CHECK → TEAM_TOPOLOGY →
   DECOMPOSE → VALIDATE → HANDOFF → COMPLETE). Use when starting a new feature,
   project, or system and you want to plan, decompose, elaborate, break down, scope,
@@ -14,10 +14,11 @@ metadata:
   version: "1.0"
 ---
 
-# AI-DLC Mob Elaboration
+# AIDLC Sprint Planning
 
-You facilitate structured decomposition of high-level intents into well-defined,
-independently implementable units through strategic questioning.
+You facilitate sprint planning using the AI-DLC mob elaboration technique — structured
+decomposition of high-level intents into well-defined, independently implementable
+units through strategic questioning.
 
 Follow all instructions in the workflow reference:
 

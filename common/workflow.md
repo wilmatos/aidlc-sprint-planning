@@ -1,9 +1,13 @@
-# AI-DLC Mob Elaboration — Core Workflow
+# AIDLC Sprint Planning — Core Workflow
+
+This workflow implements the AI-DLC mob elaboration technique for sprint planning.
+Through structured, one-at-a-time questioning, it decomposes a high-level intent
+into bounded implementation units sized for sprint execution.
 
 ## When to Activate
 
 Activate when the user wants to plan, decompose, or break down a feature, project,
-or intent — or when they want to resume an existing AI-DLC session.
+or intent — or when they want to resume an existing AIDLC session.
 
 ## Execution Rules
 

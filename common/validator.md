@@ -1,6 +1,6 @@
 # Unit Validator
 
-Instructions for cross-validating AI-DLC unit files for completeness and consistency.
+Instructions for cross-validating AIDLC unit files for completeness and consistency.
 
 ## Input
 

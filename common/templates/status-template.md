@@ -1,4 +1,4 @@
-# AI-DLC Session Status
+# AIDLC Session Status
 
 ## Overview
 | Field | Value |
