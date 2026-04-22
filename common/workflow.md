@@ -319,6 +319,25 @@ All {N} units have been defined and validated. Full execution plan: `aidlc/plan.
 > **3.** 🗺️ **Roadmap only** — stop here, I'll implement directly
 ```
 
+## Output Template Reference
+
+Each phase uses a specific output format. Use the templates defined in these files:
+
+| Output | Template location | Used in phase |
+|--------|------------------|---------------|
+| Question format | complexity-rubric (Question Template section) | QUESTIONING |
+| Status dashboard | status-template | INIT (create), all phases (update) |
+| Complexity assessment | workflow.md ASSESS Phase section above | ASSESS |
+| Ready check summary | workflow.md READY_CHECK Phase section above | READY_CHECK |
+| Topology profile | team-topology (Topology Profile section) | TEAM_TOPOLOGY |
+| Unit files | unit-template | DECOMPOSE |
+| Execution plan | plan-template | DECOMPOSE |
+| Validation report | validator (Report Format section) | VALIDATE |
+| Implementation roadmap | workflow.md HANDOFF Phase section above | HANDOFF |
+| Resume presentation | resume-protocol (Resume Presentation section) | Resume |
+
+Always use the template from the referenced file. Do not invent output formats.
+
 ## Gotchas
 
 - If `aidlc/elaboration-log.md` exists but has no `## Phase:` marker, treat as

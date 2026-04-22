@@ -27,6 +27,38 @@ COMMON_DIR="$ROOT_DIR/common"
 DIST_DIR="$ROOT_DIR/dist"
 
 # ---------------------------------------------------------------------------
+# Validate required source files exist before building
+# ---------------------------------------------------------------------------
+validate_sources() {
+  local errors=0
+
+  # Common logic files
+  for f in workflow.md state-machine.md complexity-rubric.md team-topology.md \
+           decomposer.md validator.md plan-generator.md spec-handoff.md \
+           resume-protocol.md unit-format.md requirements-validation.md; do
+    if [[ ! -f "$COMMON_DIR/$f" ]]; then
+      echo "ERROR: Missing common file: common/$f"
+      errors=$((errors + 1))
+    fi
+  done
+
+  # Template files
+  for f in elaboration-log-template.md status-template.md unit-template.md plan-template.md; do
+    if [[ ! -f "$COMMON_DIR/templates/$f" ]]; then
+      echo "ERROR: Missing template: common/templates/$f"
+      errors=$((errors + 1))
+    fi
+  done
+
+  if [[ $errors -gt 0 ]]; then
+    echo "FATAL: $errors missing source file(s). Aborting."
+    exit 1
+  fi
+}
+
+validate_sources
+
+# ---------------------------------------------------------------------------
 # Title derivation: kebab-case filename → Title Case display name
 # e.g. "complexity-rubric.md" → "AIDLC Complexity Rubric"
 # ---------------------------------------------------------------------------
