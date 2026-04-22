@@ -73,17 +73,17 @@ Each question must include:
 4. **Follow-up trigger:** What answer would close this question?
 
 Format:
+  ```
+  ## [Category] Question {N} of ~{estimated_total}
+
+  {Question text}
+
+  {Optional: suggested answers}
+
+  ---
+  📊 **Progress:** {answered}/{estimated_total} · 📋 **Decisions recorded:** {count}
+  ```
 ```
-## [Category] Question {N} of ~{estimated_total}
-
-{Question text}
-
-{Optional: suggested answers}
-
----
-📊 **Progress:** {answered}/{estimated_total} · 📋 **Decisions recorded:** {count}
-```
-
 **Impact:** Reduces LLM token waste on question generation and ensures consistency.
 
 ---
