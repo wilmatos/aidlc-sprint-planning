@@ -71,3 +71,23 @@ Look for signals that help identify bounded contexts:
 - Different scaling requirements
 - Different deployment cadences
 - Natural language boundaries (different vocabulary for different parts)
+
+## Question Template
+
+Each question must include:
+1. **Category tag:** [Users] [Scope] [Functionality] [Data] [Integration] [NFRs] [Risks]
+2. **Question type:** Clarification | Decision | Constraint | Boundary
+3. **Suggested answers (2-3):** Only for technology/scale decisions
+4. **Follow-up trigger:** What answer would close this question?
+
+Format:
+```markdown
+## [Category] Question {N} of ~{estimated_total}
+
+{Question text}
+
+{Optional: suggested answers}
+
+---
+📊 **Progress:** {answered}/{estimated_total} · 📋 **Decisions recorded:** {count}
+```
