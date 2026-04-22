@@ -35,7 +35,8 @@ validate_sources() {
   # Common logic files
   for f in workflow.md complexity-rubric.md team-topology.md \
            decomposer.md validator.md plan-generator.md spec-handoff.md \
-           resume-protocol.md unit-format.md requirements-validation.md; do
+           resume-protocol.md unit-format.md requirements-validation.md \
+           terminology.md; do
     if [[ ! -f "$COMMON_DIR/$f" ]]; then
       echo "ERROR: Missing common file: common/$f"
       errors=$((errors + 1))

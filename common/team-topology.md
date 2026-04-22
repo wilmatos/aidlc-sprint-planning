@@ -87,80 +87,17 @@ block the rest of the roadmap.
 Based on the answers, select one or more strategies. Record the selected strategy
 in the elaboration log under `## Team Topology` before generating units.
 
-### Strategy A: Vertical Slices
+| Strategy | Name | Use when |
+|----------|------|----------|
+| A | Vertical Slices | Single full-stack team, demoable units |
+| B | Horizontal Layers | Separate frontend/backend teams, contract-first |
+| C | Risk-First | High uncertainty, spike needed |
+| D | Parallel Streams | Multiple sub-teams, maximize parallelism |
+| E | Complexity-Calibrated | Mixed complexity, match unit size to capacity |
+| F | Domain-Team Alignment | Teams organized by business domain |
 
-**Use when:** Single full-stack team, demoable units, milestone-driven.
-
-**Decompose:** Each unit = complete user-facing capability (UI + API + data). Order by user value. Shared infra = foundational unit.
-
-**Example:**
-```
-01-foundation        (auth, DB schema, shared infra)
-02-user-onboarding   (registration UI + API + email)
-03-core-workflow     (main feature, full vertical slice)
-04-reporting         (dashboard UI + query API)
-```
-
-### Strategy B: Horizontal Layers
-
-**Use when:** Separate frontend/backend teams, parallel work, contract-first integration.
-
-**Decompose:** Add a CONTRACT unit first (API shape, schemas, error codes, auth model). Backend implements contract. Frontend mocks contract, replaces mocks at integration. Integration unit closes streams.
-
-**Contract unit contains:** API schema, request/response examples, error shapes, auth flow, pagination conventions, versioning strategy.
-
-**Example:**
-```
-01-foundation        (shared infra, auth)
-02-api-contract      (OpenAPI spec, shared types, error model)
-03-backend-core      (implements contract endpoints)
-04-frontend-core     (mocks contract, builds UI)
-05-integration       (replace mocks with real API, E2E tests)
-```
-
-### Strategy C: Risk-First
-
-**Use when:** High uncertainty in one or more areas, experimental integrations, unfamiliar technology.
-
-**Decompose:** Isolate uncertain areas into spike units with time-box and clear question to answer. Spikes produce decisions + proof-of-concept, not production code. Remaining units planned after spike. Spikes are always unit 01 or 02.
-
-**Example:**
-```
-01-spike-realtime    (validate WebSocket approach, time-boxed 3 days)
-02-foundation        (built on validated approach from spike)
-```
-
-### Strategy D: Parallel Streams
-
-**Use when:** Multiple developers/sub-teams, mix of independent and dependent units, maximize parallelism.
-
-**Decompose:** Identify dependency graph. Group independent units into parallel streams. Add sync units at merge points. Number parallel units with lane suffix (02a, 02b).
-
-**Example:**
-```
-01-foundation        (everyone depends on this)
-02a-user-auth        (stream A)
-02b-data-pipeline    (stream B, parallel with 02a)
-03-integration       (sync point: merges A and B)
-```
-
-### Strategy E: Complexity-Calibrated
-
-**Use when:** Mixed-complexity features, varying team experience, need to match unit size to capacity.
-
-**Decompose:** Assess each area independently. Combine simple areas into larger units. Split complex areas into smaller units. Split any unit exceeding 2x target duration.
-
-| Target duration | Max stories | Max tasks |
-|----------------|------------|-----------|
-| 2-3 days       | 3-4        | 5-8       |
-| 1 week         | 5-8        | 8-15      |
-| 2 weeks        | 8-12       | 15-25     |
-
-### Strategy F: Domain-Team Alignment
-
-**Use when:** Teams organized around business domains, each team owns a domain end-to-end, minimize cross-team coordination.
-
-**Decompose:** Map units to team ownership boundaries. Each unit ownable by one team. Shared capabilities (auth, notifications, payments) become platform units. Cross-domain interactions = explicit contracts.
+Each strategy is defined in its own reference file (strategy-a through strategy-f).
+Read the selected strategy file before generating units.
 
 ## Topology Profile
 
