@@ -72,23 +72,26 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 
 **Entry:** User confirmed depth, or returned from READY_CHECK.
 
-**Actions per turn:**
+**Exit criteria (any one triggers transition to READY_CHECK):**
+- User explicitly asks to decompose or move to DECOMPOSE phase
+- Question count reaches estimated_total (from complexity-rubric depth guidelines)
+- All categories in complexity-rubric have been covered (Users, Scope, Functionality, Data, Integration, NFRs, Risks)
 
+**Actions per turn:**
 1. Read the log to find the last question number and answer
 2. If previous question has no answer, wait
-3. If answer exists, evaluate whether enough context exists
-4. If enough → READY_CHECK
+3. If answer exists, evaluate whether exit criteria are met
+4. If exit criteria met → READY_CHECK
 5. If not → generate next question, append to log, present
 
 **Question selection strategy:**
-
 - Adapt based on all previous answers, not a rigid category order
 - Follow threads opened by user answers
 - If an answer closes a category, skip remaining questions in it
 - Apply DDD principles: bounded contexts, loose coupling, high cohesion
 - If you'd strongly recommend something, frame it as a question
 
-**Exit:** Enough context (→ READY_CHECK) or user asks to decompose.
+**Exit:** Transition to READY_CHECK or user asks to decompose.
 
 **Log format (per question):**
 
@@ -108,8 +111,11 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 
 **Entry:** Facilitator determines enough context exists.
 
-**Actions:**
+**Exit criteria (any one triggers transition):**
+- User explicitly confirms ready to proceed to TEAM_TOPOLOGY
+- User explicitly asks for more questions (returns to QUESTIONING)
 
+**Actions:**
 1. Summarize key decisions
 2. Ask user if ready to proceed
 
@@ -119,8 +125,12 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 
 **Entry:** User confirmed ready from READY_CHECK.
 
-**Actions:**
+**Exit criteria (any one triggers transition to DECOMPOSE):**
+- Team size and structure (Q1) answered
+- Unit delivery expectation (Q2) answered
+- Decomposition strategy can be selected based on answers
 
+**Actions:**
 1. Read the team-topology reference for the full question set and strategies
 2. Ask topology questions one at a time — skip any already answered
 3. Stop when enough context exists to select a decomposition strategy
@@ -128,7 +138,6 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 5. Transition to DECOMPOSE
 
 **Minimum required before proceeding:**
-
 - Team size and structure (Q1)
 - Unit delivery expectation (Q2)
 
