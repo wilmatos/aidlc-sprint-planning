@@ -339,8 +339,8 @@ per-phase instructions. The sections below cover Power-specific behaviour only.
 
 Before doing anything else on activation, check for `aidlc/elaboration-log.md`
 in the current workspace. If it exists, read the resume-protocol steering file
-and follow the resume flow before proceeding. Do not start a new session if one
-is already in progress.
+and follow the resume flow before proceeding. Always resume an existing session
+rather than starting a new one.
 
 ### Templates
 
@@ -362,7 +362,7 @@ Delegate to subagents rather than performing these tasks inline:
 - **HANDOFF — pre-spec elaboration:** invoke `aidlc-spec-elaborator` per unit
 - **HANDOFF — requirements coverage:** invoke `aidlc-requirements-validator` after writing requirements.md
 
-Invoke subagents directly — do not rely on hooks for any part of this workflow.
+Invoke subagents directly — always call them explicitly rather than relying on hooks.
 
 ### Formatting
 
@@ -380,7 +380,7 @@ always know which phase they are in and what happens next.
 - Delegate to subagents for decomposition, validation, and spec elaboration
 - Reference steering files for detailed guidance on each phase
 
-### ❌ Don't:
+### ❌ Avoid:
 - Batch multiple questions in one turn
 - Assume or invent answers to your own questions
 - Add features the user didn't ask for

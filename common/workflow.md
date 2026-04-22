@@ -51,25 +51,25 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
    - The steps you will follow
    - Where you will stop for their input
 
-4. **Stop at critical decision points.** Do not proceed through a phase transition,
-   generate files, or make structural decisions without explicit user confirmation.
-   Present your plan, then wait.
+4. **Wait for confirmation at decision points.** Always present your plan and wait
+   for explicit user confirmation before proceeding through a phase transition,
+   generating files, or making structural decisions.
 
 5. **One question per turn.** During QUESTIONING, ask exactly one question, then
-   wait. Never batch questions. Never assume answers.
+   wait. Always wait for the answer before generating the next question.
 
 6. **Track everything.** Every question, answer, and decision goes into the
    elaboration log. Every phase transition updates the status dashboard.
 
-7. **Never invent features.** Only include what the user asked for. If something
-   is strongly recommended, raise it as a question. Let the user decide.
+7. **Only include what the user asked for.** If something is strongly recommended,
+   raise it as a question. Let the user decide.
 
 8. **Prefer fewer, larger units.** Justify every split with bounded context
    rationale.
 
-9. **No spec creation until HANDOFF.** Do NOT mention spec creation,
-   `requirements.md`, or implementation until the HANDOFF phase is reached with
-   all units generated, validated, and accepted by the user.
+9. **Spec creation happens only in HANDOFF.** Only mention spec creation,
+   `requirements.md`, or implementation after all units are generated, validated,
+   and accepted by the user.
 
 10. **Autonomous mode requires confirmation.** If the user asks you to run
     autonomously or skip steps, first confirm and offer the choice to proceed
@@ -226,7 +226,7 @@ Read the complexity-rubric reference for factor definitions and depth guidelines
 Read the complexity-rubric reference for question strategy and category guidance.
 
 Rules:
-- Adapt based on all previous answers — do not follow a rigid category order
+- Adapt based on all previous answers — follow threads, skip closed categories
 - Follow threads opened by user answers
 - Apply DDD principles: bounded contexts, loose coupling, high cohesion
 - If you'd strongly recommend something, frame it as a question
@@ -451,15 +451,21 @@ Each phase uses a specific output format. Use the templates defined in these fil
 | Implementation roadmap | workflow.md HANDOFF Phase section above | HANDOFF |
 | Resume presentation | resume-protocol (Resume Presentation section) | Resume |
 
-Always use the template from the referenced file. Do not invent output formats.
+Always use the template from the referenced file. Invent formats only if no template exists.
 
 ## Error Recovery
 
-If the log is inconsistent (question without answer, phase marker without content):
+If the log is inconsistent, apply these recovery rules:
 
-1. Present what you can determine
-2. Ask user to confirm where to resume
-3. Append recovery note:
+| Condition | Recovery action |
+|-----------|----------------|
+| Question without `**Answer:**` | Re-present the unanswered question |
+| `## Phase:` marker with no content after it | Ask user to confirm current phase |
+| DECOMPOSE phase but `aidlc/units/` is empty | Offer to regenerate all units |
+| HANDOFF phase but status.md shows no specs started | Present roadmap with current status |
+| No `## Phase:` marker in log | Treat as corrupted — ask user where to resume |
+
+After recovery, append:
 
 ```markdown
 ## Recovery Note
@@ -475,5 +481,5 @@ Session resumed. Previous state: {detected}. User confirmed: {phase}.
   re-present it.
 - DECOMPOSE with empty `aidlc/units/` means decomposition was interrupted — offer
   to regenerate.
-- Never silently add recommendations to units. Raise them as questions first.
+- Always raise recommendations as questions first. Let the user decide.
 - Circular dependencies between units mean they should be merged into one unit.
