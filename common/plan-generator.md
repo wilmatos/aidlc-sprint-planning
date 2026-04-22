@@ -23,7 +23,7 @@ Write `aidlc/plan.md` — a single document that serves as the team's execution 
 
 One paragraph describing the overall intent, the complexity rating, and the
 decomposition strategy chosen. Written for a developer who wasn't in the
-elaboration session.
+mob elaboration session.
 
 ### 2. Unit Catalogue
 
@@ -180,7 +180,7 @@ both backend and frontend implementations" for Strategy B integration units).
 
 ## Writing Guidelines
 
-- Write for a developer who wasn't in the elaboration session
+- Write for a developer who wasn't in the mob elaboration session
 - Be specific about who does what — use role names from the topology profile
 - If the topology profile didn't specify roles, use generic labels:
   "Developer A", "Backend team", "Frontend team"
