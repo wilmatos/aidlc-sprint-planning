@@ -61,7 +61,7 @@ documents for each unit. Present this as a clear choice:
 ```markdown
 ## 📄 Create Specifications?
 
-For each unit, I can generate three specification documents:
+For each unit, I can generate three specification (spec) documents:
 
 | Document | Purpose |
 |----------|---------|
