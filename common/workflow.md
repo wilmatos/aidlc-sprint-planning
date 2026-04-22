@@ -9,6 +9,32 @@ into bounded implementation units sized for sprint execution.
 Activate when the user wants to plan, decompose, or break down a feature, project,
 or intent — or when they want to resume an existing AIDLC session.
 
+## Phase Transitions
+
+```
+INIT ──→ ASSESS ──→ QUESTIONING ──→ READY_CHECK ──→ TEAM_TOPOLOGY ──→ DECOMPOSE ──→ VALIDATE ──→ HANDOFF ──→ COMPLETE
+                         ↑                │
+                         └────────────────┘
+                      (user wants more questions)
+```
+
+## State Detection
+
+Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
+
+| Marker | Phase | Next Action |
+|--------|-------|-------------|
+| No file exists | INIT | Create session, parse intent |
+| `## Phase: INIT` | INIT | Present understanding, move to ASSESS |
+| `## Phase: ASSESS` | ASSESS | Record depth confirmation, ask first question |
+| `## Phase: QUESTIONING (N)` | QUESTIONING | Read last answer, ask next or READY_CHECK |
+| `## Phase: READY_CHECK` | READY_CHECK | If ready → TEAM_TOPOLOGY. If more → QUESTIONING |
+| `## Phase: TEAM_TOPOLOGY` | TEAM_TOPOLOGY | Ask topology questions, then DECOMPOSE |
+| `## Phase: DECOMPOSE` | DECOMPOSE | Generate units, then VALIDATE |
+| `## Phase: VALIDATE` | VALIDATE | Present validation, then HANDOFF |
+| `## Phase: HANDOFF` | HANDOFF | Present implementation instructions |
+| `## Phase: COMPLETE` | COMPLETE | Session finished |
+
 ## Execution Rules
 
 1. **Always read state first.** Check for `aidlc/elaboration-log.md` and
@@ -84,33 +110,38 @@ confirmation, respond with:
 
 Wait for the user's choice before proceeding.
 
-## Phase Quick Reference
-
-| Phase | What happens | Stops for user |
-|-------|-------------|----------------|
-| INIT | Parse intent, create session files | Understanding confirmation |
-| ASSESS | Complexity assessment, depth recommendation | Depth confirmation |
-| QUESTIONING | Strategic questions, one at a time | Each answer |
-| READY_CHECK | Summarise decisions, propose topology | Readiness confirmation |
-| TEAM_TOPOLOGY | Team structure and decomposition strategy | Each topology question |
-| DECOMPOSE | Generate unit files and plan | Review before generating |
-| VALIDATE | Cross-reference validation | Review findings |
-| HANDOFF | Present roadmap, create specs with validation | Unit selection, each spec |
-| COMPLETE | Session finished | — |
-
-See the state-machine reference for full phase transition logic and error recovery.
+---
 
 ## INIT Phase
 
-**What I'll do:**
+**Entry:** No `aidlc/elaboration-log.md` exists, or user starts a new session.
 
+**Exit:** User confirms or corrects understanding.
+
+**Actions:**
 1. Parse your intent and write my understanding to the elaboration log
 2. Create the session files (`aidlc/elaboration-log.md`, `aidlc/status.md`, `aidlc/units/`)
 3. Present my understanding and ask you to confirm before moving on
 
 Use the elaboration-log and status templates when creating session files.
 
-Present understanding like this:
+**Log format:**
+
+```markdown
+# Sprint Planning — Mob Elaboration Log
+
+## Intent
+
+{raw intent from user}
+
+## Understanding
+
+{your interpretation}
+
+## Phase: INIT
+```
+
+**Present understanding like this:**
 
 ```markdown
 ## 🎯 Intent Received
@@ -130,17 +161,23 @@ Present understanding like this:
 > before we assess complexity?
 ```
 
+---
+
 ## ASSESS Phase
 
-**What I'll do:**
+**Entry:** User confirmed understanding from INIT.
 
+**Exit:** User confirms depth.
+
+**Actions:**
 1. Evaluate your intent against six complexity factors
-2. Present the assessment with a recommended elaboration depth
-3. Ask you to confirm the depth or choose a different level
+2. Record assessment in log
+3. Present the assessment with a recommended elaboration depth
+4. Ask you to confirm the depth or choose a different level
 
 Read the complexity-rubric reference for factor definitions and depth guidelines.
 
-Present the assessment like this:
+**Present the assessment like this:**
 
 ```markdown
 ## 📊 Complexity Assessment
@@ -168,13 +205,23 @@ Present the assessment like this:
 > **3.** 🔽 Go **lighter** — faster, fewer questions
 ```
 
+---
+
 ## QUESTIONING Phase
 
-**What I'll do each turn:**
+**Entry:** User confirmed depth, or returned from READY_CHECK.
 
+**Exit criteria (any one triggers transition to READY_CHECK):**
+- User explicitly asks to decompose or move to DECOMPOSE phase
+- Question count reaches estimated_total (from complexity-rubric depth guidelines)
+- All categories in complexity-rubric have been covered (Users, Scope, Functionality, Data, Integration, NFRs, Risks)
+
+**Actions per turn:**
 1. Review all previous answers and decisions
-2. Determine whether enough context exists to proceed, or generate the next question
-3. Present one focused question and wait for your answer
+2. If previous question has no answer, wait
+3. If answer exists, evaluate whether exit criteria are met
+4. If exit criteria met → READY_CHECK
+5. If not → generate next question, append to log, present one focused question
 
 Read the complexity-rubric reference for question strategy and category guidance.
 
@@ -184,7 +231,21 @@ Rules:
 - Apply DDD principles: bounded contexts, loose coupling, high cohesion
 - If you'd strongly recommend something, frame it as a question
 
-Format each question:
+**Log format (per question):**
+
+```markdown
+## Question {N}: {Short Title}
+
+{question text}
+
+{optional suggested answers}
+
+## Phase: QUESTIONING ({N})
+
+**Answer:** {user's answer, appended after they respond}
+```
+
+**Present each question like this:**
 
 ```markdown
 ## ❓ Question {N} of ~{estimated_total} — {Category}
@@ -197,10 +258,17 @@ Format each question:
 📊 **Progress:** {answered}/{estimated_total} · 📋 **Decisions recorded:** {count}
 ```
 
+---
+
 ## READY_CHECK Phase
 
-**What I'll do:**
+**Entry:** Facilitator determines enough context exists.
 
+**Exit criteria (any one triggers transition):**
+- User explicitly confirms ready to proceed → TEAM_TOPOLOGY
+- User explicitly asks for more questions → QUESTIONING
+
+**Actions:**
 1. Summarise all key decisions made so far
 2. Ask whether you are ready to move to team topology, or want more questions
 
@@ -219,25 +287,49 @@ I've gathered solid context across {N} questions. Here's what I know:
 > **2.** ➕ **No, keep going** — I have more to cover
 ```
 
+---
+
 ## TEAM_TOPOLOGY Phase
 
-**What I'll do:**
+**Entry:** User confirmed ready from READY_CHECK.
 
+**Exit criteria (all required before transition to DECOMPOSE):**
+- Team size and structure (Q1) answered
+- Unit delivery expectation (Q2) answered
+- Decomposition strategy can be selected based on answers
+
+**Actions:**
 1. Ask focused questions about your team structure and delivery expectations
 2. Select a decomposition strategy based on your answers
 3. Present the strategy and ask you to confirm before decomposing
+4. Record the topology profile in the elaboration log
 
 Read the team-topology reference. Ask one question at a time — skip any already
 answered by prior context. Stop when enough context exists to select a strategy.
 
-Minimum required before proceeding:
-- Team size and structure
-- Unit delivery expectation (demoable slices vs. layered build)
+**Log format:**
+
+```markdown
+## Team Topology Question: {Short Title}
+
+{question text}
+
+## Phase: TEAM_TOPOLOGY
+
+**Answer:** {user's answer}
+```
+
+Followed by the full topology profile block after all questions are answered.
+
+---
 
 ## DECOMPOSE Phase
 
-**What I'll do — and I'll tell you before I start:**
+**Entry:** Topology profile recorded.
 
+**Exit:** All unit files and `aidlc/plan.md` generated.
+
+**Actions — tell the user before starting:**
 1. Summarise the decomposition approach I plan to take
 2. Ask you to confirm before generating any files
 3. Generate unit files in `aidlc/units/` following the decomposer reference
@@ -245,7 +337,7 @@ Minimum required before proceeding:
 5. Update `aidlc/status.md`
 6. Present the generated units for your review before proceeding to validation
 
-Before generating, present:
+**Before generating, present:**
 
 ```markdown
 ## 🔧 Ready to Decompose
@@ -268,23 +360,38 @@ Based on our session, here's my plan:
 > **2.** ✏️ **Adjust** — I want to change something first
 ```
 
+---
+
 ## VALIDATE Phase
 
-**What I'll do:**
+**Entry:** DECOMPOSE completed.
 
+**Exit:** User accepts validation results.
+
+**Actions:**
 1. Run all validation checks against the generated units and plan
 2. Present the full validation report
 3. If issues exist, offer to regenerate — otherwise ask you to confirm before HANDOFF
 
 Read the validator reference for all checks.
 
+---
+
 ## HANDOFF Phase
 
-**CRITICAL: Only reach this phase after ALL units are generated and validated, and
-the user has explicitly reviewed and accepted the complete set of units.**
+**Entry:** Validation accepted.
 
-**What I'll do:**
+**CRITICAL GATE:** Before presenting implementation instructions, verify:
+1. ALL unit files exist in `aidlc/units/`
+2. The VALIDATE phase completed successfully with no critical issues
+3. The user has explicitly reviewed and accepted the full set of units
 
+If any gate condition is not met, explain which condition is missing and what
+needs to happen first.
+
+**Exit:** User picks a unit or ends session.
+
+**Actions:**
 1. Present the full implementation roadmap
 2. Ask which unit(s) you want to create specs for
 3. For each unit, follow the full spec creation sequence:
@@ -297,7 +404,7 @@ the user has explicitly reviewed and accepted the complete set of units.**
 
 Read the spec-handoff reference for the full sequence and coverage validation format.
 
-Before starting specs, present:
+**Before starting specs, present:**
 
 ```markdown
 ## 🚀 Implementation Roadmap
@@ -319,6 +426,14 @@ All {N} units have been defined and validated. Full execution plan: `aidlc/plan.
 > **3.** 🗺️ **Roadmap only** — stop here, I'll implement directly
 ```
 
+---
+
+## COMPLETE Phase
+
+**Entry:** All units handed off or user ends session.
+
+---
+
 ## Output Template Reference
 
 Each phase uses a specific output format. Use the templates defined in these files:
@@ -337,6 +452,20 @@ Each phase uses a specific output format. Use the templates defined in these fil
 | Resume presentation | resume-protocol (Resume Presentation section) | Resume |
 
 Always use the template from the referenced file. Do not invent output formats.
+
+## Error Recovery
+
+If the log is inconsistent (question without answer, phase marker without content):
+
+1. Present what you can determine
+2. Ask user to confirm where to resume
+3. Append recovery note:
+
+```markdown
+## Recovery Note
+
+Session resumed. Previous state: {detected}. User confirmed: {phase}.
+```
 
 ## Gotchas
 

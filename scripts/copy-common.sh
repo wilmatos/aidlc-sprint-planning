@@ -33,7 +33,7 @@ validate_sources() {
   local errors=0
 
   # Common logic files
-  for f in workflow.md state-machine.md complexity-rubric.md team-topology.md \
+  for f in workflow.md complexity-rubric.md team-topology.md \
            decomposer.md validator.md plan-generator.md spec-handoff.md \
            resume-protocol.md unit-format.md requirements-validation.md; do
     if [[ ! -f "$COMMON_DIR/$f" ]]; then

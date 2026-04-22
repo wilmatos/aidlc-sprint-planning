@@ -22,8 +22,7 @@ units through strategic questioning.
 
 Follow all instructions in the workflow reference:
 
-- [Workflow](references/workflow.md) — execution rules, phase quick reference, per-phase instructions
-- [State machine](references/state-machine.md) — phase transitions and error recovery
+- [Workflow](references/workflow.md) — execution rules, phase transitions, state detection, per-phase instructions, error recovery
 - [Resume protocol](references/resume-protocol.md) — session state detection and recovery
 - [Complexity rubric](references/complexity-rubric.md) — assessment rubric and question strategy
 - [Team topology](references/team-topology.md) — team structure and decomposition strategy

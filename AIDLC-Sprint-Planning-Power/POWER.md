@@ -319,8 +319,7 @@ After creating all files, verify:
 
 This power includes detailed workflow guides loaded on-demand:
 
-- **workflow** — Execution rules, phase quick reference, and per-phase instructions
-- **state-machine** — Phase transitions, state detection, edge cases, and error recovery
+- **workflow** — Execution rules, phase transitions, state detection, per-phase instructions, and error recovery
 - **complexity-rubric** — Complexity assessment rubric, question depth, question categories and strategy
 - **unit-format** — EARS notation, unit file template, decomposition principles, scaling by depth
 - **team-topology** — Team structure assessment and decomposition strategy selection
