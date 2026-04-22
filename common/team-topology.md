@@ -87,23 +87,13 @@ block the rest of the roadmap.
 Based on the answers, select one or more strategies. Record the selected strategy
 in the elaboration log under `## Team Topology` before generating units.
 
-### Strategy A: Vertical Slices (Full-Stack, Demo-Driven)
+### Strategy A: Vertical Slices
 
-**When to use:**
+**Use when:** Single full-stack team, demoable units, milestone-driven.
 
-- Single full-stack team
-- Each unit should be demoable end-to-end
-- Team prefers seeing working software at each milestone
+**Decompose:** Each unit = complete user-facing capability (UI + API + data). Order by user value. Shared infra = foundational unit.
 
-**How to decompose:**
-
-- Each unit delivers a complete user-facing capability: UI + API + data layer
-- Units are ordered by user value, not technical dependency
-- A unit is "done" when a user can interact with it in a running system
-- Shared infrastructure (auth, observability) gets its own foundational unit first
-
-**Example shape:**
-
+**Example:**
 ```
 01-foundation        (auth, DB schema, shared infra)
 02-user-onboarding   (registration UI + API + email)
@@ -111,25 +101,15 @@ in the elaboration log under `## Team Topology` before generating units.
 04-reporting         (dashboard UI + query API)
 ```
 
-### Strategy B: Horizontal Layers (Specialized Teams, Contract-First)
+### Strategy B: Horizontal Layers
 
-**When to use:**
+**Use when:** Separate frontend/backend teams, parallel work, contract-first integration.
 
-- Separate frontend and backend teams (or mobile + API, etc.)
-- Teams need to work in parallel without blocking each other
-- Integration happens at a defined point, not continuously
+**Decompose:** Add a CONTRACT unit first (API shape, schemas, error codes, auth model). Backend implements contract. Frontend mocks contract, replaces mocks at integration. Integration unit closes streams.
 
-**How to decompose:**
+**Contract unit contains:** API schema, request/response examples, error shapes, auth flow, pagination conventions, versioning strategy.
 
-- Add a CONTRACT unit before any parallel work begins
-- The contract unit defines: API shape, request/response schemas, error codes,
-  auth model, and any shared data types
-- Backend units implement the contract
-- Frontend units mock the contract, build against the mock, replace mock at integration
-- Each parallel stream gets its own numbered units
-
-**Example shape:**
-
+**Example:**
 ```
 01-foundation        (shared infra, auth)
 02-api-contract      (OpenAPI spec, shared types, error model)
@@ -138,102 +118,49 @@ in the elaboration log under `## Team Topology` before generating units.
 05-integration       (replace mocks with real API, E2E tests)
 ```
 
-**Contract unit contents:**
+### Strategy C: Risk-First
 
-- OpenAPI or GraphQL schema (or equivalent)
-- Request/response examples for every endpoint
-- Error response shapes and codes
-- Auth flow and token format
-- Pagination and filtering conventions
-- Versioning strategy
+**Use when:** High uncertainty in one or more areas, experimental integrations, unfamiliar technology.
 
-### Strategy C: Risk-First (Spike Units)
+**Decompose:** Isolate uncertain areas into spike units with time-box and clear question to answer. Spikes produce decisions + proof-of-concept, not production code. Remaining units planned after spike. Spikes are always unit 01 or 02.
 
-**When to use:**
-
-- One or more parts of the system have high uncertainty
-- A technical approach needs validation before committing to a full unit
-- Experimental integrations or unfamiliar technology
-
-**How to decompose:**
-
-- Isolate uncertain areas into spike units with a time-box and a clear question to answer
-- Spike units produce a decision and a proof-of-concept, not production code
-- Remaining units are planned after the spike resolves the uncertainty
-- Spike units are always unit 01 or 02 — they unblock everything else
-
-**Example shape:**
-
+**Example:**
 ```
 01-spike-realtime    (validate WebSocket approach, time-boxed 3 days)
 02-foundation        (built on validated approach from spike)
-03-...
 ```
 
-### Strategy D: Parallel Streams with Synchronization Points
+### Strategy D: Parallel Streams
 
-**When to use:**
+**Use when:** Multiple developers/sub-teams, mix of independent and dependent units, maximize parallelism.
 
-- Multiple developers or sub-teams working simultaneously
-- Some units are independent, others have hard dependencies
-- Team wants to maximize parallelism without losing coordination
+**Decompose:** Identify dependency graph. Group independent units into parallel streams. Add sync units at merge points. Number parallel units with lane suffix (02a, 02b).
 
-**How to decompose:**
-
-- Identify the dependency graph first
-- Group independent units into parallel streams
-- Add explicit synchronization units where streams must merge
-- Each stream is numbered within its lane; sync points get their own unit
-
-**Example shape:**
-
+**Example:**
 ```
 01-foundation        (everyone depends on this)
 02a-user-auth        (stream A)
 02b-data-pipeline    (stream B, parallel with 02a)
 03-integration       (sync point: merges A and B)
-04-...
 ```
 
-### Strategy E: Complexity-Calibrated Units
+### Strategy E: Complexity-Calibrated
 
-**When to use:**
+**Use when:** Mixed-complexity features, varying team experience, need to match unit size to capacity.
 
-- Mixed-complexity feature set (some parts are simple CRUD, others are complex)
-- Team has varying experience levels
-- Want to match unit size to developer capacity
+**Decompose:** Assess each area independently. Combine simple areas into larger units. Split complex areas into smaller units. Split any unit exceeding 2x target duration.
 
-**How to decompose:**
-
-- Assess each functional area's complexity independently
-- Simple areas: combine into larger units (less overhead)
-- Complex areas: split into smaller units (more checkpoints, less risk)
-- Each unit should be completable by one developer in the agreed time-box
-- If a unit would take more than 2x the target duration, split it
-
-**Sizing heuristics:**
-
-| Target duration | Max user stories | Max tasks |
-|----------------|-----------------|-----------|
-| 2-3 days       | 3-4             | 5-8       |
-| 1 week         | 5-8             | 8-15      |
-| 2 weeks        | 8-12            | 15-25     |
+| Target duration | Max stories | Max tasks |
+|----------------|------------|-----------|
+| 2-3 days       | 3-4        | 5-8       |
+| 1 week         | 5-8        | 8-15      |
+| 2 weeks        | 8-12       | 15-25     |
 
 ### Strategy F: Domain-Team Alignment
 
-**When to use:**
+**Use when:** Teams organized around business domains, each team owns a domain end-to-end, minimize cross-team coordination.
 
-- Teams are organized around business domains (not technical layers)
-- Each team owns a domain end-to-end
-- Minimizing cross-team coordination is a priority
-
-**How to decompose:**
-
-- Map units to team ownership boundaries
-- A unit should be ownable by a single team with minimal external dependencies
-- Shared capabilities (auth, notifications, payments) become platform units
-  owned by a platform team or treated as external dependencies
-- Cross-domain interactions are defined as explicit contracts between units
+**Decompose:** Map units to team ownership boundaries. Each unit ownable by one team. Shared capabilities (auth, notifications, payments) become platform units. Cross-domain interactions = explicit contracts.
 
 ## Topology Profile
 

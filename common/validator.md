@@ -8,13 +8,12 @@ All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
 
 ## Validation Checks
 
-1. **Decision Coverage** — Every question/answer from the log is reflected in a unit.
-2. **Dependency Ordering** — Unit 01 has no deps, no circular deps, valid DAG.
-3. **Functionality Gaps** — All intent functionality is covered by units.
-4. **Bounded Context Integrity** — No significant overlap between units.
-5. **NFR Completeness** — All NFR targets from questioning appear in units.
-6. **Plan Consistency** — `aidlc/plan.md` exists; merge sequence matches the
-   dependency graph; every unit appears in the execution order table.
+1. Decision Coverage — every log Q/A reflected in a unit
+2. Dependency Ordering — unit 01 has no deps, no cycles, valid DAG
+3. Functionality Gaps — all intent functionality covered by units
+4. Bounded Context Integrity — no significant overlap between units
+5. NFR Completeness — all NFR targets from questioning in units
+6. Plan Consistency — `aidlc/plan.md` exists, merge sequence matches DAG, all units in execution order
 
 ## How to Count Issues
 

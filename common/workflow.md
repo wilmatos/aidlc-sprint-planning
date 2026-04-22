@@ -77,15 +77,11 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 
 ## Formatting
 
-Format all responses for a rich user interface experience:
-
-- Use clear section headers to separate phases and steps
-- Present all options on separate lines, numbered, with a brief description
-- Use **bold** for labels, phase names, and key terms
-- Use emoji section markers where the interface supports them (🎯 📊 ❓ ✅ 🚀 📄)
-- Use tables for structured data (assessments, unit lists, coverage checks)
-- Use progress indicators to show where the user is in the session
-- Keep prose concise — structure does the heavy lifting
+Format all responses with:
+- Section headers, numbered options, **bold** labels
+- Emoji markers where supported (🎯 📊 ❓ ✅ 🚀 📄)
+- Tables for structured data, progress indicators
+- Concise prose — structure does the heavy lifting
 
 ## Autonomous Mode
 
