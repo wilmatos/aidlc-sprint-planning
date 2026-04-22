@@ -36,8 +36,8 @@ Follow all instructions in the workflow reference:
 
 ## Templates
 
-Use the templates in `assets/` when creating session files:
-- [elaboration-log-template.md](assets/elaboration-log-template.md)
-- [status-template.md](assets/status-template.md)
-- [unit-template.md](assets/unit-template.md)
-- [plan-template.md](assets/plan-template.md)
+Use these templates when creating session files:
+- **elaboration-log-template** → `aidlc/elaboration-log.md`
+- **status-template** → `aidlc/status.md`
+- **unit-template** → each `aidlc/units/NN-name.md`
+- **plan-template** → `aidlc/plan.md`

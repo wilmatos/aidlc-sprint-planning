@@ -345,13 +345,15 @@ is already in progress.
 
 ### Templates
 
-When creating session files during INIT, use the templates from the power's
-`steering/` directory:
+When creating session files during INIT, use these templates:
 
-- `steering/template-elaboration-log-template.md` → `aidlc/elaboration-log.md`
-- `steering/template-status-template.md` → `aidlc/status.md`
-- `steering/template-unit-template.md` → each `aidlc/units/NN-name.md`
-- `steering/template-plan-template.md` → `aidlc/plan.md`
+- **elaboration-log-template** → `aidlc/elaboration-log.md`
+- **status-template** → `aidlc/status.md`
+- **unit-template** → each `aidlc/units/NN-name.md`
+- **plan-template** → `aidlc/plan.md`
+
+These templates are available as steering files with a `template-` prefix
+(e.g., `template-elaboration-log-template.md`).
 
 ### Subagent Delegation
 

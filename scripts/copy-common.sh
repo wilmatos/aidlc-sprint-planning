@@ -14,6 +14,11 @@
 #   dist/aidlc-sprint-planning-power/   — staging → dist/aidlc-sprint-planning-power.zip
 #   dist/aidlc-sprint-planning-skill/   — staging → dist/aidlc-sprint-planning-skill.zip
 #   dist/aidlc-sprint-planning-cli/     — staging → dist/aidlc-sprint-planning-cli.zip
+#
+# Template path mapping (agent instructions reference templates by name only):
+#   Power:  common/templates/*.md → steering/template-*.md  (Kiro only serves steering/)
+#   Skill:  common/templates/*.md → assets/*.md
+#   CLI:    common/templates/*.md → .kiro/templates/*.md
 
 set -euo pipefail
 
