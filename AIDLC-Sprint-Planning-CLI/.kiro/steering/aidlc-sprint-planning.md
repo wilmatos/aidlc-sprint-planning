@@ -36,10 +36,10 @@ visual formats and use the terminal equivalents defined below instead.
 Before creating any spec files during HANDOFF, check whether a `.kiro/` directory
 exists in the current working directory:
 
-- **If `.kiro/` exists:** offer to write specs into `.kiro/specs/{unit-name}/`
+- **If `.kiro/` exists:** offer to write specs into `.kiro/specs/{NN-unit-name}/`
   instead of the default location. Present this as a choice before writing anything.
 - **If `.kiro/` does not exist:** follow the standard workflow (specs alongside
-  the `aidlc/` directory).
+  the `aidlc/` directory as `specs/{NN-unit-name}/`).
 
 Present the choice like this:
 
@@ -50,8 +50,8 @@ Present the choice like this:
 
     Where would you like to write the spec files?
 
-    [1] .kiro/specs/{unit-name}/  (Kiro IDE integration)
-    [2] specs/{unit-name}/        (standard location)
+    [1] .kiro/specs/{NN-unit-name}/  (Kiro IDE integration)
+    [2] specs/{NN-unit-name}/        (standard location)
 ```
 
 ## Autonomous Mode (Terminal Format)

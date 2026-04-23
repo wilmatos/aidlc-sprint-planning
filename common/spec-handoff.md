@@ -81,6 +81,33 @@ For each unit, I can generate three specification (spec) documents:
 
 If the user chooses to create specs, proceed unit by unit following the steps below.
 
+## Spec Output Location
+
+Create spec directories using the same two-digit prefix as the unit files to
+preserve dependency order:
+
+```
+specs/
+├── 01-foundation/
+│   ├── requirements.md
+│   ├── design.md
+│   └── tasks.md
+├── 02-user-auth/
+│   ├── requirements.md
+│   ├── design.md
+│   └── tasks.md
+└── 03-data-pipeline/
+    ├── requirements.md
+    ├── design.md
+    └── tasks.md
+```
+
+The directory name must match the unit file name without the `.md` extension:
+- Unit file `aidlc/units/01-foundation.md` → spec directory `specs/01-foundation/`
+- Unit file `aidlc/units/02-user-auth.md` → spec directory `specs/02-user-auth/`
+
+This ensures specs are listed in build order when browsing the directory.
+
 ## Creating Specs for a Unit
 
 For each unit the user picks to implement, follow this sequence in order. Do not
