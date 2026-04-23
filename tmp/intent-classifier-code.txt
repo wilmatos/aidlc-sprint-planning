@@ -1,0 +1,667 @@
+import { getMetricReporterOrNoOp } from '../platform/telemetry.js';
+import { TelemetryAttributes, TelemetryNamespace, UsageSummaryEntry } from '../types/shared-types.js';
+import { ContextChatMessage } from '../agent-context/context-chat-message';
+import { SupportedModel } from '../utils/model-loading/model-provider';
+import {
+  FinalIntentResult,
+  IntentClassification,
+  IntentVector,
+  LLMIntentResult,
+  LocalIntentResult,
+} from '../types/shared-types.js';
+import { AIMessage, AIMessageChunk, BaseMessage, HumanMessage, mergeMessageRuns } from '@langchain/core/messages';
+import { UnexpectedResponseFormatError } from './errors';
+import { AgentTaskType } from '@aws/codewhisperer-streaming-client';
+import { logger } from '../utils/logger.js';
+
+const Metrics = getMetricReporterOrNoOp(TelemetryNamespace.Agent, 'IntentDetection');
+
+/**
+ * Service for detecting user intent in messages
+ * Implements a multi-phase algorithm to classify user input as chat, action, or specification
+ */
+export interface IIntentDetectionService {
+  /**
+   * Performs quick local classification based on rules
+   * @param userInput User input text
+   * @returns Local intent classification result
+   */
+  detectLocalIntent(userInput: string): LocalIntentResult;
+
+  /**
+   * Starts LLM-based classification (returns a promise)
+   * @param userInput User input text
+   * @param previousMessages Previous chat messages for context
+   * @returns Promise resolving to LLM intent classification result
+   */
+  detectLLMIntent(
+    userInput: string,
+    previousMessages: ContextChatMessage[],
+    signal: AbortSignal,
+    sessionId: string,
+    continuationId: string,
+  ): Promise<LLMIntentResult | undefined>;
+
+  /**
+   * Finalizes intent classification by combining local and LLM results
+   * @param localResult Result from local intent detection
+   * @param llmResult Result from LLM intent detection
+   * @param weights Optional weight overrides
+   * @returns Final intent classification result
+   */
+  finalizeIntent(localResult: LocalIntentResult, llmResult: LLMIntentResult, weights?: IntentVector): FinalIntentResult;
+}
+
+interface IntentClassificationResult {
+  intent: IntentVector;
+  usageSummaryEntry?: UsageSummaryEntry;
+}
+
+/**
+ * Implementation of the IntentDetectionService
+ */
+export class IntentDetectionService implements IIntentDetectionService {
+  private modelClient: SupportedModel;
+  // Used for metrics, static for metric annotations -- only one instance expected!
+  private static modelId: string;
+  private readonly CONFIDENCE_THRESHOLD = 0.8;
+  private readonly DEFAULT_WEIGHTS: IntentVector = {
+    chat: 1,
+    do: 1,
+    spec: 1,
+  };
+  private readonly BIAS_FACTOR = 1.5;
+  private readonly HISTORY_DEPTH = 2;
+
+  // System prompt for the LLM classification
+  private readonly systemPrompt = `
+You are an intent classifier for a language model.
+
+Your job is to classify the user's intent based on their conversation history into one of two main categories:
+
+1. **Do mode** (default for most requests)
+2. **Spec mode** (only for specific specification/planning requests)
+
+Return ONLY a JSON object with 3 properties (chat, do, spec) representing your confidence in each category. The values must always sum to 1.
+
+### Category Definitions
+
+#### 1. Do mode (DEFAULT CHOICE)
+Input belongs in do mode if it:
+- Is NOT explicitly about creating or working with specifications
+- Requests modifications to code or the workspace
+- Is an imperative sentence asking for action
+- Starts with a base-form verb (e.g., "Write," "Create," "Generate")
+- Has an implied subject ("you" is understood)
+- Requests to run commands or make changes to files
+- Asks for information, explanation, or clarification
+- Ends with a question mark (?)
+- Seeks information or explanation
+- Starts with interrogative words like "who," "what," "where," "when," "why," or "how"
+- Begins with a helping verb for yes/no questions, like "Is," "Are," "Can," "Should"
+- Asks for explanation of code or concepts
+- Examples include:
+  - "Write a function to reverse a string."
+  - "Create a new file called index.js."
+  - "Fix the syntax errors in this function."
+  - "Refactor this code to be more efficient."
+  - "What is the capital of France?"
+  - "How do promises work in JavaScript?"
+  - "Can you explain this code?"
+  - "Tell me about design patterns"
+
+#### 2. Spec mode (ONLY for specification requests)
+Input belongs in spec mode ONLY if it EXPLICITLY:
+- Asks to create a specification (or spec) 
+- Uses the word "spec" or "specification" to request creating a formal spec
+- Mentions creating a formal requirements document
+- Involves executing tasks from existing specs
+- Examples include:
+  - "Create a spec for this feature"
+  - "Generate a specification for the login system"
+  - "Let's create a formal spec document for this project"
+  - "Implement a spec based on this conversation"
+  - "Execute task 3.2 from my-feature spec"
+  - "Execute task 2 from My Feature"
+  - "Start task 1 for the spec"
+  - "Start the next task"
+  - "What is the next task in the <feature name> spec?"
+
+IMPORTANT: When in doubt, classify as "Do" mode. Only classify as "Spec" when the user is explicitly requesting to create or work with a formal specification document.
+
+Ensure you look at the historical conversation between you and the user in addition to the latest user message when making your decision.
+Previous messages may have context that is important to consider when combined with the user's latest reply.
+
+IMPORTANT: Respond ONLY with a raw JSON object. No explanation, no commentary, no additional text, no markdown formatting, no code fences (\`\`\`), no backticks.
+
+Example response (exactly this format):
+{"chat": 0.0, "do": 0.9, "spec": 0.1}
+
+Here is the last user message:
+`;
+
+  constructor(modelId: string, modelClient: SupportedModel) {
+    IntentDetectionService.modelId = modelId;
+    this.modelClient = modelClient;
+  }
+
+  /**
+   * Performs quick local classification based on rules
+   * @param userInput User input text
+   * @returns Local intent classification result
+   */
+  @Metrics.Trace('detectLocalIntent', () => {
+    return { [TelemetryAttributes.ModelId]: IntentDetectionService.modelId };
+  })
+  public detectLocalIntent(userInput: string): LocalIntentResult {
+    const intent = this.localClassification(userInput);
+    const classification = this.getClassificationFromIntent(intent);
+    return {
+      intent,
+      classification,
+    };
+  }
+
+  /**
+   * Attempts to classify user input using local rule-based classification
+   * @param input User input text
+   * @returns IntentVector or null if classification is uncertain
+   */
+  private localClassification(input: string): IntentVector {
+    const trimmed = input.trim();
+    const lowerInput = trimmed.toLowerCase();
+
+    // === 1. Chat mode (read-only) ===
+    const questionWords = /^(who|what|where|when|why|how)\b/i;
+    const helpingVerbs = /^(explain|summarize|is|are|can|should|would|could|does|did|has|have|will|was|were|show)\b/i;
+
+    const isQuestion = trimmed.endsWith('?') || questionWords.test(trimmed) || helpingVerbs.test(trimmed);
+
+    if (isQuestion)
+      return {
+        chat: 1,
+        do: 0,
+        spec: 0,
+      };
+
+    // === 2. Do mode (workspace modification) ===
+    const imperativeVerbs = new Set([
+      'do',
+      'write',
+      'generate',
+      'create',
+      'build',
+      'validate',
+      'check',
+      'test',
+      'refactor',
+      'convert',
+      'translate',
+      'implement',
+      'analyze',
+      'debug',
+      'document',
+      'compile',
+      'run',
+      'simulate',
+      'optimize',
+    ]);
+
+    const firstWord = lowerInput.split(/\s+/)[0];
+    const endsWithPeriodOrBang = /[.!]$/.test(trimmed);
+
+    const isImperative =
+      imperativeVerbs.has(firstWord) &&
+      !questionWords.test(trimmed) &&
+      !helpingVerbs.test(trimmed) &&
+      (endsWithPeriodOrBang || !trimmed.includes('?'));
+
+    if (isImperative) return { chat: 0, do: 1, spec: 0 };
+
+    // === 3. Spec mode (requirements and design) ===
+    const specKeywords = [
+      'requirement',
+      'requirements',
+      'design',
+      'plan',
+      'spec',
+      'specs',
+      'specification',
+      'architecture',
+      'implementation',
+      'user story',
+      'feature',
+      'component',
+      'task',
+      'use case',
+      'algorithm',
+      'api',
+      'schema',
+    ];
+
+    const mentionsSpec = specKeywords.some((keyword) => lowerInput.includes(keyword));
+
+    if (mentionsSpec) return { chat: 0, do: 0, spec: 1 };
+
+    // Fallback: use model
+    return {
+      chat: 0,
+      do: 0,
+      spec: 0,
+    };
+  }
+
+  /**
+   * Starts LLM-based classification (returns a promise)
+   * @param userInput User input text
+   * @param previousMessages Previous chat messages for context
+   * @param signal Abort signal for cancellation
+   * @param sessionId Session identifier
+   * @param continuationId Continuation identifier
+   * @returns Promise resolving to LLM intent classification result
+   */
+  @Metrics.Trace('detectLLMIntent', () => {
+    return { [TelemetryAttributes.ModelId]: IntentDetectionService.modelId };
+  })
+  public async detectLLMIntent(
+    userInput: string,
+    previousMessages: ContextChatMessage[],
+    signal: AbortSignal,
+    sessionId: string,
+    continuationId: string,
+  ): Promise<LLMIntentResult | undefined> {
+    const { intent, usageSummaryEntry } = await this.classifyIntent(
+      userInput,
+      previousMessages,
+      signal,
+      sessionId,
+      continuationId,
+    );
+
+    // Determine classification and generate clarification if needed
+    const classification = this.getClassificationFromIntent(intent);
+    const result: LLMIntentResult = {
+      intent,
+      classification,
+      usageSummaryEntry,
+    };
+
+    return result;
+  }
+
+  /**
+   * Finalizes intent classification by combining local and LLM results, plus applying weights
+   * @param localResult Result from local intent detection
+   * @param llmResult Result from LLM intent detection
+   * @param weightOverrides Optional weight overrides to apply to the LLM intent
+   * @returns Final intent classification result
+   */
+  public finalizeIntent(
+    localResult: LocalIntentResult,
+    llmResult?: LLMIntentResult,
+    weightOverrides?: IntentVector,
+  ): FinalIntentResult {
+    // Get the original LLM intent or use local intent if LLM intent is not available
+    const originalLLMIntent = llmResult?.intent ?? this.DEFAULT_WEIGHTS;
+
+    // If no LLM result, use local intent and classification
+    if (!llmResult) {
+      return {
+        localIntent: localResult.intent,
+        llmIntent: originalLLMIntent,
+        finalIntent: localResult.intent,
+        classification: localResult.classification,
+        clarificationQuestion: undefined,
+      };
+    }
+
+    // Apply weights to the LLM intent
+    const weights = weightOverrides ?? this.DEFAULT_WEIGHTS;
+
+    // Apply weights to create weighted intent
+    const weighted = {
+      chat: originalLLMIntent.chat * weights.chat,
+      do: originalLLMIntent.do * weights.do,
+      spec: originalLLMIntent.spec * weights.spec,
+    };
+
+    const weightedIntent = this.normalize(weighted);
+
+    // Determine classification based on weighted intent
+    const classification = this.getClassificationFromIntent(weightedIntent);
+
+    Metrics.reportCountMetrics(
+      {
+        localIntentChat: localResult.intent.chat,
+        localIntentDo: localResult.intent.do,
+        localIntentSpec: localResult.intent.spec,
+        llmIntentChat: originalLLMIntent.chat || 0,
+        llmIntentDo: originalLLMIntent.do || 0,
+        llmIntentSpec: originalLLMIntent.spec || 0,
+        intentDisagreed: localResult.classification !== classification,
+        localIntentAmbiguous: localResult.classification === 'ambiguous',
+        chatWeight: weights.chat,
+        doWeight: weights.do,
+        specWeight: weights.spec,
+      },
+      { [TelemetryAttributes.ModelId]: IntentDetectionService.modelId },
+    );
+
+    return {
+      localIntent: localResult.intent,
+      llmIntent: originalLLMIntent,
+      finalIntent: weightedIntent,
+      classification,
+      clarificationQuestion: llmResult.clarificationQuestion,
+    };
+  }
+
+  /**
+   * Parse out the conversation history, removing all 'forced role' messages (e.g. those representing tool calls)
+   * and strip down to a simplified version of the human/bot/human stream.
+   * The result of this method call is guaranteed to start and end with a human method, alternate between human and bot, and have no empty content messages.
+   * @param conversationHistory the history to process
+   * @returns the normalized set of baseMessages
+   */
+  private getUserMessagesFromConversationHistory(conversationHistory: ContextChatMessage[]): BaseMessage[] {
+    const messages = conversationHistory
+      // We only want real messages, not forced role messages
+      .filter((message) => !message.forcedRole && (message.role === 'human' || message.role === 'bot'))
+      .map((message) => {
+        // Filter above ensures this is true
+        const role = message.role as 'human' | 'bot';
+
+        const textEntries: string[] = [];
+
+        // Extract only text from messages
+        for (const entry of message.entries) {
+          if (entry.type === 'text') {
+            textEntries.push(entry.text);
+          }
+        }
+
+        const content = textEntries.join('\n\n');
+
+        if (role === 'bot') {
+          return new AIMessage({
+            content,
+          });
+        } else {
+          return new HumanMessage({
+            content,
+          });
+        }
+      });
+
+    const truncatedMessages = this.trimMessageHistory(messages);
+
+    if (truncatedMessages.length > 0) {
+      if (truncatedMessages[0].getType() !== 'human') {
+        truncatedMessages.unshift(
+          new HumanMessage({
+            content: 'continue',
+          }),
+        );
+      }
+
+      if (truncatedMessages[truncatedMessages.length - 1].getType() !== 'human') {
+        truncatedMessages.push(
+          new HumanMessage({
+            content: 'continue',
+          }),
+        );
+      }
+    }
+
+    // Ensure there are no null, undefined, or empty strings in 'content'
+    for (const message of truncatedMessages) {
+      if (message.content === '') {
+        message.content = message.getType() === 'human' ? 'continue' : 'understood';
+      }
+    }
+
+    return truncatedMessages;
+  }
+
+  /**
+   * Trims the message history to keep only the most relevant recent messages
+   * The result will contain the last complete human/AI pair, plus the latest human message
+   * (which may not have an AI response yet).
+   * @param messages The full set of messages to trim
+   * @returns Trimmed message history with the last human/AI pair plus latest human message
+   */
+  private trimMessageHistory(messages: BaseMessage[]): BaseMessage[] {
+    if (messages.length === 0) {
+      return [];
+    }
+
+    const groupedMessages = mergeMessageRuns(messages);
+    const result: BaseMessage[] = [];
+
+    const pairs: { human: BaseMessage; ai: BaseMessage }[] = [];
+
+    // Iterate through messages to find human/AI pairs
+    for (let i = 0; i < groupedMessages.length - 1; i++) {
+      if (groupedMessages[i].getType() === 'human' && groupedMessages[i + 1].getType() === 'ai') {
+        pairs.push({
+          human: groupedMessages[i],
+          ai: groupedMessages[i + 1],
+        });
+        // Skip the AI message in the next iteration since we've already paired it
+        i++;
+      }
+    }
+
+    // Get the last complete pair
+    const lastPairs = pairs.slice(-1);
+
+    for (const pair of lastPairs) {
+      result.push(pair.human);
+      result.push(pair.ai);
+    }
+
+    // Check if the last message is a human message (incomplete pair)
+    const lastMessage = groupedMessages[groupedMessages.length - 1];
+    if (lastMessage.getType() === 'human') {
+      // Check if this human message is already part of the last pair we added
+      const isAlreadyIncluded = lastPairs.some((pair) => pair.human === lastMessage);
+      if (!isAlreadyIncluded) {
+        result.push(lastMessage);
+      }
+    }
+
+    // If we have no messages at all, return a synthetic human message
+    if (result.length === 0 && messages.length > 0) {
+      // If there are messages but no valid pairs, return the last human message if it exists
+      const lastHumanMessage = [...groupedMessages].reverse().find((msg) => msg.getType() === 'human');
+      if (lastHumanMessage) {
+        return [lastHumanMessage];
+      }
+      return [new HumanMessage({ content: 'continue' })];
+    }
+
+    return result;
+  }
+
+  /**
+   * Classifies user intent using LLM
+   * @param userInput User input text
+   * @param conversationHistory Previous user and AI messages in the conversation
+   * @returns Promise resolving to IntentVector
+   */
+  private async classifyIntent(
+    userInput: string,
+    conversationHistory: ContextChatMessage[],
+    signal: AbortSignal,
+    sessionId: string,
+    continuationId: string,
+  ): Promise<IntentClassificationResult> {
+    const fullPrompt = `${this.systemPrompt}${userInput}`;
+
+    const messages = mergeMessageRuns([
+      new HumanMessage({
+        content: fullPrompt,
+      }),
+      new AIMessage({
+        content: 'I will follow these instructions',
+      }),
+      ...this.getUserMessagesFromConversationHistory(conversationHistory),
+    ]);
+
+    for (const message of messages) {
+      message.additional_kwargs.conversationId = sessionId;
+      message.additional_kwargs.continuationId = continuationId;
+      message.additional_kwargs.taskType = AgentTaskType.VIBE;
+    }
+
+    try {
+      const response = await this.doLLMIntentClassification(messages, signal);
+
+      const responseText = response.content;
+      if (typeof responseText !== 'string') {
+        throw new UnexpectedResponseFormatError();
+      }
+
+      const cleanedText = stripMarkdownCodeFences(responseText);
+
+      let responseObject: IntentVector;
+      try {
+        responseObject = JSON.parse(cleanedText) as IntentVector;
+      } catch (error) {
+        if (error instanceof SyntaxError) {
+          throw new UnexpectedResponseFormatError();
+        }
+        throw error;
+      }
+
+      // Return the raw intent without applying weights
+      return {
+        intent: this.normalize(responseObject),
+        usageSummaryEntry: response.additional_kwargs.usageSummaryEntry as UsageSummaryEntry | undefined,
+      };
+    } catch (error) {
+      logger.error('Error classifying intent with LLM:', error);
+
+      return {
+        intent: {
+          chat: 0,
+          do: 0,
+          spec: 0,
+        },
+      };
+    }
+  }
+
+  @Metrics.Trace('doLLMIntentClassification', () => {
+    return { [TelemetryAttributes.ModelId]: IntentDetectionService.modelId };
+  })
+  private async doLLMIntentClassification(messages: BaseMessage[], signal: AbortSignal): Promise<AIMessageChunk> {
+    return await this.modelClient.invoke(messages, { signal });
+  }
+
+  /**
+   * Normalize an IntentVector so its values sum to 1
+   * @param intentVector IntentVector object to normalize
+   * @returns Normalized IntentVector object
+   */
+  private normalize(intentVector: IntentVector): IntentVector {
+    const total = Object.values(intentVector).reduce((sum, val) => sum + val, 0);
+
+    // Avoid division by zero
+    if (total === 0) {
+      return { chat: 0.33, do: 0.33, spec: 0.33 }; // Default balanced distribution
+    }
+
+    // Create a new object with normalized values rounded to 2 decimal places
+    const result: IntentVector = {
+      chat: Number((intentVector.chat / total).toPrecision(2)),
+      do: Number((intentVector.do / total).toPrecision(2)),
+      spec: Number((intentVector.spec / total).toPrecision(2)),
+    };
+
+    // Handle potential floating point precision issues
+    // Ensure the sum is exactly 1 by adjusting the largest value if needed
+    const sum = Object.values(result).reduce((s, v) => s + v, 0);
+    if (sum !== 1) {
+      const maxCategory = findMaxIntent(result);
+      result[maxCategory] += Number((1 - sum).toPrecision(2));
+    }
+
+    return result;
+  }
+
+  /**
+   * Get classification type from intent vector
+   * @param intent Intent vector
+   * @returns Classification type
+   */
+  private getClassificationFromIntent(intent: IntentVector): IntentClassification {
+    // Round values to 2 decimal places for comparison
+    const rounded = {
+      chat: Number(intent.chat.toPrecision(2)),
+      do: Number(intent.do.toPrecision(2)),
+      spec: Number(intent.spec.toPrecision(2)),
+    };
+
+    // Find the category with the highest confidence
+    const maxCategory = findMaxIntent(rounded);
+    const maxValue = rounded[maxCategory];
+
+    // Check if the confidence exceeds the threshold
+    if (maxValue >= this.CONFIDENCE_THRESHOLD) {
+      return maxCategory;
+    } else {
+      return 'ambiguous';
+    }
+  }
+
+  /**
+   * Generate a clarification question based on intent and user input
+   * @param intent Intent vector
+   * @returns Clarification question
+   */
+  private generateClarificationQuestion(intent: IntentVector): string {
+    // Find the category with the highest confidence
+    const maxCategory = findMaxIntent(intent);
+
+    // Generate a clarification question based on the most likely intent
+    const clarificationQuestions: Record<keyof IntentVector, string> = {
+      chat: `It seems like you want to chat with me. Is that correct?`,
+      do: `It looks like you want me to modify code or perform an action in your workspace. Is that right?`,
+      spec: `I think you want to work on requirements or design planning. Is that what you need?`,
+    };
+
+    return clarificationQuestions[maxCategory];
+  }
+}
+
+/**
+ * Given a vector of intents, find the maximum classification
+ */
+export function findMaxIntent(intent: IntentVector): keyof IntentVector {
+  let maxCategory: keyof IntentVector = 'chat';
+  let maxValue = intent.chat;
+
+  if (intent.do > maxValue) {
+    maxValue = intent.do;
+    maxCategory = 'do';
+  }
+
+  if (intent.spec > maxValue) {
+    maxCategory = 'spec';
+  }
+
+  return maxCategory;
+}
+
+/**
+ * Strips markdown code fences from a string if present, including JSON indicator and newlines
+ * @param text Text that may contain markdown code fences
+ * @returns Cleaned text without code fences
+ */
+export function stripMarkdownCodeFences(text: string): string {
+  return text
+    .replace(/^```(?:json)?\s*\n?/i, '')
+    .replace(/\n?```\s*$/i, '')
+    .trim();
+}

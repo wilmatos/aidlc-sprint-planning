@@ -37,22 +37,39 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 
 ## Execution Mode
 
-All phases from INIT through VALIDATE operate in **action mode** — the agent
-performs actions (creates files, asks questions, generates units) without
-referencing specifications, spec documents, or formal requirements documents.
+All phases from INIT through VALIDATE operate in **action mode**. The host IDE
+classifies each message as "Do" or "Spec" based on keywords. To stay in Do mode,
+avoid these trigger words in agent responses and user-facing prompts before HANDOFF.
 
-Avoid using the words "spec", "specification", or "requirements document" in any
-response before the HANDOFF phase. Use these alternatives instead:
+**High-risk trigger words** (cause immediate Spec mode classification):
+`spec`, `specification`, `requirement`, `requirements`, `design`, `plan`,
+`architecture`, `implementation`, `user story`, `feature`, `component`,
+`task`, `use case`, `api`, `schema`
 
-| Instead of | Use |
-|-----------|-----|
-| spec / specification | unit file, implementation document |
-| requirements document | unit definition |
-| create a spec | define the unit |
-| spec creation | implementation planning |
+Use these substitutions in all pre-HANDOFF responses:
 
-The HANDOFF phase is the only phase where specification language is appropriate.
-This prevents premature triggering of specification workflows in the host IDE.
+| Trigger word | Safe alternative |
+|-------------|-----------------|
+| spec / specification | unit file, unit definition |
+| requirement(s) | acceptance criteria, expected behavior |
+| design | approach, structure, layout |
+| plan | roadmap, execution order, sequence |
+| architecture | system structure, component layout |
+| implementation | build, development, coding |
+| user story | user need, behavior description |
+| feature | capability, functionality |
+| component | module, part, piece |
+| task | work item, step, action |
+| use case | scenario, workflow |
+| api | endpoint, interface, contract |
+| schema | data model, data shape, structure |
+
+**In the HANDOFF phase only**, specification language is appropriate and expected.
+Use "spec", "requirements.md", "design.md", and "tasks.md" freely in HANDOFF.
+
+**Why this matters:** The host IDE's intent classifier scans both user messages
+and agent responses. If the agent says "let's design the architecture" during
+QUESTIONING, the classifier may switch to Spec mode and interrupt the session.
 
 ## Execution Rules
 

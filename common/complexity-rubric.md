@@ -69,3 +69,18 @@ Format:
 ---
 📊 **Progress:** {answered}/{estimated_total} · 📋 **Decisions recorded:** {count}
 ```
+
+### Safe Question Framing
+
+When asking questions, avoid trigger words that could cause the host IDE to
+switch modes. Frame questions using the safe alternatives from the workflow's
+Execution Mode table. For example:
+
+- Instead of: "What's the API design?"
+- Use: "How should the endpoints be structured?"
+
+- Instead of: "What are the requirements?"
+- Use: "What behavior do you expect?"
+
+- Instead of: "Describe the architecture"
+- Use: "How should the system be structured?"
