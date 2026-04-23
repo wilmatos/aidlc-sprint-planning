@@ -25,14 +25,15 @@ bounded context with its own data ownership, change frequency, or scaling needs}
 > they are implementation checkpoints within one unit. Use them to break large units
 > into reviewable increments without splitting the bounded context.
 
-## Spec Reference
+## Implementation Reference
 
-> ⚠️ **Do not act on this section until all units are defined and validated.**
+> ⚠️ **This section applies only after all units are defined, validated, and
+> the HANDOFF phase is reached.** Ignore this section during decomposition.
 
-When ready to implement this unit (after HANDOFF), create three specification documents:
+When ready to implement this unit, create three implementation documents:
 
 1. **`requirements.md`** — Full requirements using EARS notation
 2. **`design.md`** — Technical design document
 3. **`tasks.md`** — Implementation task breakdown with checkpoints
 
-See the spec-handoff reference for detailed instructions on each document.
+See the handoff reference for detailed instructions on each document.

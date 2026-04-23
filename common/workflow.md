@@ -35,6 +35,25 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 | `## Phase: HANDOFF` | HANDOFF | Present implementation instructions |
 | `## Phase: COMPLETE` | COMPLETE | Session finished |
 
+## Execution Mode
+
+All phases from INIT through VALIDATE operate in **action mode** — the agent
+performs actions (creates files, asks questions, generates units) without
+referencing specifications, spec documents, or formal requirements documents.
+
+Avoid using the words "spec", "specification", or "requirements document" in any
+response before the HANDOFF phase. Use these alternatives instead:
+
+| Instead of | Use |
+|-----------|-----|
+| spec / specification | unit file, implementation document |
+| requirements document | unit definition |
+| create a spec | define the unit |
+| spec creation | implementation planning |
+
+The HANDOFF phase is the only phase where specification language is appropriate.
+This prevents premature triggering of specification workflows in the host IDE.
+
 ## Execution Rules
 
 1. **Always read state first.** Check for `aidlc/elaboration-log.md` and
@@ -67,9 +86,10 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 8. **Prefer fewer, larger units.** Justify every split with bounded context
    rationale.
 
-9. **Spec creation happens only in HANDOFF.** Only mention spec creation,
-   `requirements.md`, or implementation after all units are generated, validated,
-   and accepted by the user.
+9. **Implementation planning happens only in HANDOFF.** Only mention implementation
+   documents, specifications, or `requirements.md` after all units are generated,
+   validated, and accepted by the user. Before HANDOFF, refer to "unit files" and
+   "unit definitions" instead.
 
 10. **Autonomous mode requires confirmation.** If the user asks you to run
     autonomously or skip steps, first confirm and offer the choice to proceed
@@ -458,7 +478,7 @@ If the log is inconsistent, apply these recovery rules:
 | Question without `**Answer:**` | Re-present the unanswered question |
 | `## Phase:` marker with no content after it | Ask user to confirm current phase |
 | DECOMPOSE phase but `aidlc/units/` is empty | Offer to regenerate all units |
-| HANDOFF phase but status.md shows no specs started | Present roadmap with current status |
+| HANDOFF phase but status.md shows no work started | Present roadmap with current status |
 | No `## Phase:` marker in log | Treat as corrupted — ask user where to resume |
 
 After recovery, append:

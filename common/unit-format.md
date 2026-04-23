@@ -49,18 +49,19 @@ bounded context with its own data ownership, change frequency, or scaling needs}
 > they are implementation checkpoints within one unit. Use them to break large units
 > into reviewable increments without splitting the bounded context.
 
-## Spec Reference
+## Implementation Reference
 
-> ⚠️ **Do not act on this section until all units are defined and validated.**
+> ⚠️ **This section applies only after all units are defined, validated, and
+> the HANDOFF phase is reached.** Ignore this section during decomposition.
 
-When ready to implement this unit (after HANDOFF), create three specification documents:
+When ready to implement this unit, create three implementation documents:
 
 1. **`requirements.md`** — Full requirements using EARS notation
    - Map every user story from this unit to at least one requirement
    - Add testable acceptance criteria (specific, measurable, clear pass/fail)
    - Include NFRs with measurable targets
    - Address risks with defensive requirements
-   - Do not add scope beyond this unit file
+   - Scope only what this unit file defines
 
 2. **`design.md`** — Technical design document
    - Architecture decisions and component breakdown
