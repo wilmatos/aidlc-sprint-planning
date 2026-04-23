@@ -22,8 +22,7 @@ units through strategic questioning.
 
 Follow all instructions in the workflow reference:
 
-- [Workflow](references/workflow.md) — execution rules, phase quick reference, per-phase instructions
-- [State machine](references/state-machine.md) — phase transitions and error recovery
+- [Workflow](references/workflow.md) — execution rules, phase transitions, state detection, per-phase instructions, error recovery
 - [Resume protocol](references/resume-protocol.md) — session state detection and recovery
 - [Complexity rubric](references/complexity-rubric.md) — assessment rubric and question strategy
 - [Team topology](references/team-topology.md) — team structure and decomposition strategy
@@ -36,8 +35,8 @@ Follow all instructions in the workflow reference:
 
 ## Templates
 
-Use the templates in `assets/` when creating session files:
-- [elaboration-log-template.md](assets/elaboration-log-template.md)
-- [status-template.md](assets/status-template.md)
-- [unit-template.md](assets/unit-template.md)
-- [plan-template.md](assets/plan-template.md)
+Use these templates when creating session files:
+- **elaboration-log-template** → `aidlc/elaboration-log.md`
+- **status-template** → `aidlc/status.md`
+- **unit-template** → each `aidlc/units/NN-name.md`
+- **plan-template** → `aidlc/plan.md`

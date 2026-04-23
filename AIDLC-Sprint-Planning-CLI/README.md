@@ -20,9 +20,8 @@ The main steering file (`aidlc-sprint-planning.md`) loads automatically via `inc
 | File | Inclusion | Purpose |
 |------|-----------|---------|
 | `aidlc-sprint-planning.md` | always | CLI entry point — terminal formatting rules and spec output location |
-| `aidlc-workflow.md` | always | Core workflow — execution rules and per-phase instructions |
+| `aidlc-workflow.md` | always | Core workflow — execution rules, phase transitions, state detection, per-phase instructions |
 | `aidlc-terminal-format.md` | always | Terminal output format overrides for all phases |
-| `aidlc-state-machine.md` | manual | Phase transitions and state detection |
 | `aidlc-complexity-rubric.md` | manual | Complexity assessment and question strategy |
 | `aidlc-team-topology.md` | manual | Team structure assessment and decomposition strategy |
 | `aidlc-unit-format.md` | manual | EARS notation and unit templates |

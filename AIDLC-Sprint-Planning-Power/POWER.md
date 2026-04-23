@@ -319,8 +319,7 @@ After creating all files, verify:
 
 This power includes detailed workflow guides loaded on-demand:
 
-- **workflow** — Execution rules, phase quick reference, and per-phase instructions
-- **state-machine** — Phase transitions, state detection, edge cases, and error recovery
+- **workflow** — Execution rules, phase transitions, state detection, per-phase instructions, and error recovery
 - **complexity-rubric** — Complexity assessment rubric, question depth, question categories and strategy
 - **unit-format** — EARS notation, unit file template, decomposition principles, scaling by depth
 - **team-topology** — Team structure assessment and decomposition strategy selection
@@ -340,18 +339,20 @@ per-phase instructions. The sections below cover Power-specific behaviour only.
 
 Before doing anything else on activation, check for `aidlc/elaboration-log.md`
 in the current workspace. If it exists, read the resume-protocol steering file
-and follow the resume flow before proceeding. Do not start a new session if one
-is already in progress.
+and follow the resume flow before proceeding. Always resume an existing session
+rather than starting a new one.
 
 ### Templates
 
-When creating session files during INIT, use the templates from the power's
-`steering/` directory:
+When creating session files during INIT, use these templates:
 
-- `steering/template-elaboration-log-template.md` → `aidlc/elaboration-log.md`
-- `steering/template-status-template.md` → `aidlc/status.md`
-- `steering/template-unit-template.md` → each `aidlc/units/NN-name.md`
-- `steering/template-plan-template.md` → `aidlc/plan.md`
+- **elaboration-log-template** → `aidlc/elaboration-log.md`
+- **status-template** → `aidlc/status.md`
+- **unit-template** → each `aidlc/units/NN-name.md`
+- **plan-template** → `aidlc/plan.md`
+
+These templates are available as steering files with a `template-` prefix
+(e.g., `template-elaboration-log-template.md`).
 
 ### Subagent Delegation
 
@@ -361,7 +362,7 @@ Delegate to subagents rather than performing these tasks inline:
 - **HANDOFF — pre-spec elaboration:** invoke `aidlc-spec-elaborator` per unit
 - **HANDOFF — requirements coverage:** invoke `aidlc-requirements-validator` after writing requirements.md
 
-Invoke subagents directly — do not rely on hooks for any part of this workflow.
+Invoke subagents directly — always call them explicitly rather than relying on hooks.
 
 ### Formatting
 
@@ -379,7 +380,7 @@ always know which phase they are in and what happens next.
 - Delegate to subagents for decomposition, validation, and spec elaboration
 - Reference steering files for detailed guidance on each phase
 
-### ❌ Don't:
+### ❌ Avoid:
 - Batch multiple questions in one turn
 - Assume or invent answers to your own questions
 - Add features the user didn't ask for

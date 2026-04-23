@@ -9,14 +9,15 @@ through creating specification documents for each unit.
 
 ## CRITICAL: Handoff Gate
 
-**Do NOT suggest implementation or spec creation until ALL of the following are true:**
+Suggest implementation or spec creation only when ALL of the following are true:
 
 1. ALL unit files have been generated (DECOMPOSE phase complete)
 2. Validation has passed with no critical issues (VALIDATE phase complete)
 3. The user has explicitly reviewed and accepted the complete set of units
 4. The session phase in `aidlc/status.md` is HANDOFF or COMPLETE
 
-If the user asks to start implementation before all units are defined, respond:
+**If any gate condition is not met:** Explain which condition is missing and what
+needs to happen first. Example:
 
 > "Let's finish defining all units first. Once every unit is generated and validated,
 > I'll walk you through the implementation roadmap. This ensures cross-unit
@@ -61,7 +62,7 @@ documents for each unit. Present this as a clear choice:
 ```markdown
 ## 📄 Create Specifications?
 
-For each unit, I can generate three specification documents:
+For each unit, I can generate three specification (spec) documents:
 
 | Document | Purpose |
 |----------|---------|

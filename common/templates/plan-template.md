@@ -12,7 +12,7 @@
 
 {One paragraph: what is being built, why it was decomposed this way, and what
 the team should know before starting. Written for a developer who wasn't in the
-elaboration session.}
+mob elaboration session.}
 
 ---
 

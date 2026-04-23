@@ -35,39 +35,37 @@
 
 ### Adaptive Questioning
 
-Don't rigidly march through categories:
+Start with the most ambiguous category. Follow threads from answers. Skip closed categories. Pursue new concerns immediately. Circle back to uncovered categories before READY_CHECK.
 
-1. Start with the category that has the most ambiguity
-2. Follow threads opened by user answers
-3. If an answer closes a category, skip it
-4. If an answer opens a new concern, pursue it immediately
-5. Circle back to uncovered categories before READY_CHECK
+### Suggest Answers When:
+- Technology choice or scale/scope decision
+- User might not know the available options
 
-### When to Suggest Answers
+### Recommend Strongly:
+> "Based on {reason}, I'd recommend {thing}. Want me to include it?"
 
-Suggest 2-3 possible answers when:
-- The question involves a technology choice
-- The question involves a scale/scope decision
-- The user might not know the options available
+Always raise recommendations as questions. Let the user decide.
 
-Don't suggest answers when:
-- The question is about domain knowledge only the user has
-- Suggesting answers might anchor the user to options they wouldn't consider
+### Bounded Context Signals
 
-### When to Recommend
+Look for: different data ownership, change frequency, team ownership, scaling requirements, deployment cadence, or vocabulary boundaries.
 
-If you'd strongly recommend something the user hasn't mentioned:
+## Question Template
 
-> "Based on {reason}, I'd strongly recommend considering {thing}. Want me to include it?"
+Each question must include:
+1. **Category tag:** [Users] [Scope] [Functionality] [Data] [Integration] [NFRs] [Risks]
+2. **Question type:** Clarification | Decision | Constraint | Boundary
+3. **Suggested answers (2-3):** Only for technology/scale decisions
+4. **Follow-up trigger:** What answer would close this question?
 
-Never silently add recommendations to units.
+Format:
+```markdown
+## [Category] Question {N} of ~{estimated_total}
 
-### DDD Principles During Questioning
+{Question text}
 
-Look for signals that help identify bounded contexts:
-- Different data ownership patterns
-- Different change frequencies
-- Different team ownership
-- Different scaling requirements
-- Different deployment cadences
-- Natural language boundaries (different vocabulary for different parts)
+{Optional: suggested answers}
+
+---
+📊 **Progress:** {answered}/{estimated_total} · 📋 **Decisions recorded:** {count}
+```
