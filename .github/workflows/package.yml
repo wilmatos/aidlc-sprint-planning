@@ -1,0 +1,46 @@
+name: Package
+
+on:
+  push:
+    branches: [main]
+    tags: ['*']
+
+jobs:
+  package-power:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Power package
+        run: bash scripts/copy-common.sh power
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aidlc-sprint-planning-power
+          path: dist/aidlc-sprint-planning-power.zip
+          retention-days: 0
+
+  package-skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Skill package
+        run: bash scripts/copy-common.sh skill
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aidlc-sprint-planning-skill
+          path: dist/aidlc-sprint-planning-skill.zip
+          retention-days: 0
+
+  package-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CLI package
+        run: bash scripts/copy-common.sh cli
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aidlc-sprint-planning-cli
+          path: dist/aidlc-sprint-planning-cli.zip
+          retention-days: 0
