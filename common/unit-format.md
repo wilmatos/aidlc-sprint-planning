@@ -9,6 +9,18 @@ Units are numbered with a two-digit prefix for build order, followed by kebab-ca
 
 Sequence so dependencies are built before dependents.
 
+### Sanitization Rules
+
+When deriving filenames from user intent or unit names:
+1. Convert to lowercase
+2. Replace spaces and underscores with hyphens
+3. Strip all characters except `a-z`, `0-9`, and `-`
+4. Collapse consecutive hyphens into one
+5. Truncate to 40 characters (excluding the `NN-` prefix and `.md` extension)
+6. Reject names that start with `.` or contain `..`
+
+Example: "User Authentication & OAuth 2.0!" → `01-user-authentication-oauth-20.md`
+
 ## EARS Notation for User Stories
 
 | Pattern | Template | When to Use |

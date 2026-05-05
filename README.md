@@ -51,7 +51,6 @@ AIDLC-Sprint-Planning-Power/
     ├── requirements-validation.md  # Validates requirements.md against unit definitions
     ├── resume-protocol.md          # Session state detection and recovery
     ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
-    ├── state-machine.md            # Phase transitions, edge cases, error recovery
     ├── team-topology.md            # Team structure and decomposition strategy
     ├── unit-format.md              # EARS notation, unit file template, scaling rules
     ├── validator.md                # Cross-validation checks for unit files
@@ -104,7 +103,6 @@ AIDLC-Sprint-Planning-Skill/
         ├── requirements-validation.md  # Validates requirements.md against unit definitions
         ├── resume-protocol.md          # Session state detection and recovery
         ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
-        ├── state-machine.md            # Phase transitions, edge cases, error recovery
         ├── team-topology.md            # Team structure and decomposition strategy
         ├── unit-format.md              # EARS notation, unit file template, scaling rules
         └── validator.md                # Cross-validation checks for unit files
@@ -144,7 +142,6 @@ AIDLC-Sprint-Planning-CLI/
     │   ├── aidlc-requirements-validation.md    # Requirements validation (inclusion: manual)
     │   ├── aidlc-resume-protocol.md            # Session recovery (inclusion: manual)
     │   ├── aidlc-spec-handoff.md               # Spec creation and handoff (inclusion: manual)
-    │   ├── aidlc-state-machine.md              # Phase transitions (inclusion: manual)
     │   ├── aidlc-team-topology.md              # Team topology (inclusion: manual)
     │   ├── aidlc-terminal-format.md            # Terminal output formatting (inclusion: manual)
     │   ├── aidlc-unit-format.md                # EARS notation and unit template (inclusion: manual)
@@ -194,7 +191,6 @@ Then run `kiro-cli chat` in that project directory.
 │   ├── requirements-validation.md
 │   ├── resume-protocol.md
 │   ├── spec-handoff.md
-│   ├── state-machine.md
 │   ├── team-topology.md
 │   ├── unit-format.md
 │   ├── validator.md

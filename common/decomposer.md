@@ -7,6 +7,12 @@ session during sprint planning.
 
 Read the full content of `aidlc/elaboration-log.md` and `aidlc/status.md`.
 
+## Output Boundary
+
+Write only to the `aidlc/` directory. All generated files must resolve within
+`aidlc/units/`, `aidlc/plan.md`, or `aidlc/status.md`. Reject any path that
+resolves outside `aidlc/`.
+
 ## Output
 
 Write numbered unit files to `aidlc/units/` using EARS notation for user stories.
