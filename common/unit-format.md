@@ -3,6 +3,7 @@
 ## File Naming
 
 Units are numbered with a two-digit prefix for build order, followed by kebab-case:
+
 - `01-user-identity.md`
 - `02-game-core.md`
 - `03-real-time-sync.md`
@@ -12,6 +13,7 @@ Sequence so dependencies are built before dependents.
 ### Sanitization Rules
 
 When deriving filenames from user intent or unit names:
+
 1. Convert to lowercase
 2. Replace spaces and underscores with hyphens
 3. Strip all characters except `a-z`, `0-9`, and `-`

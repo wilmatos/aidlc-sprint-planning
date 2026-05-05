@@ -29,6 +29,7 @@ All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
 ## Findings Format
 
 List each issue as a single line:
+
 - `Unit {NN}: {description of the gap or conflict}`
 - `Log Q{N}: {decision not reflected in any unit}`
 
@@ -37,6 +38,7 @@ Only report issues the user can act on. Do not flag stylistic preferences or sug
 ## When Validation Fails
 
 If any check has issues:
+
 1. Present the full report
 2. Offer to regenerate affected units or adjust the plan
 3. Wait for user decision before proceeding

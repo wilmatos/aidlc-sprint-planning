@@ -217,11 +217,13 @@ by `scripts/copy-common.sh` and are excluded from version control via `.gitignor
 Never edit the generated files directly — they will be overwritten.
 
 To update logic:
+
 1. Edit the file in `common/`
 2. Run `bash scripts/copy-common.sh all` to sync locally and verify output
 3. Commit only the `common/` change
 
 To update implementation-specific behavior:
+
 - Power: edit `AIDLC-Sprint-Planning-Power/POWER.md`
 - Skill: edit `AIDLC-Sprint-Planning-Skill/aidlc-sprint-planning/SKILL.md`
 - CLI entry point: edit `AIDLC-Sprint-Planning-CLI/.kiro/steering/aidlc-sprint-planning.md`

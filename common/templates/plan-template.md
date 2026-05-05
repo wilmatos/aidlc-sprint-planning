@@ -20,12 +20,13 @@ mob elaboration session.}
 
 {Repeat the following block for each unit}
 
-#### Unit {N}: {Name}
+### Unit {N}: {Name}
 
 **File:** `aidlc/units/NN-{name}.md`
 **Branch:** `feature/NN-{name}`
 **Description:** {one sentence}
 **Key deliverables:**
+
 - {what is tangibly done when this unit is complete}
 - {another deliverable}
 

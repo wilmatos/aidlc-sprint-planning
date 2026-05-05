@@ -188,6 +188,7 @@ the user didn't ask for.
 ### Verdict
 {✅ All checks passed / ⚠️ Issues found — review recommended}
 ```
+
 ```
 
 **File: `~/.kiro/agents/aidlc-spec-elaborator.md`**
@@ -305,6 +306,7 @@ If ambiguous, ask the user which unit file to validate against.
 ### Verdict
 {✅ Full coverage — no gaps detected / ⚠️ Gaps found — review recommended}
 ```
+
 ```
 
 ### Step 2: Verify Installation

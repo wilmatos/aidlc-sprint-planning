@@ -57,6 +57,7 @@ decomposition shapes even for the same feature set.
 
 > If frontend and backend are being built in parallel, how do you want to handle
 > the integration point? Options:
+>
 > 1. Define a contract unit first — both sides implement against it independently,
 >    then integrate
 > 2. Backend-first — frontend waits for working API endpoints

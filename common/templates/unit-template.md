@@ -6,18 +6,22 @@
 bounded context with its own data ownership, change frequency, or scaling needs}
 
 **User Stories:**
+
 - WHEN {condition} THE SYSTEM SHALL {behavior}
 - IF {error condition} THEN THE SYSTEM SHALL {recovery behavior}
 
 **NFRs:**
+
 - {Requirement with measurable target, e.g., "Response latency: < 500ms"}
 
 **Risks:**
+
 - {Risk description} — mitigate with {mitigation strategy}
 
 **Dependencies:** {Other units by number and name, or "None (foundational unit)"}
 
 **Suggested Bolts:**
+
 - Bolt 1: {Scope — a logical chunk of implementation work within this unit}
 
 > A "Bolt" is a logical sub-chunk of work within the unit — a grouping of related

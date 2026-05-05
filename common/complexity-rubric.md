@@ -37,11 +37,13 @@
 
 Start with the most ambiguous category. Follow threads from answers. Skip closed categories. Pursue new concerns immediately. Circle back to uncovered categories before READY_CHECK.
 
-### Suggest Answers When:
+### Suggest Answers When
+
 - Technology choice or scale/scope decision
 - User might not know the available options
 
-### Recommend Strongly:
+### Recommend Strongly
+>
 > "Based on {reason}, I'd recommend {thing}. Want me to include it?"
 
 Always raise recommendations as questions. Let the user decide.
@@ -53,12 +55,14 @@ Look for: different data ownership, change frequency, team ownership, scaling re
 ## Question Template
 
 Each question must include:
+
 1. **Category tag:** [Users] [Scope] [Functionality] [Data] [Integration] [NFRs] [Risks]
 2. **Question type:** Clarification | Decision | Constraint | Boundary
 3. **Suggested answers (2-3):** Only for technology/scale decisions
 4. **Follow-up trigger:** What answer would close this question?
 
 Format:
+
 ```markdown
 ## [Category] Question {N} of ~{estimated_total}
 

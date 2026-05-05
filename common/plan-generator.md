@@ -91,6 +91,7 @@ have no mutual dependencies.
 #### Branch Naming
 
 Suggest a branch name for each unit:
+
 - `feature/01-foundation`
 - `feature/02-user-auth`
 - For parallel streams: `feature/03a-backend-core`, `feature/03b-frontend-core`
@@ -199,4 +200,3 @@ Append a note to `aidlc/elaboration-log.md`:
 ## Plan Generated
 
 `aidlc/plan.md` written. {N} units, {N} merge sequences, strategy {X}.
-```

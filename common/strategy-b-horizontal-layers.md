@@ -7,10 +7,11 @@
 **Contract unit contains:** API schema, request/response examples, error shapes, auth flow, pagination conventions, versioning strategy.
 
 **Example:**
-```
+
+```text
 01-foundation        (shared infra, auth)
 02-api-contract      (OpenAPI spec, shared types, error model)
 03-backend-core      (implements contract endpoints)
 04-frontend-core     (mocks contract, builds UI)
 05-integration       (replace mocks with real API, E2E tests)
-```
+```text

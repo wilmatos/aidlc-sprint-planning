@@ -1,3 +1,4 @@
+```
 # Spec Handoff Reference
 
 ## Overview
@@ -103,6 +104,7 @@ specs/
 ```
 
 The directory name must match the unit file name without the `.md` extension:
+
 - Unit file `aidlc/units/01-foundation.md` → spec directory `specs/01-foundation/`
 - Unit file `aidlc/units/02-user-auth.md` → spec directory `specs/02-user-auth/`
 
@@ -117,6 +119,7 @@ skip steps or reorder them.
 
 Before writing any spec document, ask 2-5 focused, tactical questions about this
 specific unit. These are implementation-detail questions not covered during mob elaboration:
+
 - Specific API contracts and response shapes
 - Error handling and recovery behavior
 - Data validation rules and edge cases
@@ -131,6 +134,7 @@ Ask one question at a time. Record answers in the elaboration log under
 
 Using the unit definition, elaboration log, and spec elaboration answers, write
 a requirements document using EARS notation:
+
 - Map every user story from the unit to at least one requirement
 - Add testable acceptance criteria (specific, measurable, clear pass/fail)
 - Include NFRs with measurable targets
@@ -141,6 +145,7 @@ a requirements document using EARS notation:
 
 Immediately after writing requirements.md, validate it against the source unit file
 before proceeding to design. Cross-check against:
+
 - Every user story in the unit file
 - Every NFR in the unit file
 - Every risk and its mitigation strategy
@@ -167,6 +172,7 @@ until the result is fully covered. Do NOT proceed to Step 4 until coverage is co
 ### Step 4: Write design.md
 
 Write a technical design document:
+
 - Architecture decisions and component breakdown
 - Data models and API contracts
 - Integration points with dependent units
@@ -176,6 +182,7 @@ Write a technical design document:
 ### Step 5: Write tasks.md
 
 Break the unit into concrete, independently executable implementation tasks:
+
 - Each task has: clear scope, acceptance criteria, and a validation checkpoint
 - Order tasks by dependency
 - Flag tasks that can be parallelized
@@ -202,4 +209,3 @@ These units can be implemented simultaneously:
 
 These must be sequential:
 - Unit {Z} depends on Unit {X} — implement {X} first
-```

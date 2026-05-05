@@ -1,3 +1,4 @@
+```
 # AIDLC Sprint Planning — Core Workflow
 
 This workflow implements the AI-DLC mob elaboration technique for sprint planning.
@@ -11,7 +12,7 @@ or intent — or when they want to resume an existing AIDLC session.
 
 ## Phase Transitions
 
-```
+```text
 INIT ──→ ASSESS ──→ QUESTIONING ──→ READY_CHECK ──→ TEAM_TOPOLOGY ──→ DECOMPOSE ──→ VALIDATE ──→ HANDOFF ──→ COMPLETE
                          ↑                │
                          └────────────────┘
@@ -115,6 +116,7 @@ QUESTIONING, the classifier may switch to Spec mode and interrupt the session.
 ## Formatting
 
 Format all responses with:
+
 - Section headers, numbered options, **bold** labels
 - Emoji markers where supported (🎯 📊 ❓ ✅ 🚀 📄)
 - Tables for structured data, progress indicators
@@ -133,13 +135,13 @@ confirmation, respond with:
 > How would you like to proceed?
 >
 > **1.** 🤖 **Autonomous** — I'll run through all phases and make reasonable
->    decisions without stopping, then present the full output for your review
+> decisions without stopping, then present the full output for your review
 >
 > **2.** 🧭 **Guided (recommended)** — I'll follow the normal workflow, stopping
->    at key decision points so you stay in control of the important choices
+> at key decision points so you stay in control of the important choices
 >
 > **3.** ⚡ **Accelerated** — I'll skip low-stakes confirmations but still stop
->    at phase transitions and before generating files
+> at phase transitions and before generating files
 
 Wait for the user's choice before proceeding.
 
@@ -152,6 +154,7 @@ Wait for the user's choice before proceeding.
 **Exit:** User confirms or corrects understanding.
 
 **Actions:**
+
 1. Parse your intent and write my understanding to the elaboration log
 2. Create the session files (`aidlc/elaboration-log.md`, `aidlc/status.md`, `aidlc/units/`)
 3. Present my understanding and ask you to confirm before moving on
@@ -203,6 +206,7 @@ Use the elaboration-log and status templates when creating session files.
 **Exit:** User confirms depth.
 
 **Actions:**
+
 1. Evaluate your intent against six complexity factors
 2. Record assessment in log
 3. Present the assessment with a recommended elaboration depth
@@ -245,11 +249,13 @@ Read the complexity-rubric reference for factor definitions and depth guidelines
 **Entry:** User confirmed depth, or returned from READY_CHECK.
 
 **Exit criteria (any one triggers transition to READY_CHECK):**
+
 - User explicitly asks to decompose or move to DECOMPOSE phase
 - Question count reaches estimated_total (from complexity-rubric depth guidelines)
 - All categories in complexity-rubric have been covered (Users, Scope, Functionality, Data, Integration, NFRs, Risks)
 
 **Actions per turn:**
+
 1. Review all previous answers and decisions
 2. If previous question has no answer, wait
 3. If answer exists, evaluate whether exit criteria are met
@@ -259,6 +265,7 @@ Read the complexity-rubric reference for factor definitions and depth guidelines
 Read the complexity-rubric reference for question strategy and category guidance.
 
 Rules:
+
 - Adapt based on all previous answers — follow threads, skip closed categories
 - Follow threads opened by user answers
 - Apply DDD principles: bounded contexts, loose coupling, high cohesion
@@ -298,10 +305,12 @@ Rules:
 **Entry:** Facilitator determines enough context exists.
 
 **Exit criteria (any one triggers transition):**
+
 - User explicitly confirms ready to proceed → TEAM_TOPOLOGY
 - User explicitly asks for more questions → QUESTIONING
 
 **Actions:**
+
 1. Summarise all key decisions made so far
 2. Ask whether you are ready to move to team topology, or want more questions
 
@@ -327,11 +336,13 @@ I've gathered solid context across {N} questions. Here's what I know:
 **Entry:** User confirmed ready from READY_CHECK.
 
 **Exit criteria (all required before transition to DECOMPOSE):**
+
 - Team size and structure (Q1) answered
 - Unit delivery expectation (Q2) answered
 - Decomposition strategy can be selected based on answers
 
 **Actions:**
+
 1. Ask focused questions about your team structure and delivery expectations
 2. Select a decomposition strategy based on your answers
 3. Present the strategy and ask you to confirm before decomposing
@@ -363,6 +374,7 @@ Followed by the full topology profile block after all questions are answered.
 **Exit:** All unit files and `aidlc/plan.md` generated.
 
 **Actions — tell the user before starting:**
+
 1. Summarise the decomposition approach I plan to take
 2. Ask you to confirm before generating any files
 3. Generate unit files in `aidlc/units/` following the decomposer reference
@@ -402,6 +414,7 @@ Based on our session, here's my plan:
 **Exit:** User accepts validation results.
 
 **Actions:**
+
 1. Run all validation checks against the generated units and plan
 2. Present the full validation report
 3. If issues exist, offer to regenerate — otherwise ask you to confirm before HANDOFF
@@ -415,6 +428,7 @@ Read the validator reference for all checks.
 **Entry:** Validation accepted.
 
 **CRITICAL GATE:** Before presenting implementation instructions, verify:
+
 1. ALL unit files exist in `aidlc/units/`
 2. The VALIDATE phase completed successfully with no critical issues
 3. The user has explicitly reviewed and accepted the full set of units
@@ -425,6 +439,7 @@ needs to happen first.
 **Exit:** User picks a unit or ends session.
 
 **Actions:**
+
 1. Present the full implementation roadmap
 2. Ask which unit(s) you want to create specs for
 3. For each unit, follow the full spec creation sequence:
@@ -466,6 +481,7 @@ All {N} units have been defined and validated. Full execution plan: `aidlc/plan.
 **Entry:** All units handed off or user ends session.
 
 **Actions:**
+
 1. Update `aidlc/status.md` — set Current Phase to COMPLETE, Last Updated to now
 2. Present a brief session summary: total questions asked, units generated, specs created
 3. Confirm the session is finished
