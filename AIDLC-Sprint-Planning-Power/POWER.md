@@ -112,7 +112,7 @@ Each unit file must include:
 - Risks (with mitigation strategies)
 - Dependencies (other units by number and name, or "None")
 - Suggested Bolts (logical sub-chunks of implementation work within the unit)
-- Spec Reference section (boilerplate — do not act on it during decomposition)
+- Implementation Reference section (included in every unit file but only relevant during HANDOFF — ignore during decomposition)
 
 ## Plan Generation
 

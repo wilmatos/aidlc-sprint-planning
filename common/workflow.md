@@ -465,6 +465,11 @@ All {N} units have been defined and validated. Full execution plan: `aidlc/plan.
 
 **Entry:** All units handed off or user ends session.
 
+**Actions:**
+1. Update `aidlc/status.md` — set Current Phase to COMPLETE, Last Updated to now
+2. Present a brief session summary: total questions asked, units generated, specs created
+3. Confirm the session is finished
+
 ---
 
 ## Output Template Reference
