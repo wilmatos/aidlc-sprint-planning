@@ -317,6 +317,23 @@ After creating all files, verify:
 - [ ] `~/.kiro/agents/aidlc-spec-elaborator.md` exists
 - [ ] `~/.kiro/agents/aidlc-requirements-validator.md` exists
 
+## Available Steering Files
+
+This power includes detailed workflow guides loaded on-demand. These files are
+assembled from `common/` and bundled into the packaged power (under `steering/`) by
+the build pipeline (`scripts/copy-common.sh`), so they ship inside the installed power:
+
+- **workflow** — Execution rules, phase transitions, state detection, per-phase instructions, and error recovery
+- **complexity-rubric** — Complexity assessment rubric, question depth, question categories and strategy
+- **unit-format** — EARS notation, unit file template, decomposition principles, scaling by depth
+- **team-topology** — Team structure assessment and decomposition strategy selection
+- **decomposer** — Unit generation rules
+- **validator** — Cross-validation checks for unit files
+- **plan-generator** — Execution plan generation
+- **spec-handoff** — Creating specs from units, per-unit elaboration, requirements coverage validation
+- **requirements-validation** — Validates requirements.md coverage against unit definitions
+- **resume-protocol** — Session state detection, resume presentation, recovery scenarios
+
 ## Core Workflow
 
 Read the workflow steering file for execution rules, phase quick reference, and
