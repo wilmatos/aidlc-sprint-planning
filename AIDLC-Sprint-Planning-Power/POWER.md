@@ -319,7 +319,9 @@ After creating all files, verify:
 
 ## Available Steering Files
 
-This power includes detailed workflow guides loaded on-demand:
+This power includes detailed workflow guides loaded on-demand. These files are
+assembled from `common/` and bundled into the packaged power (under `steering/`) by
+the build pipeline (`scripts/copy-common.sh`), so they ship inside the installed power:
 
 - **workflow** — Execution rules, phase transitions, state detection, per-phase instructions, and error recovery
 - **complexity-rubric** — Complexity assessment rubric, question depth, question categories and strategy
@@ -404,3 +406,12 @@ Verify the onboarding step completed. Check `~/.kiro/agents/` for the four agent
 ### Requirements validation not running
 Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/units/`
 contains a unit file whose name matches the current spec.
+
+## License and support
+
+This power is licensed under the **Apache License 2.0**. A full copy of the license
+text is available in the [LICENSE](https://github.com/Keerthi-Sreenivas/aidlc-sprint-planning/blob/main/LICENSE)
+file at the root of the repository.
+
+For support, questions, or to report a problem, open an issue at
+[github.com/Keerthi-Sreenivas/aidlc-sprint-planning/issues](https://github.com/Keerthi-Sreenivas/aidlc-sprint-planning/issues).
