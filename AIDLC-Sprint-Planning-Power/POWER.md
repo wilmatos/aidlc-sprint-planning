@@ -3,7 +3,7 @@ name: "aidlc-sprint-planning"
 displayName: "AIDLC Sprint Planning"
 description: "Structured sprint planning using the AI-DLC mob elaboration technique. Decomposes intents into implementation units through strategic questioning, producing specs ready for Kiro's Spec-Driven Development."
 keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to"]
-author: "workspace"
+author: "Will Matos"
 ---
 
 # AIDLC Sprint Planning
