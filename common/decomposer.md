@@ -41,6 +41,12 @@ determining unit boundaries, ordering, and naming.
 If no `## Team Topology` section exists in the log, default to Strategy A (read
 `strategy-a-vertical-slices.md`) and note the assumption in the decomposition summary.
 
+Under any strategy, if the topology profile shows parallel work and two units worked
+on simultaneously share a seam (an endpoint, a shared function's signature, a claim a
+token must carry), pin that seam in a contract unit or in an earlier unit both depend
+on, including any obligation that fails silently if dropped. Skip this when the units
+share nothing or are built one after another.
+
 ## Scale Detail by Depth
 
 - Lightweight: 2-3 stories, brief NFRs, key risks
