@@ -158,6 +158,8 @@ Verdict: {All checks passed / Issues found - review recommended}
 ## Validation Confirmation
 
 ```
+Validation complete. How would you like to proceed?
+
 [1] Continue to handoff
 [2] Independent review first - a reviewer that has not seen this
     session tries to break the units against the codebase
@@ -169,9 +171,9 @@ Verdict: {All checks passed / Issues found - review recommended}
 === Structure Review ===
 
 Findings:
-  - {BLOCKING / WORTH FIXING / SUGGESTION} Unit {NN}: {what breaks}
+  - {WILL BREAK / WORTH FIXING / SUGGESTION} Unit {NN}: {what breaks}
     Evidence: {file:line, code path, or log Q{N}}
     Smallest change: {what to change}
 
-Verdict: {No blocking findings / Blocking findings - review before handoff}
+Verdict: {Nothing will break / Findings that will break - review before handoff}
 ```

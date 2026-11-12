@@ -51,10 +51,10 @@ AIDLC-Sprint-Planning-Power/
     ├── requirements-validation.md  # Validates requirements.md against unit definitions
     ├── resume-protocol.md          # Session state detection and recovery
     ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
+    ├── structure-review.md         # Optional independent review after validation
     ├── team-topology.md            # Team structure and decomposition strategy
     ├── unit-format.md              # EARS notation, unit file template, scaling rules
     ├── validator.md                # Cross-validation checks for unit files
-    ├── structure-review.md         # Optional independent review after validation
     ├── template-elaboration-log-template.md  # Starting template for aidlc/sprints/{sprint}/elaboration-log.md
     ├── template-plan-template.md             # Starting template for aidlc/sprints/{sprint}/plan.md
     ├── template-status-template.md           # Starting template for aidlc/sprints/{sprint}/status.md
@@ -105,9 +105,9 @@ AIDLC-Sprint-Planning-Skill/
         ├── requirements-validation.md  # Validates requirements.md against unit definitions
         ├── resume-protocol.md          # Session state detection and recovery
         ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
+        ├── structure-review.md         # Optional independent review after validation
         ├── team-topology.md            # Team structure and decomposition strategy
         ├── unit-format.md              # EARS notation, unit file template, scaling rules
-        ├── structure-review.md         # Optional independent review after validation
         └── validator.md                # Cross-validation checks for unit files
 ```
 

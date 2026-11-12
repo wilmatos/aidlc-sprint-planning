@@ -339,15 +339,16 @@ those checks.
 
 - An assumption the existing system contradicts
 - A seam two units rely on that neither unit defines
-- An execution order that leaves a unit unable to start
+- An undeclared execution order that leaves a unit unable to start
 - An NFR target the chosen structure cannot meet
-- A boundary that forces two units to change together
+- A boundary that forces two units to change together for an unstated reason
 
 ## Rules
 
 1. Ground each finding in a unit file and line, a code path, or a log decision.
 2. Label a finding backed only by preference as a suggestion.
 3. Leave every file unchanged. Return findings for the user to decide on.
+4. Findings the user declines do not block handoff.
 
 ## Report Format
 
@@ -356,13 +357,13 @@ those checks.
 
 ### Findings
 
-- **{Blocking / Worth fixing / Suggestion}** — Unit {NN}: {what breaks}
+- **{Will break / Worth fixing / Suggestion}** — Unit {NN}: {what breaks}
   - Evidence: {file:line, code path, or log Q{N}}
   - Smallest change: {what to change in the unit file or execution order}
 
 ### Verdict
 
-{✅ No blocking findings / ⚠ Blocking findings — review before handoff}
+{✅ Nothing will break / ⚠ Findings that will break — review before handoff}
 ```
 
 ```

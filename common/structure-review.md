@@ -4,12 +4,11 @@ Instructions for an optional, independent review of the unit files and execution
 order, offered after the validation report. The review reports findings only; the
 user decides what to change.
 
-## Why It Runs Separately
+## How to Run
 
-The validator compares units to the elaboration log. It cannot catch a log that is
-itself wrong, and the session that wrote the units shares their assumptions. Run
-this review as the `aidlc-structure-reviewer` subagent, which starts without the
-session history. If the host has no subagents, run it inline and tell the user the
+The session that wrote the units shares their assumptions, so run this review as
+the `aidlc-structure-reviewer` subagent. Pass it the file paths only, not a summary
+of the session. If the host has no subagents, run it inline and tell the user the
 review is not independent.
 
 ## Input
@@ -26,9 +25,9 @@ Try to break the cut. Report where it fails once someone builds it:
 |----------|---------|
 | An assumption the system contradicts | A unit relies on results sorted by price; the search mode in use does not keep that order |
 | A seam with no owner | Two units both read a data shape that neither unit defines |
-| An order that blocks | Unit 03 needs a data shape that only Unit 05 creates |
+| An undeclared order that blocks | Unit 03 needs a data shape that only Unit 05 creates, and its dependencies do not list Unit 05 |
 | A target the structure cannot meet | An NFR that the chosen data store cannot reach |
-| A boundary that will not hold | Two units that must change together on every edit |
+| A boundary that will not hold | Two units that must change together on every edit, for a reason the units do not state |
 
 Ground each finding in evidence the user can check: a unit file and line, a code
 path, or a decision in the log. Label a finding backed only by preference as a
@@ -41,16 +40,18 @@ suggestion. Skip anything the validator already checks. Leave every file unchang
 
 ### Findings
 
-- **{Blocking / Worth fixing / Suggestion}** — Unit {NN}: {what breaks}
+- **{Will break / Worth fixing / Suggestion}** — Unit {NN}: {what breaks}
   - Evidence: {file:line, code path, or log Q{N}}
   - Smallest change: {what to change in the unit file or execution order}
 
 ### Verdict
 
-{✅ No blocking findings / ⚠ Blocking findings — review before handoff}
+{✅ Nothing will break / ⚠ Findings that will break — review before handoff}
 ```
 
 ## After the Review
 
 Present the findings and ask which to apply. Apply only those the user picks:
-regenerate the affected units or execution order, then re-run the validator.
+record each as a decision in the elaboration log, regenerate the affected units or
+execution order, then re-run the validator. Findings the user declines do not block
+HANDOFF.

@@ -423,8 +423,7 @@ Based on our session, here's my plan:
 1. Run all validation checks against the generated units and plan
 2. Present the full validation report
 3. If issues exist, offer to regenerate
-4. Ask you to confirm before HANDOFF, offering the optional structure review first.
-   If you accept, run it, present its findings, and apply only the ones you pick
+4. Ask you to confirm before HANDOFF, offering the optional structure review first
 
 Read the validator reference for all checks and the structure-review reference for
 the optional review.
@@ -433,6 +432,8 @@ the optional review.
 
 ```markdown
 ---
+> Validation complete. How would you like to proceed?
+>
 > **1.** 🚀 **Continue** to handoff
 >
 > **2.** 🔍 **Independent review first** — a reviewer that has not seen this
