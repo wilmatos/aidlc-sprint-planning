@@ -10,6 +10,9 @@ into bounded implementation units sized for sprint execution.
 Activate when the user wants to plan, decompose, or break down a feature, project,
 or intent — or when they want to resume an existing AIDLC session.
 
+When the user says a unit or the sprint is done, follow the unit-completion
+reference instead of this workflow.
+
 ## Phase Transitions
 
 ```text
@@ -75,9 +78,10 @@ QUESTIONING, the classifier may switch to Spec mode and interrupt the session.
 
 ## Execution Rules
 
-1. **Always read state first.** Check `aidlc/sprints/` for sprint folders. If any
-   exist, follow the resume protocol before doing anything else. Tell every
-   subagent the active sprint folder (`aidlc/sprints/{sprint}/`).
+1. **Always read state first.** If `aidlc/lessons.md` exists, read it before
+   anything else and apply its lessons. Then check `aidlc/sprints/` for sprint
+   folders. If any exist, follow the resume protocol before doing anything else.
+   Tell every subagent the active sprint folder (`aidlc/sprints/{sprint}/`).
 
 2. **Reflect before responding.** Before sending any response, review it internally:
    Is this the clearest, most useful answer I can give? Is anything ambiguous or

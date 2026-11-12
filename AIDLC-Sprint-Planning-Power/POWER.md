@@ -2,7 +2,7 @@
 name: "aidlc-sprint-planning"
 displayName: "AIDLC Sprint Planning"
 description: "Structured sprint planning using the AI-DLC mob elaboration technique. Decomposes intents into implementation units through strategic questioning, producing specs ready for Kiro's Spec-Driven Development."
-keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to"]
+keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to", "unit done", "unit complete", "pr merged", "sprint done", "close the sprint", "unit-completion"]
 author: "Will Matos"
 ---
 
@@ -334,6 +334,7 @@ the build pipeline (`scripts/copy-common.sh`), so they ship inside the installed
 - **spec-handoff** — Creating specs from units, per-unit elaboration, requirements coverage validation
 - **requirements-validation** — Validates requirements.md coverage against unit definitions
 - **resume-protocol** — Session state detection, resume presentation, recovery scenarios
+- **unit-completion** — Records unit and sprint outcomes and keeps lessons in `aidlc/lessons.md`
 
 ## Core Workflow
 
@@ -342,10 +343,13 @@ per-phase instructions. The sections below cover Power-specific behaviour only.
 
 ### Session State on Activation
 
-Before doing anything else on activation, check for sprint folders under
-`aidlc/sprints/` in the current workspace. If any exist, read the resume-protocol
-steering file and follow the resume flow before proceeding. Resume an open sprint
-rather than starting a new one, unless the user asks for a new sprint.
+Before doing anything else on activation, read `aidlc/lessons.md` if it exists.
+
+If the user says a unit or the sprint is done, read the unit-completion steering
+file and follow it. Otherwise, check for sprint folders under `aidlc/sprints/` in
+the current workspace. If any exist, read the resume-protocol steering file and
+follow the resume flow before proceeding. Resume an open sprint rather than
+starting a new one, unless the user asks for a new sprint.
 
 ### Templates
 

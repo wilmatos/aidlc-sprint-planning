@@ -173,7 +173,7 @@ A checklist that applies to every unit before it can be merged:
 - [ ] No regressions in dependent units (run integration tests if available)
 - [ ] Branch rebased on latest main before merge
 - [ ] Demo checkpoint verified (something runnable/showable)
-- [ ] `aidlc/sprints/{sprint}/status.md` updated to reflect unit completion
+- [ ] Outcome recorded in the unit's PR — when this unit is done, run unit-completion
 ```
 
 Add unit-specific additions where relevant (e.g., "contract validated against

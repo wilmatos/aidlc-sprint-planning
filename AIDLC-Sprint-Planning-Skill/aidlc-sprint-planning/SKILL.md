@@ -32,6 +32,7 @@ Follow all instructions in the workflow reference:
 - [Plan generator](references/plan-generator.md) — execution plan generation
 - [Spec handoff](references/spec-handoff.md) — spec creation, per-unit elaboration, requirements coverage validation
 - [Requirements validation](references/requirements-validation.md) — validates requirements.md against unit definitions
+- [Unit completion](references/unit-completion.md) — records unit and sprint outcomes, keeps lessons in `aidlc/lessons.md`
 
 ## Templates
 

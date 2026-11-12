@@ -12,4 +12,5 @@ Use these terms consistently across all phases and output.
 | **spec elaboration** | Per-unit questioning before writing specs (HANDOFF phase) | "Run spec elaboration for Unit 02" |
 | **unit** | A bounded implementation chunk produced by decomposition | "Unit 01: Foundation" |
 | **bolt** | A sub-chunk of work within a unit | "Bolt 1: Database schema" |
+| **lesson** | A developer's correction kept for next time in `aidlc/lessons.md` | "Keep that as a lesson for this project" |
 | **AIDLC Sprint Planning** | The tool/product name | Title and headings only |

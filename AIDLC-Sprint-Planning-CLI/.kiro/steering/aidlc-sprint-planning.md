@@ -14,6 +14,11 @@ Follow all instructions in `.kiro/steering/aidlc-workflow.md` for execution rule
 phase quick reference, and per-phase instructions. The sections below cover
 CLI-specific behaviour only.
 
+## Unit and Sprint Completion
+
+When the user says a unit or the sprint is done, follow
+`.kiro/steering/aidlc-unit-completion.md` instead of the planning workflow.
+
 ## Terminal Output Rules
 
 This is a CLI environment. Output renders in a plain terminal, not a markdown viewer.

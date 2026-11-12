@@ -28,6 +28,16 @@ All three implement the same state machine and elaboration logic — they differ
 
 State machine: `INIT → ASSESS → QUESTIONING → READY_CHECK → TEAM_TOPOLOGY → DECOMPOSE → VALIDATE → HANDOFF → COMPLETE`
 
+### After planning: unit and sprint completion
+
+Units are usually built in other sessions that never load the planning workflow. Every unit file and `aidlc/plan.md` carry the line "When this unit is done, run unit-completion." That routine records the unit's outcome in its own PR, asks whether to keep anything the developer corrected as a lesson in `aidlc/lessons.md`, and at sprint end opens one sprint-close PR that compares the plan with what shipped and prunes the lessons. The lessons step borrows the learnings ritual from [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (`core/aidlc-common/protocols/stage-protocol-learnings.md`), done with prompts only.
+
+The first time it writes a lesson, unit-completion adds one line to the project's `AGENTS.md` pointing at `aidlc/lessons.md`, so every later session reads it:
+
+- Kiro (IDE, CLI and Web) and Codex always load `AGENTS.md`.
+- Claude Code reads `CLAUDE.md`, so add a `CLAUDE.md` containing `@AGENTS.md`.
+- Kiro teams that want the lessons always in context can add `#[[file:aidlc/lessons.md]]` to `AGENTS.md`.
+
 ---
 
 ## AIDLC-Sprint-Planning-Power
@@ -52,6 +62,7 @@ AIDLC-Sprint-Planning-Power/
     ├── resume-protocol.md          # Session state detection and recovery
     ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
     ├── team-topology.md            # Team structure and decomposition strategy
+    ├── unit-completion.md          # Unit and sprint outcomes, lessons in aidlc/lessons.md
     ├── unit-format.md              # EARS notation, unit file template, scaling rules
     ├── validator.md                # Cross-validation checks for unit files
     ├── template-elaboration-log-template.md  # Starting template for aidlc/sprints/{sprint}/elaboration-log.md
@@ -89,6 +100,10 @@ A generic Skill — client-agnostic, no file copying to client-specific folders.
 
 ```
 AIDLC-Sprint-Planning-Skill/
+├── aidlc-unit-completion/
+│   ├── SKILL.md                        # Runs when a unit or sprint is done
+│   └── references/
+│       └── unit-completion.md          # Unit and sprint outcomes, lessons in aidlc/lessons.md
 └── aidlc-sprint-planning/
     ├── SKILL.md                        # Agent instructions and phase reference
     ├── assets/
@@ -104,13 +119,14 @@ AIDLC-Sprint-Planning-Skill/
         ├── resume-protocol.md          # Session state detection and recovery
         ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
         ├── team-topology.md            # Team structure and decomposition strategy
+        ├── unit-completion.md          # Unit and sprint outcomes, lessons in aidlc/lessons.md
         ├── unit-format.md              # EARS notation, unit file template, scaling rules
         └── validator.md                # Cross-validation checks for unit files
 ```
 
 ### Installation
 
-Copy the `AIDLC-Sprint-Planning-Skill/aidlc-sprint-planning/` directory into your skills folder and activate it from your agent host.
+Copy the `AIDLC-Sprint-Planning-Skill/aidlc-sprint-planning/` and `AIDLC-Sprint-Planning-Skill/aidlc-unit-completion/` directories into your skills folder and activate them from your agent host.
 
 ---
 
@@ -144,6 +160,7 @@ AIDLC-Sprint-Planning-CLI/
     │   ├── aidlc-spec-handoff.md               # Spec creation and handoff (inclusion: manual)
     │   ├── aidlc-team-topology.md              # Team topology (inclusion: manual)
     │   ├── aidlc-terminal-format.md            # Terminal output formatting (inclusion: manual)
+    │   ├── aidlc-unit-completion.md            # Unit and sprint outcomes, lessons (inclusion: manual)
     │   ├── aidlc-unit-format.md                # EARS notation and unit template (inclusion: manual)
     │   └── aidlc-validator.md                  # Cross-validation checks (inclusion: manual)
     └── templates/
@@ -192,6 +209,7 @@ Then run `kiro-cli chat` in that project directory.
 │   ├── resume-protocol.md
 │   ├── spec-handoff.md
 │   ├── team-topology.md
+│   ├── unit-completion.md
 │   ├── unit-format.md
 │   ├── validator.md
 │   └── templates/
@@ -201,7 +219,7 @@ Then run `kiro-cli chat` in that project directory.
 │       └── unit-template.md
 │
 ├── AIDLC-Sprint-Planning-Power/       # Kiro IDE power implementation
-├── AIDLC-Sprint-Planning-Skill/       # Generic skill implementation
+├── AIDLC-Sprint-Planning-Skill/       # Generic skill implementations (planning, unit completion)
 ├── AIDLC-Sprint-Planning-CLI/         # Kiro CLI implementation
 │
 ├── scripts/
