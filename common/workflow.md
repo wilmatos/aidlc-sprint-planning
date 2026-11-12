@@ -422,9 +422,22 @@ Based on our session, here's my plan:
 
 1. Run all validation checks against the generated units and plan
 2. Present the full validation report
-3. If issues exist, offer to regenerate — otherwise ask you to confirm before HANDOFF
+3. If issues exist, offer to regenerate
+4. Ask you to confirm before HANDOFF, offering the optional structure review first.
+   If you accept, run it, present its findings, and apply only the ones you pick
 
-Read the validator reference for all checks.
+Read the validator reference for all checks and the structure-review reference for
+the optional review.
+
+**When asking to confirm, present:**
+
+```markdown
+---
+> **1.** 🚀 **Continue** to handoff
+>
+> **2.** 🔍 **Independent review first** — a reviewer that has not seen this
+> session tries to break the units against the codebase and reports findings
+```
 
 ---
 
@@ -507,6 +520,7 @@ Each phase uses a specific output format. Use the templates defined in these fil
 | Unit files | unit-template | DECOMPOSE |
 | Execution plan | plan-template | DECOMPOSE |
 | Validation report | validator (Report Format section) | VALIDATE |
+| Structure review | structure-review (Report Format section) | VALIDATE |
 | Implementation roadmap | workflow.md HANDOFF Phase section above | HANDOFF |
 | Resume presentation | resume-protocol (Resume Presentation section) | Resume |
 

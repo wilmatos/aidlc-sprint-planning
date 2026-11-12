@@ -28,6 +28,7 @@ The main steering file (`aidlc-sprint-planning.md`) loads automatically via `inc
 | `aidlc-decomposer.md` | manual | Unit generation rules |
 | `aidlc-plan-generator.md` | manual | Execution plan generation |
 | `aidlc-validator.md` | manual | Cross-validation checks |
+| `aidlc-structure-review.md` | manual | Optional independent review of units |
 | `aidlc-spec-handoff.md` | manual | Implementation roadmap and handoff |
 | `aidlc-resume-protocol.md` | manual | Session resumption and recovery |
 | `aidlc-requirements-validation.md` | manual | Requirements coverage validation |
@@ -40,6 +41,7 @@ The main steering file (`aidlc-sprint-planning.md`) loads automatically via `inc
 | `aidlc-validator.json` | Cross-validates unit files |
 | `aidlc-spec-elaborator.json` | Per-unit implementation questioning |
 | `aidlc-requirements-validator.json` | Validates requirements against units |
+| `aidlc-structure-reviewer.json` | Optional independent review of units after validation |
 
 ### Templates (`.kiro/templates/`)
 

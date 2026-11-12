@@ -29,7 +29,7 @@ rich status tracking throughout.
 
 ## Onboarding
 
-On first activation, create four subagent files in `~/.kiro/agents/`. Installing
+On first activation, create five subagent files in `~/.kiro/agents/`. Installing
 globally makes these agents available across all your workspaces.
 
 ### Step 1: Create Subagent Files
@@ -310,6 +310,63 @@ If ambiguous, ask the user which unit file to validate against.
 
 ```
 
+**File: `~/.kiro/agents/aidlc-structure-reviewer.md`**
+
+```markdown
+---
+name: aidlc-structure-reviewer
+description: >
+  Independently reviews AIDLC unit files and the execution order after validation,
+  looking for where the cut breaks once built. Reads the units, aidlc/plan.md, the
+  elaboration log decisions, and the existing codebase. Reports findings only. Use
+  when the user asks for an independent review before handoff.
+tools: ["read"]
+---
+
+# AIDLC Structure Reviewer
+
+You did not write these units. Try to break the cut, and report where it fails once
+someone builds it. The validator has already compared the units to the log; skip
+those checks.
+
+## Input
+
+- All unit files from `aidlc/units/` and `aidlc/plan.md`
+- The decisions in `aidlc/elaboration-log.md`
+- The existing codebase, when the intent changes one
+
+## What to Look For
+
+- An assumption the existing system contradicts
+- A seam two units rely on that neither unit defines
+- An execution order that leaves a unit unable to start
+- An NFR target the chosen structure cannot meet
+- A boundary that forces two units to change together
+
+## Rules
+
+1. Ground each finding in a unit file and line, a code path, or a log decision.
+2. Label a finding backed only by preference as a suggestion.
+3. Leave every file unchanged. Return findings for the user to decide on.
+
+## Report Format
+
+```markdown
+## 🔍 Structure Review
+
+### Findings
+
+- **{Blocking / Worth fixing / Suggestion}** — Unit {NN}: {what breaks}
+  - Evidence: {file:line, code path, or log Q{N}}
+  - Smallest change: {what to change in the unit file or execution order}
+
+### Verdict
+
+{✅ No blocking findings / ⚠ Blocking findings — review before handoff}
+```
+
+```
+
 ### Step 2: Verify Installation
 
 After creating all files, verify:
@@ -317,6 +374,7 @@ After creating all files, verify:
 - [ ] `~/.kiro/agents/aidlc-validator.md` exists
 - [ ] `~/.kiro/agents/aidlc-spec-elaborator.md` exists
 - [ ] `~/.kiro/agents/aidlc-requirements-validator.md` exists
+- [ ] `~/.kiro/agents/aidlc-structure-reviewer.md` exists
 
 ## Available Steering Files
 
@@ -330,6 +388,7 @@ the build pipeline (`scripts/copy-common.sh`), so they ship inside the installed
 - **team-topology** — Team structure assessment and decomposition strategy selection
 - **decomposer** — Unit generation rules
 - **validator** — Cross-validation checks for unit files
+- **structure-review** — Optional independent review of units after validation
 - **plan-generator** — Execution plan generation
 - **spec-handoff** — Creating specs from units, per-unit elaboration, requirements coverage validation
 - **requirements-validation** — Validates requirements.md coverage against unit definitions
@@ -364,6 +423,7 @@ These templates are available as steering files with a `template-` prefix
 Delegate to subagents rather than performing these tasks inline:
 - **DECOMPOSE phase:** invoke `aidlc-decomposer` to generate unit files
 - **VALIDATE phase:** invoke `aidlc-validator` to cross-validate units
+- **VALIDATE — optional review:** invoke `aidlc-structure-reviewer` if the user accepts the independent review
 - **HANDOFF — pre-spec elaboration:** invoke `aidlc-spec-elaborator` per unit
 - **HANDOFF — requirements coverage:** invoke `aidlc-requirements-validator` after writing requirements.md
 
@@ -402,7 +462,7 @@ Read the resume-protocol steering file. Check that the sprint's `aidlc/sprints/{
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
-Verify the onboarding step completed. Check `~/.kiro/agents/` for the four agent files.
+Verify the onboarding step completed. Check `~/.kiro/agents/` for the five agent files.
 
 ### Requirements validation not running
 Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/sprints/*/units/`

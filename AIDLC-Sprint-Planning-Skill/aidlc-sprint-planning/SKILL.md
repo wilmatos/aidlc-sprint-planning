@@ -29,6 +29,7 @@ Follow all instructions in the workflow reference:
 - [Unit format](references/unit-format.md) — EARS notation and unit template
 - [Decomposer](references/decomposer.md) — unit generation rules
 - [Validator](references/validator.md) — cross-validation checks
+- [Structure review](references/structure-review.md) — optional independent review after validation
 - [Plan generator](references/plan-generator.md) — execution plan generation
 - [Spec handoff](references/spec-handoff.md) — spec creation, per-unit elaboration, requirements coverage validation
 - [Requirements validation](references/requirements-validation.md) — validates requirements.md against unit definitions

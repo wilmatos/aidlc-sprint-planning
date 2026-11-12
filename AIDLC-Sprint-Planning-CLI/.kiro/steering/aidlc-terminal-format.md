@@ -154,3 +154,24 @@ Sections written:
 
 Verdict: {All checks passed / Issues found - review recommended}
 ```
+
+## Validation Confirmation
+
+```
+[1] Continue to handoff
+[2] Independent review first - a reviewer that has not seen this
+    session tries to break the units against the codebase
+```
+
+## Structure Review
+
+```
+=== Structure Review ===
+
+Findings:
+  - {BLOCKING / WORTH FIXING / SUGGESTION} Unit {NN}: {what breaks}
+    Evidence: {file:line, code path, or log Q{N}}
+    Smallest change: {what to change}
+
+Verdict: {No blocking findings / Blocking findings - review before handoff}
+```

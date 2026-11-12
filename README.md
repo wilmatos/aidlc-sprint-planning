@@ -54,6 +54,7 @@ AIDLC-Sprint-Planning-Power/
     ├── team-topology.md            # Team structure and decomposition strategy
     ├── unit-format.md              # EARS notation, unit file template, scaling rules
     ├── validator.md                # Cross-validation checks for unit files
+    ├── structure-review.md         # Optional independent review after validation
     ├── template-elaboration-log-template.md  # Starting template for aidlc/sprints/{sprint}/elaboration-log.md
     ├── template-plan-template.md             # Starting template for aidlc/sprints/{sprint}/plan.md
     ├── template-status-template.md           # Starting template for aidlc/sprints/{sprint}/status.md
@@ -68,6 +69,7 @@ The `POWER.md` onboarding installs these artifacts into the target workspace:
 | Subagent | `~/.kiro/agents/aidlc-validator.md` | Cross-validates unit files |
 | Subagent | `~/.kiro/agents/aidlc-spec-elaborator.md` | Per-unit requirements elaboration |
 | Subagent | `~/.kiro/agents/aidlc-requirements-validator.md` | Validates requirements against units |
+| Subagent | `~/.kiro/agents/aidlc-structure-reviewer.md` | Optional independent review of units after validation |
 
 ### Installation
 
@@ -105,6 +107,7 @@ AIDLC-Sprint-Planning-Skill/
         ├── spec-handoff.md             # Spec creation from units, per-unit elaboration
         ├── team-topology.md            # Team structure and decomposition strategy
         ├── unit-format.md              # EARS notation, unit file template, scaling rules
+        ├── structure-review.md         # Optional independent review after validation
         └── validator.md                # Cross-validation checks for unit files
 ```
 
@@ -132,6 +135,7 @@ AIDLC-Sprint-Planning-CLI/
     │   ├── aidlc-decomposer.json               # Generates unit files from elaboration log
     │   ├── aidlc-requirements-validator.json   # Validates requirements against units
     │   ├── aidlc-spec-elaborator.json          # Per-unit requirements elaboration
+    │   ├── aidlc-structure-reviewer.json       # Optional independent review of units
     │   └── aidlc-validator.json                # Cross-validates unit files
     ├── steering/
     │   ├── aidlc-sprint-planning.md            # Core workflow — CLI formatting, delegates to aidlc-workflow.md
@@ -142,6 +146,7 @@ AIDLC-Sprint-Planning-CLI/
     │   ├── aidlc-requirements-validation.md    # Requirements validation (inclusion: manual)
     │   ├── aidlc-resume-protocol.md            # Session recovery (inclusion: manual)
     │   ├── aidlc-spec-handoff.md               # Spec creation and handoff (inclusion: manual)
+    │   ├── aidlc-structure-review.md           # Optional independent review (inclusion: manual)
     │   ├── aidlc-team-topology.md              # Team topology (inclusion: manual)
     │   ├── aidlc-terminal-format.md            # Terminal output formatting (inclusion: manual)
     │   ├── aidlc-unit-format.md                # EARS notation and unit template (inclusion: manual)
@@ -191,6 +196,7 @@ Then run `kiro-cli chat` in that project directory.
 │   ├── requirements-validation.md
 │   ├── resume-protocol.md
 │   ├── spec-handoff.md
+│   ├── structure-review.md
 │   ├── team-topology.md
 │   ├── unit-format.md
 │   ├── validator.md
