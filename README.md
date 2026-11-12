@@ -30,7 +30,7 @@ State machine: `INIT → ASSESS → QUESTIONING → READY_CHECK → TEAM_TOPOLOG
 
 ### After planning: unit and sprint completion
 
-Units are usually built in other sessions that never load the planning workflow. Every unit file and `aidlc/plan.md` carry the line "When this unit is done, run unit-completion." That routine records the unit's outcome in its own PR, asks whether to keep anything the developer corrected as a lesson in `aidlc/lessons.md`, and at sprint end opens one sprint-close PR that compares the plan with what shipped and prunes the lessons. The lessons step borrows the learnings ritual from [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (`core/aidlc-common/protocols/stage-protocol-learnings.md`), done with prompts only.
+Units are usually built in other sessions that never load the planning workflow. Every unit file carries the line "When this unit is done, run unit-completion.", and the Definition of Done in `aidlc/plan.md` points to it too. That routine records the unit's outcome in its own PR, asks whether to keep anything the developer corrected as a lesson in `aidlc/lessons.md`, and at sprint end opens one sprint-close PR that compares the plan with what shipped and prunes the lessons. The lessons step borrows the learnings ritual from [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (`core/aidlc-common/protocols/stage-protocol-learnings.md`), done with prompts only.
 
 The first time it writes a lesson, unit-completion adds one line to the project's `AGENTS.md` pointing at `aidlc/lessons.md`, so every later session reads it:
 

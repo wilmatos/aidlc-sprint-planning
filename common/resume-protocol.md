@@ -94,7 +94,8 @@ proceed to INIT.
 
 ### Interrupted During Handoff
 
-1. Check `aidlc/sprints/{sprint}/status.md` for progress
+1. Check `aidlc/sprints/{sprint}/status.md` for progress, and the Unit Outcome
+   blocks in merged PRs for units finished since the last sprint close
 2. Present roadmap with current status
 3. Ask which unit to work on next
 

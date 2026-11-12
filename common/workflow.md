@@ -78,10 +78,11 @@ QUESTIONING, the classifier may switch to Spec mode and interrupt the session.
 
 ## Execution Rules
 
-1. **Always read state first.** If `aidlc/lessons.md` exists, read it before
-   anything else and apply its lessons. Then check `aidlc/sprints/` for sprint
-   folders. If any exist, follow the resume protocol before doing anything else.
-   Tell every subagent the active sprint folder (`aidlc/sprints/{sprint}/`).
+1. **Always read state first.** Read `aidlc/lessons.md` first if it exists and
+   apply its lessons. Then, unless the user says a unit or the sprint is done (see
+   When to Activate), check `aidlc/sprints/` for sprint folders. If any exist,
+   follow the resume protocol before doing anything else. Tell every subagent the
+   active sprint folder (`aidlc/sprints/{sprint}/`).
 
 2. **Reflect before responding.** Before sending any response, review it internally:
    Is this the clearest, most useful answer I can give? Is anything ambiguous or

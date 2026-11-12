@@ -2,7 +2,7 @@
 name: "aidlc-sprint-planning"
 displayName: "AIDLC Sprint Planning"
 description: "Structured sprint planning using the AI-DLC mob elaboration technique. Decomposes intents into implementation units through strategic questioning, producing specs ready for Kiro's Spec-Driven Development."
-keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to", "unit done", "unit complete", "pr merged", "sprint done", "close the sprint", "unit-completion"]
+keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to", "unit done", "unit complete", "sprint done", "unit-completion"]
 author: "Will Matos"
 ---
 
@@ -105,6 +105,7 @@ the assumption in the decomposition summary.
 ## Unit File Structure
 
 Each unit file must include:
+- The line "When this unit is done, run unit-completion." directly under the title
 - Description (one paragraph)
 - Bounded Context Rationale (why this is a separate unit)
 - User Stories (EARS notation)
@@ -127,7 +128,9 @@ After writing all unit files, generate `aidlc/sprints/{sprint}/plan.md` with the
 5. **Branch and Merge Guide** — branch naming, merge sequence with prerequisites and
    who merges, merge conflict hotspots
 6. **Risk and Coordination Notes** — cross-unit risks the team should watch for
-7. **Definition of Done** — checklist that applies to every unit before merge
+7. **Definition of Done** — checklist that applies to every unit before merge,
+   ending with "Outcome recorded in the unit's PR — when this unit is done, run
+   unit-completion"
 ```
 
 **File: `~/.kiro/agents/aidlc-validator.md`**
