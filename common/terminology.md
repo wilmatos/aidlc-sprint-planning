@@ -6,7 +6,8 @@ Use these terms consistently across all phases and output.
 |------|---------|---------------|
 | **mob elaboration** | The questioning technique | "Apply the mob elaboration technique" |
 | **sprint planning** | The context where the technique is applied | "During sprint planning, we use mob elaboration" |
-| **elaboration log** | The session artifact (`aidlc/elaboration-log.md`) | "Record the answer in the elaboration log" |
+| **elaboration log** | The session artifact (`aidlc/sprints/{sprint}/elaboration-log.md`) | "Record the answer in the elaboration log" |
+| **sprint folder** | `aidlc/sprints/{sprint}/` — one per mob elaboration session, holding its elaboration log, status dashboard, units and `plan.md`. `{sprint}` is a short kebab-case name set at INIT | "Write units into the sprint folder" |
 | **mob elaboration session** | A complete run of the technique | "Resume the mob elaboration session" |
 | **spec elaboration** | Per-unit questioning before writing specs (HANDOFF phase) | "Run spec elaboration for Unit 02" |
 | **unit** | A bounded implementation chunk produced by decomposition | "Unit 01: Foundation" |

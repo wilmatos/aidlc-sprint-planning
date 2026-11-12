@@ -15,7 +15,7 @@ Suggest implementation or spec creation only when ALL of the following are true:
 1. ALL unit files have been generated (DECOMPOSE phase complete)
 2. Validation has passed with no critical issues (VALIDATE phase complete)
 3. The user has explicitly reviewed and accepted the complete set of units
-4. The session phase in `aidlc/status.md` is HANDOFF or COMPLETE
+4. The session phase in `aidlc/sprints/{sprint}/status.md` is HANDOFF or COMPLETE
 
 **If any gate condition is not met:** Explain which condition is missing and what
 needs to happen first. Example:
@@ -26,7 +26,7 @@ needs to happen first. Example:
 
 ## Handoff Presentation
 
-Present units as a numbered implementation roadmap. Reference `aidlc/plan.md` —
+Present units as a numbered implementation roadmap. Reference `aidlc/sprints/{sprint}/plan.md` —
 it contains the full execution guide, branch/merge instructions, and assignment
 recommendations already generated during DECOMPOSE.
 
@@ -34,7 +34,7 @@ recommendations already generated during DECOMPOSE.
 ## 🚀 Implementation Roadmap
 
 All {N} units have been defined, validated, and a full execution plan has been
-written to `aidlc/plan.md`. That document contains:
+written to `aidlc/sprints/{sprint}/plan.md`. That document contains:
 - Unit summaries and key deliverables
 - Dependency graph and execution waves
 - Branch naming and merge sequence (who merges what, in what order)
@@ -43,8 +43,8 @@ written to `aidlc/plan.md`. That document contains:
 
 | Order | Unit | File | Dependencies | Status |
 |-------|------|------|-------------|--------|
-| 1 | {name} | `aidlc/units/01-xxx.md` | None | ⬜ Not started |
-| 2 | {name} | `aidlc/units/02-xxx.md` | Unit 1 | ⬜ Not started |
+| 1 | {name} | `aidlc/sprints/{sprint}/units/01-xxx.md` | None | ⬜ Not started |
+| 2 | {name} | `aidlc/sprints/{sprint}/units/02-xxx.md` | Unit 1 | ⬜ Not started |
 
 ### Parallel Opportunities
 
@@ -105,8 +105,8 @@ specs/
 
 The directory name must match the unit file name without the `.md` extension:
 
-- Unit file `aidlc/units/01-foundation.md` → spec directory `specs/01-foundation/`
-- Unit file `aidlc/units/02-user-auth.md` → spec directory `specs/02-user-auth/`
+- Unit file `aidlc/sprints/{sprint}/units/01-foundation.md` → spec directory `specs/01-foundation/`
+- Unit file `aidlc/sprints/{sprint}/units/02-user-auth.md` → spec directory `specs/02-user-auth/`
 
 This ensures specs are listed in build order when browsing the directory.
 
@@ -191,10 +191,10 @@ Break the unit into concrete, independently executable implementation tasks:
 
 ## Updating Status
 
-After specs are created for a unit, update `aidlc/status.md`:
+After specs are created for a unit, update `aidlc/sprints/{sprint}/status.md`:
 
 ```markdown
-| 1 | Authentication System | `aidlc/units/01-auth.md` | ✅ Specs created | |
+| 1 | Authentication System | `aidlc/sprints/{sprint}/units/01-auth.md` | ✅ Specs created | |
 ```
 
 ## Parallel Spec Creation

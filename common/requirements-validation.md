@@ -7,14 +7,14 @@ AIDLC unit file. This ensures no features, user stories, NFRs, or risks were mis
 
 ## Preconditions
 
-1. An `aidlc/` directory exists in the project root
+1. An `aidlc/sprints/` directory exists in the project root
 2. A requirements document exists for the current work
-3. A matching unit file exists in `aidlc/units/`
+3. A matching unit file exists in one of the `aidlc/sprints/*/units/` folders
 
 ## Matching Logic
 
 Identify the corresponding unit file by matching the current work context to a unit
-file in `aidlc/units/`. Use directory names, references, or content similarity.
+file in `aidlc/sprints/*/units/`. Use directory names, references, or content similarity.
 If ambiguous, ask the user which unit file to validate against.
 
 ## Validation Checks

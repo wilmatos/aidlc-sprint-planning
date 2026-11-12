@@ -45,8 +45,8 @@ The main steering file (`aidlc-sprint-planning.md`) loads automatically via `inc
 
 | Template | Purpose |
 |----------|---------|
-| `elaboration-log-template.md` | Starting template for `aidlc/elaboration-log.md` |
-| `status-template.md` | Starting template for `aidlc/status.md` |
+| `elaboration-log-template.md` | Starting template for `aidlc/sprints/{sprint}/elaboration-log.md` |
+| `status-template.md` | Starting template for `aidlc/sprints/{sprint}/status.md` |
 | `unit-template.md` | Template for individual unit files |
 
 ## Installing Into Another Project
