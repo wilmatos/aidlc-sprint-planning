@@ -24,7 +24,7 @@
 | Category | Purpose | Example Questions |
 |----------|---------|-------------------|
 | Users | Identify personas and access patterns | Who are the primary users? What personas exist? |
-| Scope | Define boundaries and MVP | What's MVP vs future? What's explicitly out of scope? What does the codebase already ship that overlaps this intent? |
+| Scope | Define boundaries and MVP | What's MVP vs future? What's explicitly out of scope? Which overlap with what the code already ships should stay in scope? |
 | Functionality | Map core workflows | What are the core workflows? What triggers what? |
 | Data | Understand persistence and lifecycle | What data needs to persist? What's the lifecycle? |
 | Integration | Map external dependencies | What external systems? What APIs? What protocols? |

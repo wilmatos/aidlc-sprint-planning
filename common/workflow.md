@@ -161,12 +161,14 @@ Wait for the user's choice before proceeding.
 
 Use the elaboration-log and status templates when creating session files.
 
-**If the intent arrives with an existing unit cut, or the repository already ships
-code,** compare each proposed unit against what the main branch ships before you
-present your understanding. Name any unit that is already done, partly done, or
-built on a stale assumption (a renamed field, a check that was removed), and ask
-whether to retire or shrink it. Record what you compared and what you found under
-`## Understanding`. Otherwise, skip this comparison.
+**If the intent arrives with units already drafted, or the repository already
+ships code,** compare each drafted unit (or each part of the intent, if none are
+drafted) against what the repository's default branch ships before you present
+your understanding. Name anything already done, partly done, or built on a stale
+assumption (a renamed field, a check that was removed) under **My Understanding**,
+and ask in the closing prompt whether to retire or shrink each. Record the units
+affected and the evidence (file or commit) under `## Understanding`. Otherwise,
+skip this comparison.
 
 **Log format:**
 
