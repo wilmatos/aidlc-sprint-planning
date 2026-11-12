@@ -76,7 +76,8 @@ QUESTIONING, the classifier may switch to Spec mode and interrupt the session.
 ## Execution Rules
 
 1. **Always read state first.** Check `aidlc/sprints/` for sprint folders. If any
-   exist, follow the resume protocol before doing anything else.
+   exist, follow the resume protocol before doing anything else. Tell every
+   subagent the active sprint folder (`aidlc/sprints/{sprint}/`).
 
 2. **Reflect before responding.** Before sending any response, review it internally:
    Is this the clearest, most useful answer I can give? Is anything ambiguous or
@@ -157,8 +158,7 @@ Wait for the user's choice before proceeding.
 
 1. Parse your intent and write my understanding to the elaboration log
 2. Name the sprint folder: a short kebab-case `{sprint}` drawn from the intent
-   (e.g., `guest-checkout`) that no existing folder under `aidlc/sprints/` uses.
-   Create the session files in it (`aidlc/sprints/{sprint}/elaboration-log.md`,
+   (e.g., `guest-checkout`). Create the session files in it (`aidlc/sprints/{sprint}/elaboration-log.md`,
    `aidlc/sprints/{sprint}/status.md`, `aidlc/sprints/{sprint}/units/`)
 3. Present my understanding and ask you to confirm before moving on
 

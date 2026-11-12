@@ -3,20 +3,23 @@
 ## State Detection
 
 Each mob elaboration session lives in its own sprint folder, `aidlc/sprints/{sprint}/`.
-On activation, find the active sprint:
 
-1. List the sprint folders that contain an `elaboration-log.md`.
-2. A sprint is **open** unless its `status.md` shows Current Phase COMPLETE.
-3. Choose by the number of open sprints:
-   - **None:** Fresh session. Proceed to INIT.
-   - **One:** That is the active sprint. Read its log and detect the current phase.
-   - **Several:** List them (folder, intent, current phase) and ask the user which
-     to resume, or whether to start a new sprint.
+If `aidlc/elaboration-log.md` exists directly under `aidlc/` (the earlier
+single-session layout), first offer to move those session files into a new sprint
+folder, then continue below.
+
+On activation, find the active sprint. A sprint folder is **open** if it has an
+`elaboration-log.md` and neither its `status.md` nor its last `## Phase:` marker
+shows COMPLETE.
+
+- **No open sprint:** Fresh session. Proceed to INIT.
+- **One open sprint:** That is the active sprint. Read its log and detect the
+  current phase.
+- **Several open sprints:** List them (folder, intent, current phase) and ask the
+  user which to resume, or whether to start a new sprint.
 
 If the user names a sprint, use that folder. If the user asks for a new sprint,
-proceed to INIT. If `aidlc/elaboration-log.md` exists directly under `aidlc/` (the
-earlier single-session layout), offer to move those session files into a new
-sprint folder before resuming.
+proceed to INIT.
 
 ### Phase Detection Algorithm
 

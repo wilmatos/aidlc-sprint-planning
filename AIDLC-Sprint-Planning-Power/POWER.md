@@ -257,7 +257,8 @@ You validate that requirements fully cover everything defined in the source AIDL
 ## Matching Logic
 
 Identify the corresponding unit file by matching the current spec name to a unit
-file in `aidlc/sprints/*/units/`. Use directory names, references, or content similarity.
+file in the active sprint's `aidlc/sprints/{sprint}/units/`, or in any
+`aidlc/sprints/*/units/` if no sprint is active. Use directory names, references, or content similarity.
 If ambiguous, ask the user which unit file to validate against.
 
 ## Validation Checks
@@ -367,7 +368,6 @@ Delegate to subagents rather than performing these tasks inline:
 - **HANDOFF — requirements coverage:** invoke `aidlc-requirements-validator` after writing requirements.md
 
 Invoke subagents directly — always call them explicitly rather than relying on hooks.
-Tell each subagent the active sprint folder (`aidlc/sprints/{sprint}/`).
 
 ### Formatting
 
