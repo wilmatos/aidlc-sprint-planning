@@ -29,7 +29,7 @@ rich status tracking throughout.
 
 ## Onboarding
 
-On first activation, create four subagent files in `~/.kiro/agents/`. Installing
+On first activation, create five subagent files in `~/.kiro/agents/`. Installing
 globally makes these agents available across all your workspaces.
 
 ### Step 1: Create Subagent Files
@@ -42,7 +42,7 @@ name: aidlc-decomposer
 description: >
   Generates AIDLC unit files from a completed mob elaboration session during sprint
   planning. Invoked during the DECOMPOSE phase. Reads the elaboration log and produces
-  numbered, dependency-ordered unit files in aidlc/units/. Use when decomposing an
+  numbered, dependency-ordered unit files in aidlc/sprints/{sprint}/units/. Use when decomposing an
   elaborated intent into bounded implementation units.
 tools: ["read", "write"]
 ---
@@ -53,11 +53,11 @@ You generate implementation unit files from a completed mob elaboration session.
 
 ## Input
 
-Read the full content of `aidlc/elaboration-log.md` and `aidlc/status.md`.
+Read the full content of `aidlc/sprints/{sprint}/elaboration-log.md` and `aidlc/sprints/{sprint}/status.md`.
 
 ## Output
 
-Write numbered unit files to `aidlc/units/` using EARS notation for user stories.
+Write numbered unit files to `aidlc/sprints/{sprint}/units/` using EARS notation for user stories.
 Each file uses a two-digit prefix for build order (e.g., `01-user-identity.md`).
 Sequence units so dependencies are built before dependents.
 
@@ -71,9 +71,9 @@ Sequence units so dependencies are built before dependents.
 6. Before generating units, read the `## Team Topology` section of the elaboration
    log and apply the selected strategy (A–F) to unit boundaries and ordering.
    If no topology section exists, default to Strategy A (vertical slices).
-7. After writing all unit files, generate `aidlc/plan.md` (see Plan Generation below).
-8. After writing units and plan, update `aidlc/status.md` and append a
-   decomposition summary to `aidlc/elaboration-log.md`.
+7. After writing all unit files, generate `aidlc/sprints/{sprint}/plan.md` (see Plan Generation below).
+8. After writing units and plan, update `aidlc/sprints/{sprint}/status.md` and append a
+   decomposition summary to `aidlc/sprints/{sprint}/elaboration-log.md`.
 
 ## Applying Team Topology
 
@@ -116,7 +116,7 @@ Each unit file must include:
 
 ## Plan Generation
 
-After writing all unit files, generate `aidlc/plan.md` with the following sections:
+After writing all unit files, generate `aidlc/sprints/{sprint}/plan.md` with the following sections:
 
 1. **Project Summary** — one paragraph: intent, complexity rating, decomposition strategy
 2. **Unit Catalogue** — for each unit: file, branch, description, key deliverables,
@@ -149,7 +149,7 @@ You validate a set of AIDLC unit files for completeness and consistency.
 
 ## Input
 
-All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
+All unit files from `aidlc/sprints/{sprint}/units/` and `aidlc/sprints/{sprint}/elaboration-log.md`.
 
 ## Validation Checks
 
@@ -158,7 +158,7 @@ All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
 3. **Functionality Gaps** — All intent functionality is covered by units.
 4. **Bounded Context Integrity** — No significant overlap between units.
 5. **NFR Completeness** — All NFR targets from questioning appear in units.
-6. **Plan Consistency** — `aidlc/plan.md` exists; merge sequence matches the
+6. **Plan Consistency** — `aidlc/sprints/{sprint}/plan.md` exists; merge sequence matches the
    dependency graph; every unit appears in the execution order table.
 
 ## Report Format
@@ -210,7 +210,7 @@ You facilitate focused requirements elaboration for a single AIDLC unit.
 
 ## Input
 
-A specific unit file from `aidlc/units/` and relevant sections of the elaboration log.
+A specific unit file from `aidlc/sprints/{sprint}/units/` and relevant sections of the elaboration log.
 
 ## Questioning Strategy
 
@@ -251,13 +251,14 @@ You validate that requirements fully cover everything defined in the source AIDL
 ## Input
 
 - The requirements document for the current spec
-- The corresponding unit file from `aidlc/units/`
-- Relevant sections of `aidlc/elaboration-log.md`
+- The corresponding unit file from `aidlc/sprints/{sprint}/units/`
+- Relevant sections of `aidlc/sprints/{sprint}/elaboration-log.md`
 
 ## Matching Logic
 
 Identify the corresponding unit file by matching the current spec name to a unit
-file in `aidlc/units/`. Use directory names, references, or content similarity.
+file in the active sprint's `aidlc/sprints/{sprint}/units/`, or in any
+`aidlc/sprints/*/units/` if no sprint is active. Use directory names, references, or content similarity.
 If ambiguous, ask the user which unit file to validate against.
 
 ## Validation Checks
@@ -309,6 +310,64 @@ If ambiguous, ask the user which unit file to validate against.
 
 ```
 
+**File: `~/.kiro/agents/aidlc-structure-reviewer.md`**
+
+```markdown
+---
+name: aidlc-structure-reviewer
+description: >
+  Independently reviews AIDLC unit files and the execution order after validation,
+  looking for where the cut breaks once built. Reads the active sprint's units, plan.md,
+  elaboration log decisions, and the existing codebase. Reports findings only. Use
+  when the user asks for an independent review before handoff.
+tools: ["read"]
+---
+
+# AIDLC Structure Reviewer
+
+You did not write these units. Try to break the cut, and report where it fails once
+someone builds it. The validator has already compared the units to the log; skip
+those checks.
+
+## Input
+
+- All unit files from `aidlc/sprints/{sprint}/units/` and `aidlc/sprints/{sprint}/plan.md`
+- The decisions in `aidlc/sprints/{sprint}/elaboration-log.md`
+- The existing codebase, when the intent changes one
+
+## What to Look For
+
+- An assumption the existing system contradicts
+- A seam two units rely on that neither unit defines
+- An undeclared execution order that leaves a unit unable to start
+- An NFR target the chosen structure cannot meet
+- A boundary that forces two units to change together for an unstated reason
+
+## Rules
+
+1. Ground each finding in a unit file and line, a code path, or a log decision.
+2. Label a finding backed only by preference as a suggestion.
+3. Leave every file unchanged. Return findings for the user to decide on.
+4. Findings the user declines do not block handoff.
+
+## Report Format
+
+```markdown
+## 🔍 Structure Review
+
+### Findings
+
+- **{Will break / Worth fixing / Suggestion}** — Unit {NN}: {what breaks}
+  - Evidence: {file:line, code path, or log Q{N}}
+  - Smallest change: {what to change in the unit file or execution order}
+
+### Verdict
+
+{✅ Nothing will break / ⚠ Findings that will break — review before handoff}
+```
+
+```
+
 ### Step 2: Verify Installation
 
 After creating all files, verify:
@@ -316,6 +375,7 @@ After creating all files, verify:
 - [ ] `~/.kiro/agents/aidlc-validator.md` exists
 - [ ] `~/.kiro/agents/aidlc-spec-elaborator.md` exists
 - [ ] `~/.kiro/agents/aidlc-requirements-validator.md` exists
+- [ ] `~/.kiro/agents/aidlc-structure-reviewer.md` exists
 
 ## Available Steering Files
 
@@ -329,6 +389,7 @@ the build pipeline (`scripts/copy-common.sh`), so they ship inside the installed
 - **team-topology** — Team structure assessment and decomposition strategy selection
 - **decomposer** — Unit generation rules
 - **validator** — Cross-validation checks for unit files
+- **structure-review** — Optional independent review of units after validation
 - **plan-generator** — Execution plan generation
 - **spec-handoff** — Creating specs from units, per-unit elaboration, requirements coverage validation
 - **requirements-validation** — Validates requirements.md coverage against unit definitions
@@ -341,19 +402,19 @@ per-phase instructions. The sections below cover Power-specific behaviour only.
 
 ### Session State on Activation
 
-Before doing anything else on activation, check for `aidlc/elaboration-log.md`
-in the current workspace. If it exists, read the resume-protocol steering file
-and follow the resume flow before proceeding. Always resume an existing session
-rather than starting a new one.
+Before doing anything else on activation, check for sprint folders under
+`aidlc/sprints/` in the current workspace. If any exist, read the resume-protocol
+steering file and follow the resume flow before proceeding. Resume an open sprint
+rather than starting a new one, unless the user asks for a new sprint.
 
 ### Templates
 
 When creating session files during INIT, use these templates:
 
-- **elaboration-log-template** → `aidlc/elaboration-log.md`
-- **status-template** → `aidlc/status.md`
-- **unit-template** → each `aidlc/units/NN-name.md`
-- **plan-template** → `aidlc/plan.md`
+- **elaboration-log-template** → `aidlc/sprints/{sprint}/elaboration-log.md`
+- **status-template** → `aidlc/sprints/{sprint}/status.md`
+- **unit-template** → each `aidlc/sprints/{sprint}/units/NN-name.md`
+- **plan-template** → `aidlc/sprints/{sprint}/plan.md`
 
 These templates are available as steering files with a `template-` prefix
 (e.g., `template-elaboration-log-template.md`).
@@ -363,6 +424,7 @@ These templates are available as steering files with a `template-` prefix
 Delegate to subagents rather than performing these tasks inline:
 - **DECOMPOSE phase:** invoke `aidlc-decomposer` to generate unit files
 - **VALIDATE phase:** invoke `aidlc-validator` to cross-validate units
+- **VALIDATE — optional review:** invoke `aidlc-structure-reviewer` if the user accepts the independent review
 - **HANDOFF — pre-spec elaboration:** invoke `aidlc-spec-elaborator` per unit
 - **HANDOFF — requirements coverage:** invoke `aidlc-requirements-validator` after writing requirements.md
 
@@ -397,14 +459,14 @@ always know which phase they are in and what happens next.
 ## Troubleshooting
 
 ### Session won't resume
-Read the resume-protocol steering file. Check that `aidlc/elaboration-log.md` exists
+Read the resume-protocol steering file. Check that the sprint's `aidlc/sprints/{sprint}/elaboration-log.md` exists
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
-Verify the onboarding step completed. Check `~/.kiro/agents/` for the four agent files.
+Verify the onboarding step completed. Check `~/.kiro/agents/` for the five agent files.
 
 ### Requirements validation not running
-Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/units/`
+Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/sprints/*/units/`
 contains a unit file whose name matches the current spec.
 
 ## License and support

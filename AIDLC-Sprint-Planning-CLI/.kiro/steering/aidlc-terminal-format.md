@@ -70,10 +70,10 @@ For each unit I can generate three documents:
 Replace markdown tables with:
 
 ```
-  #   Unit Name             File                          Deps     Status
-  --- --------------------- ----------------------------- -------- ----------
-  1   {name}                aidlc/units/01-{name}.md      None     [ ] pending
-  2   {name}                aidlc/units/02-{name}.md      Unit 1   [ ] pending
+  #   Unit Name             File                                       Deps     Status
+  --- --------------------- ------------------------------------------ -------- ----------
+  1   {name}                aidlc/sprints/{sprint}/units/01-{name}.md  None     [ ] pending
+  2   {name}                aidlc/sprints/{sprint}/units/02-{name}.md  Unit 1   [ ] pending
 ```
 
 ## Validation Report (Unit Validator)
@@ -112,13 +112,13 @@ Replace markdown tables with labeled key-value output:
   Units generated:    {N}
 ```
 
-## Plan Document (aidlc/plan.md)
+## Plan Document (aidlc/sprints/{sprint}/plan.md)
 
 The plan document is written to disk — it does not need to be reproduced in the
 terminal. When plan generation completes, print a brief summary:
 
 ```
-=== Plan Generated: aidlc/plan.md ===
+=== Plan Generated: aidlc/sprints/{sprint}/plan.md ===
 
   Units:          {N}
   Execution waves: {N}
@@ -153,4 +153,27 @@ Sections written:
 {findings if any}
 
 Verdict: {All checks passed / Issues found - review recommended}
+```
+
+## Validation Confirmation
+
+```
+Validation complete. How would you like to proceed?
+
+[1] Continue to handoff
+[2] Independent review first - a reviewer that has not seen this
+    session tries to break the units against the codebase
+```
+
+## Structure Review
+
+```
+=== Structure Review ===
+
+Findings:
+  - {WILL BREAK / WORTH FIXING / SUGGESTION} Unit {NN}: {what breaks}
+    Evidence: {file:line, code path, or log Q{N}}
+    Smallest change: {what to change}
+
+Verdict: {Nothing will break / Findings that will break - review before handoff}
 ```

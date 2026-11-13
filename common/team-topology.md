@@ -135,7 +135,7 @@ and note the assumption in the decomposition summary.
 
 ## Log Format
 
-Append to `aidlc/elaboration-log.md` after each topology question:
+Append to `aidlc/sprints/{sprint}/elaboration-log.md` after each topology question:
 
 ```markdown
 ## Team Topology Question: {Short Title}
