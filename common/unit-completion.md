@@ -21,9 +21,11 @@ meant, ask the user which unit file it is.
 ## When a Unit Is Done
 
 Record the outcome in the unit's own PR description, and commit any lessons (below)
-on the same branch. Leave the sprint's `status.md` and `plan.md` alone here: the
-sprint-close PR updates them once, so parallel unit branches never rewrite the same
-tables.
+on the same branch. If the unit has already merged, commit them on the next branch
+opened (the next unit's or the sprint-close branch), or straight to the default
+branch where the project allows that. Leave the sprint's `status.md` and `plan.md`
+alone here: the sprint-close PR updates them once, so parallel unit branches never
+rewrite the same tables.
 
 ```markdown
 ## Unit Outcome
@@ -35,8 +37,9 @@ tables.
 **Drift from the unit definition:** {stories dropped, added, or changed, and why — or "None"}
 ```
 
-If there is no PR yet, or you cannot edit it, show this block to the user and ask
-them to paste it into the PR.
+If there is no PR yet, show this block to the user and ask them to paste it into
+the PR. If there is no PR host, or you cannot edit the PR, put the block in the
+unit's merge or squash commit message instead.
 
 ## Lessons
 
@@ -85,20 +88,20 @@ Before deciding how to plan or build something in this repo, read `aidlc/lessons
 ## When a Sprint Is Done
 
 Close the sprint the user names. Otherwise close the sprint folder whose
-`status.md` has no `Closed` row; if there are several, ask which.
+`status.md` has no date in the `Closed` row; if there are several, ask which.
 
 Open one sprint-close PR from a branch off main. The team reviews it like code.
 
 1. Compare `aidlc/sprints/{sprint}/plan.md` with what shipped: the Unit Outcome
-   blocks of the merged PRs and the git log on main. Note units that shipped, were
-   dropped, were added outside the plan, or drifted from their definition.
+   blocks in the merged PRs' descriptions or in the units' merge commits, and the
+   git log on main. Note units that shipped, were dropped, were added outside the
+   plan, or drifted from their definition.
 2. Update the Units table in `aidlc/sprints/{sprint}/status.md` to match, add any
    unit built outside the plan to `aidlc/sprints/{sprint}/plan.md`, and put the
    comparison in the PR description.
 3. In `aidlc/sprints/{sprint}/status.md`, set Current Phase to COMPLETE if it is not
-   already, and add a `Closed` row with today's date to the Overview table. The
-   resume protocol then no longer treats the sprint as open, and the next planning
-   session starts a new sprint folder.
+   already, and put today's date in the `Closed` row of the Overview table (add the
+   row if it is missing). The next planning session then starts a new sprint folder.
 4. Merge duplicate lessons in `aidlc/lessons.md`, drop ones that no longer hold, and
    keep the file to about 30 lines.
 5. For each lesson tagged `team`, offer to draft it as a proposed change to the
