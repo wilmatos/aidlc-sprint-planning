@@ -8,8 +8,10 @@ user decides what to change.
 
 The session that wrote the units shares their assumptions, so run this review as
 the `aidlc-structure-reviewer` subagent. Pass it the active sprint folder
-(`aidlc/sprints/{sprint}/`) and the file paths only, not a summary of the session. If the host has no subagents, run it inline and tell the user the
-review is not independent.
+(`aidlc/sprints/{sprint}/`) and the file paths only, not a summary of the session.
+If that agent does not exist, use any fresh subagent and give it this file's path
+too, so the review stays independent. If the host has no subagents, run it inline
+and tell the user the review is not independent.
 
 ## Input
 
