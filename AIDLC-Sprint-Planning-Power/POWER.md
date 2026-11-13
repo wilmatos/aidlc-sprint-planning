@@ -317,7 +317,7 @@ If ambiguous, ask the user which unit file to validate against.
 name: aidlc-structure-reviewer
 description: >
   Independently reviews AIDLC unit files and the execution order after validation,
-  looking for where the cut breaks once built. Reads the units, aidlc/plan.md, the
+  looking for where the cut breaks once built. Reads the active sprint's units, plan.md,
   elaboration log decisions, and the existing codebase. Reports findings only. Use
   when the user asks for an independent review before handoff.
 tools: ["read"]
@@ -331,8 +331,8 @@ those checks.
 
 ## Input
 
-- All unit files from `aidlc/units/` and `aidlc/plan.md`
-- The decisions in `aidlc/elaboration-log.md`
+- All unit files from `aidlc/sprints/{sprint}/units/` and `aidlc/sprints/{sprint}/plan.md`
+- The decisions in `aidlc/sprints/{sprint}/elaboration-log.md`
 - The existing codebase, when the intent changes one
 
 ## What to Look For

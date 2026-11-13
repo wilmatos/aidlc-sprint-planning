@@ -7,14 +7,14 @@ user decides what to change.
 ## How to Run
 
 The session that wrote the units shares their assumptions, so run this review as
-the `aidlc-structure-reviewer` subagent. Pass it the file paths only, not a summary
-of the session. If the host has no subagents, run it inline and tell the user the
+the `aidlc-structure-reviewer` subagent. Pass it the active sprint folder
+(`aidlc/sprints/{sprint}/`) and the file paths only, not a summary of the session. If the host has no subagents, run it inline and tell the user the
 review is not independent.
 
 ## Input
 
-- All unit files from `aidlc/units/` and `aidlc/plan.md`
-- The decisions in `aidlc/elaboration-log.md`
+- All unit files from `aidlc/sprints/{sprint}/units/` and `aidlc/sprints/{sprint}/plan.md`
+- The decisions in `aidlc/sprints/{sprint}/elaboration-log.md`
 - The existing codebase, when the intent changes one
 
 ## What to Look For
