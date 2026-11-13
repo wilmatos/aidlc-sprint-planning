@@ -1,5 +1,7 @@
 # Unit: {Name}
 
+When this unit is done, run unit-completion.
+
 **Description:** {What this unit does — one paragraph}
 
 **Bounded Context Rationale:** {Why this is a separate unit — what makes it a distinct

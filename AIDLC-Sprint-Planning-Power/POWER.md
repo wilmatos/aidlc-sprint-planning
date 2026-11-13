@@ -2,7 +2,7 @@
 name: "aidlc-sprint-planning"
 displayName: "AIDLC Sprint Planning"
 description: "Structured sprint planning using the AI-DLC mob elaboration technique. Decomposes intents into implementation units through strategic questioning, producing specs ready for Kiro's Spec-Driven Development."
-keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to"]
+keywords: ["plan", "decompose", "elaborate", "break down", "scope", "build", "design", "architect", "specs", "requirements", "feature", "project", "discovery", "units", "implementation", "prd", "aidlc", "mob elaboration", "sprint planning", "think through", "figure out", "roadmap", "breakdown", "map out", "outline", "structure", "strategy", "approach", "proposal", "implement", "create", "develop", "new feature", "new app", "new application", "new service", "new system", "refactor", "migrate", "integrate", "epic", "milestone", "mvp", "where do i start", "how do i approach", "help me think", "not sure how to", "unit done", "unit complete", "sprint done", "unit-completion"]
 author: "Will Matos"
 ---
 
@@ -42,7 +42,7 @@ name: aidlc-decomposer
 description: >
   Generates AIDLC unit files from a completed mob elaboration session during sprint
   planning. Invoked during the DECOMPOSE phase. Reads the elaboration log and produces
-  numbered, dependency-ordered unit files in aidlc/units/. Use when decomposing an
+  numbered, dependency-ordered unit files in aidlc/sprints/{sprint}/units/. Use when decomposing an
   elaborated intent into bounded implementation units.
 tools: ["read", "write"]
 ---
@@ -53,11 +53,11 @@ You generate implementation unit files from a completed mob elaboration session.
 
 ## Input
 
-Read the full content of `aidlc/elaboration-log.md` and `aidlc/status.md`.
+Read the full content of `aidlc/sprints/{sprint}/elaboration-log.md` and `aidlc/sprints/{sprint}/status.md`.
 
 ## Output
 
-Write numbered unit files to `aidlc/units/` using EARS notation for user stories.
+Write numbered unit files to `aidlc/sprints/{sprint}/units/` using EARS notation for user stories.
 Each file uses a two-digit prefix for build order (e.g., `01-user-identity.md`).
 Sequence units so dependencies are built before dependents.
 
@@ -71,9 +71,9 @@ Sequence units so dependencies are built before dependents.
 6. Before generating units, read the `## Team Topology` section of the elaboration
    log and apply the selected strategy (A–F) to unit boundaries and ordering.
    If no topology section exists, default to Strategy A (vertical slices).
-7. After writing all unit files, generate `aidlc/plan.md` (see Plan Generation below).
-8. After writing units and plan, update `aidlc/status.md` and append a
-   decomposition summary to `aidlc/elaboration-log.md`.
+7. After writing all unit files, generate `aidlc/sprints/{sprint}/plan.md` (see Plan Generation below).
+8. After writing units and plan, update `aidlc/sprints/{sprint}/status.md` and append a
+   decomposition summary to `aidlc/sprints/{sprint}/elaboration-log.md`.
 
 ## Applying Team Topology
 
@@ -105,6 +105,7 @@ the assumption in the decomposition summary.
 ## Unit File Structure
 
 Each unit file must include:
+- The line "When this unit is done, run unit-completion." directly under the title
 - Description (one paragraph)
 - Bounded Context Rationale (why this is a separate unit)
 - User Stories (EARS notation)
@@ -116,7 +117,7 @@ Each unit file must include:
 
 ## Plan Generation
 
-After writing all unit files, generate `aidlc/plan.md` with the following sections:
+After writing all unit files, generate `aidlc/sprints/{sprint}/plan.md` with the following sections:
 
 1. **Project Summary** — one paragraph: intent, complexity rating, decomposition strategy
 2. **Unit Catalogue** — for each unit: file, branch, description, key deliverables,
@@ -127,7 +128,9 @@ After writing all unit files, generate `aidlc/plan.md` with the following sectio
 5. **Branch and Merge Guide** — branch naming, merge sequence with prerequisites and
    who merges, merge conflict hotspots
 6. **Risk and Coordination Notes** — cross-unit risks the team should watch for
-7. **Definition of Done** — checklist that applies to every unit before merge
+7. **Definition of Done** — checklist that applies to every unit before merge,
+   ending with "Outcome recorded in the unit's PR — when this unit is done, run
+   unit-completion"
 ```
 
 **File: `~/.kiro/agents/aidlc-validator.md`**
@@ -149,7 +152,7 @@ You validate a set of AIDLC unit files for completeness and consistency.
 
 ## Input
 
-All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
+All unit files from `aidlc/sprints/{sprint}/units/` and `aidlc/sprints/{sprint}/elaboration-log.md`.
 
 ## Validation Checks
 
@@ -158,7 +161,7 @@ All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
 3. **Functionality Gaps** — All intent functionality is covered by units.
 4. **Bounded Context Integrity** — No significant overlap between units.
 5. **NFR Completeness** — All NFR targets from questioning appear in units.
-6. **Plan Consistency** — `aidlc/plan.md` exists; merge sequence matches the
+6. **Plan Consistency** — `aidlc/sprints/{sprint}/plan.md` exists; merge sequence matches the
    dependency graph; every unit appears in the execution order table.
 
 ## Report Format
@@ -210,7 +213,7 @@ You facilitate focused requirements elaboration for a single AIDLC unit.
 
 ## Input
 
-A specific unit file from `aidlc/units/` and relevant sections of the elaboration log.
+A specific unit file from `aidlc/sprints/{sprint}/units/` and relevant sections of the elaboration log.
 
 ## Questioning Strategy
 
@@ -251,13 +254,14 @@ You validate that requirements fully cover everything defined in the source AIDL
 ## Input
 
 - The requirements document for the current spec
-- The corresponding unit file from `aidlc/units/`
-- Relevant sections of `aidlc/elaboration-log.md`
+- The corresponding unit file from `aidlc/sprints/{sprint}/units/`
+- Relevant sections of `aidlc/sprints/{sprint}/elaboration-log.md`
 
 ## Matching Logic
 
 Identify the corresponding unit file by matching the current spec name to a unit
-file in `aidlc/units/`. Use directory names, references, or content similarity.
+file in the active sprint's `aidlc/sprints/{sprint}/units/`, or in any
+`aidlc/sprints/*/units/` if no sprint is active. Use directory names, references, or content similarity.
 If ambiguous, ask the user which unit file to validate against.
 
 ## Validation Checks
@@ -333,6 +337,7 @@ the build pipeline (`scripts/copy-common.sh`), so they ship inside the installed
 - **spec-handoff** — Creating specs from units, per-unit elaboration, requirements coverage validation
 - **requirements-validation** — Validates requirements.md coverage against unit definitions
 - **resume-protocol** — Session state detection, resume presentation, recovery scenarios
+- **unit-completion** — Records unit and sprint outcomes and keeps lessons in `aidlc/lessons.md`
 
 ## Core Workflow
 
@@ -341,19 +346,22 @@ per-phase instructions. The sections below cover Power-specific behaviour only.
 
 ### Session State on Activation
 
-Before doing anything else on activation, check for `aidlc/elaboration-log.md`
-in the current workspace. If it exists, read the resume-protocol steering file
-and follow the resume flow before proceeding. Always resume an existing session
-rather than starting a new one.
+Before doing anything else on activation, read `aidlc/lessons.md` if it exists.
+
+If the user says a unit or the sprint is done, read the unit-completion steering
+file and follow it. Otherwise, check for sprint folders under `aidlc/sprints/` in
+the current workspace. If any exist, read the resume-protocol steering file and
+follow the resume flow before proceeding. Resume an open sprint rather than
+starting a new one, unless the user asks for a new sprint.
 
 ### Templates
 
 When creating session files during INIT, use these templates:
 
-- **elaboration-log-template** → `aidlc/elaboration-log.md`
-- **status-template** → `aidlc/status.md`
-- **unit-template** → each `aidlc/units/NN-name.md`
-- **plan-template** → `aidlc/plan.md`
+- **elaboration-log-template** → `aidlc/sprints/{sprint}/elaboration-log.md`
+- **status-template** → `aidlc/sprints/{sprint}/status.md`
+- **unit-template** → each `aidlc/sprints/{sprint}/units/NN-name.md`
+- **plan-template** → `aidlc/sprints/{sprint}/plan.md`
 
 These templates are available as steering files with a `template-` prefix
 (e.g., `template-elaboration-log-template.md`).
@@ -397,14 +405,14 @@ always know which phase they are in and what happens next.
 ## Troubleshooting
 
 ### Session won't resume
-Read the resume-protocol steering file. Check that `aidlc/elaboration-log.md` exists
+Read the resume-protocol steering file. Check that the sprint's `aidlc/sprints/{sprint}/elaboration-log.md` exists
 and contains a valid `## Phase:` marker.
 
 ### Subagents not available
 Verify the onboarding step completed. Check `~/.kiro/agents/` for the four agent files.
 
 ### Requirements validation not running
-Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/units/`
+Invoke the `aidlc-requirements-validator` subagent directly. Check that `aidlc/sprints/*/units/`
 contains a unit file whose name matches the current spec.
 
 ## License and support

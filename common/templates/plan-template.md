@@ -22,7 +22,7 @@ mob elaboration session.}
 
 ### Unit {N}: {Name}
 
-**File:** `aidlc/units/NN-{name}.md`
+**File:** `aidlc/sprints/{sprint}/units/NN-{name}.md`
 **Branch:** `feature/NN-{name}`
 **Description:** {one sentence}
 **Key deliverables:**
@@ -120,6 +120,6 @@ Applies to every unit before it can be merged to main:
 - [ ] No regressions in dependent units
 - [ ] Branch rebased on latest main before merge
 - [ ] Demo checkpoint verified
-- [ ] `aidlc/status.md` updated to reflect unit completion
+- [ ] Outcome recorded in the unit's PR — when this unit is done, run unit-completion
 
 {Add unit-specific items here if needed}
