@@ -21,11 +21,12 @@ INIT ──→ ASSESS ──→ QUESTIONING ──→ READY_CHECK ──→ TEAM
 
 ## State Detection
 
-Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
+Find the active sprint folder using the resume protocol, then read its
+`aidlc/sprints/{sprint}/elaboration-log.md` and look for the last `## Phase:` marker:
 
 | Marker | Phase | Next Action |
 |--------|-------|-------------|
-| No file exists | INIT | Create session, parse intent |
+| No open sprint | INIT | Create session, parse intent |
 | `## Phase: INIT` | INIT | Present understanding, move to ASSESS |
 | `## Phase: ASSESS` | ASSESS | Record depth confirmation, ask first question |
 | `## Phase: QUESTIONING (N)` | QUESTIONING | Read last answer, ask next or READY_CHECK |
@@ -34,7 +35,7 @@ Read `aidlc/elaboration-log.md` and look for the last `## Phase:` marker:
 | `## Phase: DECOMPOSE` | DECOMPOSE | Generate units, then VALIDATE |
 | `## Phase: VALIDATE` | VALIDATE | Present validation, then HANDOFF |
 | `## Phase: HANDOFF` | HANDOFF | Present implementation instructions |
-| `## Phase: COMPLETE` | COMPLETE | Session finished |
+| `## Phase: COMPLETE` | COMPLETE | Planning finished; present the roadmap and ask which unit is next |
 
 ## Execution Mode
 
@@ -74,9 +75,9 @@ QUESTIONING, the classifier may switch to Spec mode and interrupt the session.
 
 ## Execution Rules
 
-1. **Always read state first.** Check for `aidlc/elaboration-log.md` and
-   `aidlc/status.md`. If either exists, follow the resume protocol before doing
-   anything else.
+1. **Always read state first.** Check `aidlc/sprints/` for sprint folders. If any
+   exist, follow the resume protocol before doing anything else. Tell every
+   subagent the active sprint folder (`aidlc/sprints/{sprint}/`).
 
 2. **Reflect before responding.** Before sending any response, review it internally:
    Is this the clearest, most useful answer I can give? Is anything ambiguous or
@@ -149,14 +150,16 @@ Wait for the user's choice before proceeding.
 
 ## INIT Phase
 
-**Entry:** No `aidlc/elaboration-log.md` exists, or user starts a new session.
+**Entry:** No open sprint exists, or user starts a new session.
 
 **Exit:** User confirms or corrects understanding.
 
 **Actions:**
 
 1. Parse your intent and write my understanding to the elaboration log
-2. Create the session files (`aidlc/elaboration-log.md`, `aidlc/status.md`, `aidlc/units/`)
+2. Name the sprint folder: a short kebab-case `{sprint}` drawn from the intent
+   (e.g., `guest-checkout`). Create the session files in it (`aidlc/sprints/{sprint}/elaboration-log.md`,
+   `aidlc/sprints/{sprint}/status.md`, `aidlc/sprints/{sprint}/units/`)
 3. Present my understanding and ask you to confirm before moving on
 
 Use the elaboration-log and status templates when creating session files.
@@ -183,6 +186,8 @@ Use the elaboration-log and status templates when creating session files.
 ## 🎯 Intent Received
 
 **Your intent:** {quoted intent}
+
+**Sprint folder:** `aidlc/sprints/{sprint}/`
 
 ### My Understanding
 
@@ -371,15 +376,15 @@ Followed by the full topology profile block after all questions are answered.
 
 **Entry:** Topology profile recorded.
 
-**Exit:** All unit files and `aidlc/plan.md` generated.
+**Exit:** All unit files and `aidlc/sprints/{sprint}/plan.md` generated.
 
 **Actions — tell the user before starting:**
 
 1. Summarise the decomposition approach I plan to take
 2. Ask you to confirm before generating any files
-3. Generate unit files in `aidlc/units/` following the decomposer reference
-4. Write `aidlc/plan.md` following the plan-generator reference
-5. Update `aidlc/status.md`
+3. Generate unit files in `aidlc/sprints/{sprint}/units/` following the decomposer reference
+4. Write `aidlc/sprints/{sprint}/plan.md` following the plan-generator reference
+5. Update `aidlc/sprints/{sprint}/status.md`
 6. Present the generated units for your review before proceeding to validation
 
 **Before generating, present:**
@@ -395,8 +400,8 @@ Based on our session, here's my plan:
 
 **Steps I'll follow:**
 
-1. Generate unit files in `aidlc/units/`
-2. Write execution plan to `aidlc/plan.md`
+1. Generate unit files in `aidlc/sprints/{sprint}/units/`
+2. Write execution plan to `aidlc/sprints/{sprint}/plan.md`
 3. Present units for your review
 
 ---
@@ -429,7 +434,7 @@ Read the validator reference for all checks.
 
 **CRITICAL GATE:** Before presenting implementation instructions, verify:
 
-1. ALL unit files exist in `aidlc/units/`
+1. ALL unit files exist in `aidlc/sprints/{sprint}/units/`
 2. The VALIDATE phase completed successfully with no critical issues
 3. The user has explicitly reviewed and accepted the full set of units
 
@@ -457,12 +462,12 @@ Read the spec-handoff reference for the full sequence and coverage validation fo
 ```markdown
 ## 🚀 Implementation Roadmap
 
-All {N} units have been defined and validated. Full execution plan: `aidlc/plan.md`
+All {N} units have been defined and validated. Full execution plan: `aidlc/sprints/{sprint}/plan.md`
 
 | Order | Unit | File | Dependencies | Status |
 |-------|------|------|-------------|--------|
-| 1 | {name} | `aidlc/units/01-xxx.md` | None | ⬜ Not started |
-| 2 | {name} | `aidlc/units/02-xxx.md` | Unit 1 | ⬜ Not started |
+| 1 | {name} | `aidlc/sprints/{sprint}/units/01-xxx.md` | None | ⬜ Not started |
+| 2 | {name} | `aidlc/sprints/{sprint}/units/02-xxx.md` | Unit 1 | ⬜ Not started |
 
 ---
 > Would you like to create specification documents for your units?
@@ -482,7 +487,7 @@ All {N} units have been defined and validated. Full execution plan: `aidlc/plan.
 
 **Actions:**
 
-1. Update `aidlc/status.md` — set Current Phase to COMPLETE, Last Updated to now
+1. Update `aidlc/sprints/{sprint}/status.md` — set Current Phase to COMPLETE, Last Updated to now
 2. Present a brief session summary: total questions asked, units generated, specs created
 3. Confirm the session is finished
 
@@ -515,7 +520,7 @@ If the log is inconsistent, apply these recovery rules:
 |-----------|----------------|
 | Question without `**Answer:**` | Re-present the unanswered question |
 | `## Phase:` marker with no content after it | Ask user to confirm current phase |
-| DECOMPOSE phase but `aidlc/units/` is empty | Offer to regenerate all units |
+| DECOMPOSE phase but `aidlc/sprints/{sprint}/units/` is empty | Offer to regenerate all units |
 | HANDOFF phase but status.md shows no work started | Present roadmap with current status |
 | No `## Phase:` marker in log | Treat as corrupted — ask user where to resume |
 
@@ -529,11 +534,11 @@ Session resumed. Previous state: {detected}. User confirmed: {phase}.
 
 ## Gotchas
 
-- If `aidlc/elaboration-log.md` exists but has no `## Phase:` marker, treat as
+- If `aidlc/sprints/{sprint}/elaboration-log.md` exists but has no `## Phase:` marker, treat as
   corrupted and ask the user to confirm where to resume.
 - A question without an `**Answer:**` line means the user hasn't responded yet —
   re-present it.
-- DECOMPOSE with empty `aidlc/units/` means decomposition was interrupted — offer
+- DECOMPOSE with empty `aidlc/sprints/{sprint}/units/` means decomposition was interrupted — offer
   to regenerate.
 - Always raise recommendations as questions first. Let the user decide.
 - Circular dependencies between units mean they should be merged into one unit.

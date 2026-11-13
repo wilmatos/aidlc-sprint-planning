@@ -37,7 +37,7 @@ Follow all instructions in the workflow reference:
 
 Use these templates when creating session files:
 
-- **elaboration-log-template** → `aidlc/elaboration-log.md`
-- **status-template** → `aidlc/status.md`
-- **unit-template** → each `aidlc/units/NN-name.md`
-- **plan-template** → `aidlc/plan.md`
+- **elaboration-log-template** → `aidlc/sprints/{sprint}/elaboration-log.md`
+- **status-template** → `aidlc/sprints/{sprint}/status.md`
+- **unit-template** → each `aidlc/sprints/{sprint}/units/NN-name.md`
+- **plan-template** → `aidlc/sprints/{sprint}/plan.md`

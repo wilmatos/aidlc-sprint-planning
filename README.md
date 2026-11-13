@@ -54,9 +54,9 @@ AIDLC-Sprint-Planning-Power/
     ├── team-topology.md            # Team structure and decomposition strategy
     ├── unit-format.md              # EARS notation, unit file template, scaling rules
     ├── validator.md                # Cross-validation checks for unit files
-    ├── template-elaboration-log-template.md  # Starting template for aidlc/elaboration-log.md
-    ├── template-plan-template.md             # Starting template for aidlc/plan.md
-    ├── template-status-template.md           # Starting template for aidlc/status.md
+    ├── template-elaboration-log-template.md  # Starting template for aidlc/sprints/{sprint}/elaboration-log.md
+    ├── template-plan-template.md             # Starting template for aidlc/sprints/{sprint}/plan.md
+    ├── template-status-template.md           # Starting template for aidlc/sprints/{sprint}/status.md
     └── template-unit-template.md             # Template for individual unit files
 ```
 
@@ -92,9 +92,9 @@ AIDLC-Sprint-Planning-Skill/
 └── aidlc-sprint-planning/
     ├── SKILL.md                        # Agent instructions and phase reference
     ├── assets/
-    │   ├── elaboration-log-template.md # Starting template for aidlc/elaboration-log.md
-    │   ├── plan-template.md            # Starting template for aidlc/plan.md
-    │   ├── status-template.md          # Starting template for aidlc/status.md
+    │   ├── elaboration-log-template.md # Starting template for aidlc/sprints/{sprint}/elaboration-log.md
+    │   ├── plan-template.md            # Starting template for aidlc/sprints/{sprint}/plan.md
+    │   ├── status-template.md          # Starting template for aidlc/sprints/{sprint}/status.md
     │   └── unit-template.md            # Template for individual unit files
     └── references/
         ├── workflow.md             # Execution rules, phase quick reference, per-phase instructions
@@ -147,9 +147,9 @@ AIDLC-Sprint-Planning-CLI/
     │   ├── aidlc-unit-format.md                # EARS notation and unit template (inclusion: manual)
     │   └── aidlc-validator.md                  # Cross-validation checks (inclusion: manual)
     └── templates/
-        ├── elaboration-log-template.md         # Starting template for aidlc/elaboration-log.md
-        ├── plan-template.md                    # Starting template for aidlc/plan.md
-        ├── status-template.md                  # Starting template for aidlc/status.md
+        ├── elaboration-log-template.md         # Starting template for aidlc/sprints/{sprint}/elaboration-log.md
+        ├── plan-template.md                    # Starting template for aidlc/sprints/{sprint}/plan.md
+        ├── status-template.md                  # Starting template for aidlc/sprints/{sprint}/status.md
         └── unit-template.md                    # Template for individual unit files
 ```
 
