@@ -9,6 +9,7 @@
 | Current Phase | {phase} |
 | Started | {date} |
 | Last Updated | {date} |
+| Closed | |
 
 ## Progress
 

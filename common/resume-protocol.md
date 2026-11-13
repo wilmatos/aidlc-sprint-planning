@@ -9,8 +9,9 @@ single-session layout), first offer to move those session files into a new sprin
 folder, then continue below.
 
 On activation, find the active sprint. A sprint folder is **open** if it has an
-`elaboration-log.md` and neither its `status.md` nor its last `## Phase:` marker
-shows COMPLETE.
+`elaboration-log.md` and its `status.md` has no date in the `Closed` row. COMPLETE
+only means the planning session finished; the `Closed` date is filled in when the
+sprint's work is done.
 
 - **No open sprint:** Fresh session. Proceed to INIT.
 - **One open sprint:** That is the active sprint. Read its log and detect the
@@ -35,7 +36,7 @@ proceed to INIT.
 | QUESTIONING but last question has no `**Answer:**` | User hasn't answered yet |
 | READY_CHECK but no answer follows | User hasn't confirmed readiness |
 | DECOMPOSE but `aidlc/sprints/{sprint}/units/` is empty | Decomposition was interrupted |
-| HANDOFF but status.md shows no work started | User hasn't started implementation |
+| HANDOFF or COMPLETE but status.md shows no work started | User hasn't started implementation |
 
 ## Resume Presentation
 

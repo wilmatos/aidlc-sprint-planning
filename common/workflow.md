@@ -35,7 +35,7 @@ Find the active sprint folder using the resume protocol, then read its
 | `## Phase: DECOMPOSE` | DECOMPOSE | Generate units, then VALIDATE |
 | `## Phase: VALIDATE` | VALIDATE | Present validation, then HANDOFF |
 | `## Phase: HANDOFF` | HANDOFF | Present implementation instructions |
-| `## Phase: COMPLETE` | COMPLETE | Session finished |
+| `## Phase: COMPLETE` | COMPLETE | Planning finished; present the roadmap and ask which unit is next |
 
 ## Execution Mode
 
