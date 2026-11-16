@@ -345,10 +345,10 @@ those checks.
 
 ## Rules
 
-1. Ground each finding in a unit file and line, a code path, or a log decision.
+1. Ground each finding in evidence the user can check: a unit file and line, a code
+   path, or a log decision.
 2. Label a finding backed only by preference as a suggestion.
 3. Leave every file unchanged. Return findings for the user to decide on.
-4. Findings the user declines do not block handoff.
 
 ## Report Format
 
