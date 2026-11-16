@@ -120,6 +120,6 @@ Applies to every unit before it can be merged to main:
 - [ ] No regressions in dependent units
 - [ ] Branch rebased on latest main before merge
 - [ ] Demo checkpoint verified
-- [ ] Outcome recorded in the unit's PR — when this unit is done, run unit-completion
+- [ ] Outcome recorded in the unit's PR — before merging this unit, run unit-completion
 
 {Add unit-specific items here if needed}

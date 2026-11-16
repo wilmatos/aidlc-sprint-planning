@@ -1,12 +1,14 @@
 # Unit and Sprint Completion
 
 Hands the outcome of a unit, and later of the whole sprint, back to the plan, and
-keeps what the developer corrected along the way as lessons for the next session.
+keeps the developer's corrections and lasting rules as lessons for the next session.
 
 ## When to Run
 
-- **Unit done:** the user says a unit is done, its PR is ready or merged, or a unit
-  file's "When this unit is done, run unit-completion." line brings you here.
+- **Unit done:** the user says a unit is done or ready to merge, its PR is ready or
+  merged, or a unit file's "Before merging this unit, run unit-completion." line
+  brings you here. Run it before the merge, so the outcome lands in the PR or the
+  merge commit the first time. After a merge it still keeps late lessons.
 - **Sprint done:** the user says the sprint is done or asks to close it.
 
 Before anything else, read `aidlc/lessons.md` if it exists and apply it. It sits at
@@ -39,18 +41,20 @@ rewrite the same tables.
 
 If there is no PR yet, show this block to the user and ask them to paste it into
 the PR. If there is no PR host, or you cannot edit the PR, put the block in the
-unit's merge or squash commit message instead.
+unit's merge or squash commit message when it merges, so no commit needs amending.
 
 ## Lessons
 
-Offer a lesson only for something the developer corrected during the unit that
-would apply next time: a convention, a rule for this project or team. A one-off fix
-(a typo, a wrong name, one value in one file) is not a lesson. Read corrections from
-this conversation and from the PR's review comments. Ask about each one once:
+Offer a lesson for something the developer corrected during the unit, or an
+instruction they gave that states a lasting rule or preference for this project or
+team ("this project doesn't allow direct commits to main"). A one-off fix (a typo, a
+wrong name, one value in one file) is not a lesson, and neither is an instruction
+that only applies to the current task. Read these from this conversation and from
+the PR's review comments. Ask about each one once:
 
 ```markdown
-You asked me to {their correction, in their words}. Keep that for next time, for
-this project or the team?
+You asked me to {their correction or rule, in their words}. Keep that for next
+time, for this project or the team?
 ```
 
 If the developer already said to keep something ("from now on…", "next time…"),

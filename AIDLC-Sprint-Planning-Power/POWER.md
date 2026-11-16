@@ -105,7 +105,7 @@ the assumption in the decomposition summary.
 ## Unit File Structure
 
 Each unit file must include:
-- The line "When this unit is done, run unit-completion." directly under the title
+- The line "Before merging this unit, run unit-completion." directly under the title
 - Description (one paragraph)
 - Bounded Context Rationale (why this is a separate unit)
 - User Stories (EARS notation)
@@ -129,7 +129,7 @@ After writing all unit files, generate `aidlc/sprints/{sprint}/plan.md` with the
    who merges, merge conflict hotspots
 6. **Risk and Coordination Notes** — cross-unit risks the team should watch for
 7. **Definition of Done** — checklist that applies to every unit before merge,
-   ending with "Outcome recorded in the unit's PR — when this unit is done, run
+   ending with "Outcome recorded in the unit's PR — before merging this unit, run
    unit-completion"
 ```
 

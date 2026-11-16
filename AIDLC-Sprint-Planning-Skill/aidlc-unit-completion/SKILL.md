@@ -2,9 +2,10 @@
 name: aidlc-unit-completion
 description: >
   Hands the outcome of an AIDLC unit or sprint back to the plan and keeps the
-  developer's corrections as lessons in aidlc/lessons.md. Use when a unit file says
-  "run unit-completion", or when the user says a unit is done, a unit's PR is ready
-  or merged, the sprint is done, or asks to close the sprint.
+  developer's corrections and lasting rules as lessons in aidlc/lessons.md. Use
+  before merging a unit, when a unit file says "run unit-completion", or when the
+  user says a unit is done, a unit's PR is ready or merged, the sprint is done, or
+  asks to close the sprint.
 license: MIT
 metadata:
   author: wilmatos

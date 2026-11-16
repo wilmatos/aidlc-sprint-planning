@@ -1,6 +1,6 @@
 # Unit: {Name}
 
-When this unit is done, run unit-completion.
+Before merging this unit, run unit-completion.
 
 **Description:** {What this unit does — one paragraph}
 
