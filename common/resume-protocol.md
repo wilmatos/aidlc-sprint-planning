@@ -4,9 +4,9 @@
 
 Each mob elaboration session lives in its own sprint folder, `aidlc/sprints/{sprint}/`.
 
-If `aidlc/elaboration-log.md` exists directly under `aidlc/` (the earlier
-single-session layout), first offer to move those session files into a new sprint
-folder, then continue below.
+If `aidlc/elaboration-log.md` exists directly under `aidlc/` (session files not yet
+in a sprint folder), first offer to move them into a new sprint folder, then
+continue below.
 
 On activation, find the active sprint. A sprint folder is **open** if it has an
 `elaboration-log.md` and its `status.md` has no date in the `Closed` row. COMPLETE
