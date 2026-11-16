@@ -55,5 +55,5 @@ suggestion. Skip anything the validator already checks. Leave every file unchang
 
 Present the findings and ask which to apply. Apply only those the user picks:
 record each as a decision in the elaboration log, regenerate the affected units or
-execution order, then re-run the validator. Findings the user declines do not block
-HANDOFF.
+execution order, then re-run the validator. Continue to HANDOFF once the user has
+decided on each finding, whether or not they applied it.
