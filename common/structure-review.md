@@ -24,7 +24,7 @@ and tell the user the review is not independent.
 Try to break the cut. Report where it fails once someone builds it:
 
 | Look for | Example |
-|----------|---------|
+| -------- | ------- |
 | An assumption the system contradicts | A unit relies on results sorted by price; the search mode in use does not keep that order |
 | A seam with no owner | Two units both read a data shape that neither unit defines |
 | An undeclared order that blocks | Unit 03 needs a data shape that only Unit 05 creates, and its dependencies do not list Unit 05 |
