@@ -7,8 +7,9 @@ keeps the developer's corrections and lasting rules as lessons for the next sess
 
 - **Unit done:** the user says a unit is done or ready to merge, its PR is ready or
   merged, or a unit file's "Before merging this unit, run unit-completion." line
-  brings you here. Run it before the merge, so the outcome lands in the PR or the
-  merge commit the first time. After a merge it still keeps late lessons.
+  brings you here. Run it before the merge, and hold the merge until the lesson
+  questions are answered, so the outcome and lessons land with the unit the first
+  time. After a merge it still keeps late lessons.
 - **Sprint done:** the user says the sprint is done or asks to close it.
 
 Before anything else, read `aidlc/lessons.md` if it exists and apply it. It sits at
@@ -22,12 +23,14 @@ meant, ask the user which unit file it is.
 
 ## When a Unit Is Done
 
-Record the outcome in the unit's own PR description, and commit any lessons (below)
-on the same branch. If the unit has already merged, commit them on the next branch
-opened (the next unit's or the sprint-close branch), or straight to the default
-branch where the project allows that. Leave the sprint's `status.md` and `plan.md`
-alone here: the sprint-close PR updates them once, so parallel unit branches never
-rewrite the same tables.
+Before the unit merges, record the outcome in the unit's own PR description, ask
+the lesson questions (below), wait for the answers, and commit any kept lessons on
+the unit's own branch, so they merge with the unit. For a correction that arrives
+after the merge, commit the lesson on the next branch opened (the next unit's or
+the sprint-close branch), or straight to the default branch where the project
+allows that. Leave the sprint's `status.md` and `plan.md` alone here: the
+sprint-close PR updates them once, so parallel unit branches never rewrite the
+same tables.
 
 ```markdown
 ## Unit Outcome
