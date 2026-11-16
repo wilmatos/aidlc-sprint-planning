@@ -7,9 +7,8 @@ keeps the developer's corrections and lasting rules as lessons for the next sess
 
 - **Unit done:** the user says a unit is done or ready to merge, its PR is ready or
   merged, or a unit file's "Before merging this unit, run unit-completion." line
-  brings you here. Run it before the merge, and hold the merge until the lesson
-  questions are answered, so the outcome and lessons land with the unit the first
-  time. After a merge it still keeps late lessons.
+  brings you here. Run it before the merge; after a merge it still keeps late
+  lessons.
 - **Sprint done:** the user says the sprint is done or asks to close it.
 
 Before anything else, read `aidlc/lessons.md` if it exists and apply it. It sits at
