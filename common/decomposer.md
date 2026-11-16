@@ -5,17 +5,18 @@ session during sprint planning.
 
 ## Input
 
-Read the full content of `aidlc/elaboration-log.md` and `aidlc/status.md`.
+Read the full content of `aidlc/sprints/{sprint}/elaboration-log.md` and `aidlc/sprints/{sprint}/status.md`.
 
 ## Output Boundary
 
-Write only to the `aidlc/` directory. All generated files must resolve within
-`aidlc/units/`, `aidlc/plan.md`, or `aidlc/status.md`. Reject any path that
-resolves outside `aidlc/`.
+Write only to the active sprint folder, `aidlc/sprints/{sprint}/`. All generated
+files must resolve within `aidlc/sprints/{sprint}/units/`,
+`aidlc/sprints/{sprint}/plan.md`, or `aidlc/sprints/{sprint}/status.md`. Reject any
+path that resolves outside `aidlc/sprints/{sprint}/`.
 
 ## Output
 
-Write numbered unit files to `aidlc/units/` using EARS notation for user stories.
+Write numbered unit files to `aidlc/sprints/{sprint}/units/` using EARS notation for user stories.
 Each file uses a two-digit prefix for build order (e.g., `01-user-identity.md`).
 Sequence units so dependencies are built before dependents.
 
@@ -26,10 +27,10 @@ Sequence units so dependencies are built before dependents.
 3. Number files for dependency order. Unit 01 has no dependencies.
 4. Prefer fewer, larger units. Justify every split with bounded context rationale.
 5. Only include what the user asked for.
-6. After writing all unit files, generate `aidlc/plan.md` using the plan-generator
+6. After writing all unit files, generate `aidlc/sprints/{sprint}/plan.md` using the plan-generator
    reference and the plan template.
-7. After writing units and plan, update `aidlc/status.md` and append a decomposition
-   summary to `aidlc/elaboration-log.md`.
+7. After writing units and plan, update `aidlc/sprints/{sprint}/status.md` and append a decomposition
+   summary to `aidlc/sprints/{sprint}/elaboration-log.md`.
 
 ## Applying Team Topology
 
@@ -48,4 +49,4 @@ If no `## Team Topology` section exists in the log, default to Strategy A (read
 - Comprehensive: Full stories with edge cases, detailed NFRs, risk register
 
 See the unit-format reference for the full unit template.
-See the plan-generator reference for instructions on writing `aidlc/plan.md`.
+See the plan-generator reference for instructions on writing `aidlc/sprints/{sprint}/plan.md`.

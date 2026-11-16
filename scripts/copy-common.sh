@@ -36,7 +36,7 @@ validate_sources() {
   for f in workflow.md complexity-rubric.md team-topology.md \
            decomposer.md validator.md plan-generator.md spec-handoff.md \
            resume-protocol.md unit-format.md requirements-validation.md \
-           terminology.md; do
+           terminology.md unit-completion.md; do
     if [[ ! -f "$COMMON_DIR/$f" ]]; then
       echo "ERROR: Missing common file: common/$f"
       errors=$((errors + 1))
@@ -177,6 +177,13 @@ build_skill() {
     write_file "$src" "$stage/aidlc-sprint-planning/assets/$filename" ""
     echo "  ✓ assets/$filename"
   done
+
+  # aidlc-unit-completion/ — second skill, loaded by construction sessions
+  mkdir -p "$stage/aidlc-unit-completion/references"
+  cp "$ROOT_DIR/AIDLC-Sprint-Planning-Skill/aidlc-unit-completion/SKILL.md" "$stage/aidlc-unit-completion/SKILL.md"
+  write_file "$COMMON_DIR/unit-completion.md" "$stage/aidlc-unit-completion/references/unit-completion.md" ""
+  echo "  ✓ aidlc-unit-completion/SKILL.md"
+  echo "  ✓ aidlc-unit-completion/references/unit-completion.md"
 
   # Zip with top-level folder name preserved
   (cd "$DIST_DIR" && find "$folder" -not -name ".DS_Store" | zip -q "aidlc-sprint-planning-skill.zip" -@)

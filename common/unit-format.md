@@ -38,6 +38,8 @@ Example: "User Authentication & OAuth 2.0!" → `01-user-authentication-oauth-20
 ```markdown
 # Unit: {Name}
 
+Before merging this unit, run unit-completion.
+
 **Description:** {What this unit does — one paragraph}
 
 **Bounded Context Rationale:** {Why this is a separate unit — what makes it a distinct

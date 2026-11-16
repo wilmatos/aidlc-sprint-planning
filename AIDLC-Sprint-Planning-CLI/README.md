@@ -31,6 +31,7 @@ The main steering file (`aidlc-sprint-planning.md`) loads automatically via `inc
 | `aidlc-spec-handoff.md` | manual | Implementation roadmap and handoff |
 | `aidlc-resume-protocol.md` | manual | Session resumption and recovery |
 | `aidlc-requirements-validation.md` | manual | Requirements coverage validation |
+| `aidlc-unit-completion.md` | manual | Unit and sprint outcomes, lessons in `aidlc/lessons.md` |
 
 ### Agents (`.kiro/agents/`)
 
@@ -45,8 +46,8 @@ The main steering file (`aidlc-sprint-planning.md`) loads automatically via `inc
 
 | Template | Purpose |
 |----------|---------|
-| `elaboration-log-template.md` | Starting template for `aidlc/elaboration-log.md` |
-| `status-template.md` | Starting template for `aidlc/status.md` |
+| `elaboration-log-template.md` | Starting template for `aidlc/sprints/{sprint}/elaboration-log.md` |
+| `status-template.md` | Starting template for `aidlc/sprints/{sprint}/status.md` |
 | `unit-template.md` | Template for individual unit files |
 
 ## Installing Into Another Project

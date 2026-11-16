@@ -32,12 +32,13 @@ Follow all instructions in the workflow reference:
 - [Plan generator](references/plan-generator.md) — execution plan generation
 - [Spec handoff](references/spec-handoff.md) — spec creation, per-unit elaboration, requirements coverage validation
 - [Requirements validation](references/requirements-validation.md) — validates requirements.md against unit definitions
+- [Unit completion](references/unit-completion.md) — records unit and sprint outcomes, keeps lessons in `aidlc/lessons.md`
 
 ## Templates
 
 Use these templates when creating session files:
 
-- **elaboration-log-template** → `aidlc/elaboration-log.md`
-- **status-template** → `aidlc/status.md`
-- **unit-template** → each `aidlc/units/NN-name.md`
-- **plan-template** → `aidlc/plan.md`
+- **elaboration-log-template** → `aidlc/sprints/{sprint}/elaboration-log.md`
+- **status-template** → `aidlc/sprints/{sprint}/status.md`
+- **unit-template** → each `aidlc/sprints/{sprint}/units/NN-name.md`
+- **plan-template** → `aidlc/sprints/{sprint}/plan.md`
