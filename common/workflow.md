@@ -77,7 +77,8 @@ QUESTIONING, the classifier may switch to Spec mode and interrupt the session.
 
 1. **Always read state first.** Check `aidlc/sprints/` for sprint folders. If any
    exist, follow the resume protocol before doing anything else. Tell every
-   subagent the active sprint folder (`aidlc/sprints/{sprint}/`).
+   subagent the active sprint folder (`aidlc/sprints/{sprint}/`), because their
+   instructions give paths with a `{sprint}` placeholder.
 
 2. **Reflect before responding.** Before sending any response, review it internally:
    Is this the clearest, most useful answer I can give? Is anything ambiguous or
