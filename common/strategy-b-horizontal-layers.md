@@ -4,7 +4,7 @@
 
 **Decompose:** Add a CONTRACT unit first (API shape, schemas, error codes, auth model). Backend implements contract. Frontend mocks contract, replaces mocks at integration. Integration unit closes streams.
 
-**Contract unit contains:** API schema, request/response examples, error shapes, auth flow, pagination conventions, versioning strategy.
+**Contract unit contains:** API schema, request/response examples, error shapes, auth flow, pagination conventions, versioning strategy, and any obligation that fails silently if dropped.
 
 **Example:**
 
