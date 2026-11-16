@@ -27,9 +27,8 @@ the lesson questions (below), wait for the answers, and commit any kept lessons 
 the unit's own branch, so they merge with the unit. For a correction that arrives
 after the merge, commit the lesson on the next branch opened (the next unit's or
 the sprint-close branch), or straight to the default branch where the project
-allows that. Leave the sprint's `status.md` and `plan.md` alone here: the
-sprint-close PR updates them once, so parallel unit branches never rewrite the
-same tables.
+allows that. Keep the sprint's `status.md` and `plan.md` for the sprint-close PR,
+which updates them once, so parallel unit branches never rewrite the same tables.
 
 ```markdown
 ## Unit Outcome
