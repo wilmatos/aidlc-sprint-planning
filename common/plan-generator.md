@@ -1,21 +1,21 @@
 # Plan Generator
 
-Instructions for generating `aidlc/plan.md` after all unit files have been written.
+Instructions for generating `aidlc/sprints/{sprint}/plan.md` after all unit files have been written.
 
 ## When to Run
 
-After all unit files exist in `aidlc/units/` and before transitioning to VALIDATE.
+After all unit files exist in `aidlc/sprints/{sprint}/units/` and before transitioning to VALIDATE.
 The plan is generated as the final step of the DECOMPOSE phase.
 
 ## Input
 
-- All unit files from `aidlc/units/`
-- `aidlc/elaboration-log.md` (for the Team Topology profile and key decisions)
-- `aidlc/status.md`
+- All unit files from `aidlc/sprints/{sprint}/units/`
+- `aidlc/sprints/{sprint}/elaboration-log.md` (for the Team Topology profile and key decisions)
+- `aidlc/sprints/{sprint}/status.md`
 
 ## Output
 
-Write `aidlc/plan.md` — a single document that serves as the team's execution guide.
+Write `aidlc/sprints/{sprint}/plan.md` — a single document that serves as the team's execution guide.
 
 ## Document Structure
 
@@ -32,7 +32,7 @@ For each unit, a concise summary block:
 ```markdown
 #### Unit {N}: {Name}
 
-**File:** `aidlc/units/NN-name.md`
+**File:** `aidlc/sprints/{sprint}/units/NN-name.md`
 **Branch:** `feature/NN-name` (suggested)
 **Description:** {one sentence from the unit's Description field}
 **Key deliverables:** {2-4 bullet points — what is tangibly done when this unit is complete}
@@ -173,7 +173,7 @@ A checklist that applies to every unit before it can be merged:
 - [ ] No regressions in dependent units (run integration tests if available)
 - [ ] Branch rebased on latest main before merge
 - [ ] Demo checkpoint verified (something runnable/showable)
-- [ ] `aidlc/status.md` updated to reflect unit completion
+- [ ] `aidlc/sprints/{sprint}/status.md` updated to reflect unit completion
 ```
 
 Add unit-specific additions where relevant (e.g., "contract validated against
@@ -193,10 +193,10 @@ both backend and frontend implementations" for Strategy B integration units).
 
 ## After Writing
 
-Update `aidlc/status.md` to note that `plan.md` has been generated.
-Append a note to `aidlc/elaboration-log.md`:
+Update `aidlc/sprints/{sprint}/status.md` to note that `plan.md` has been generated.
+Append a note to `aidlc/sprints/{sprint}/elaboration-log.md`:
 
 ```markdown
 ## Plan Generated
 
-`aidlc/plan.md` written. {N} units, {N} merge sequences, strategy {X}.
+`aidlc/sprints/{sprint}/plan.md` written. {N} units, {N} merge sequences, strategy {X}.

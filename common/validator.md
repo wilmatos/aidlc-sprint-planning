@@ -4,7 +4,7 @@ Instructions for cross-validating AIDLC unit files for completeness and consiste
 
 ## Input
 
-All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
+All unit files from `aidlc/sprints/{sprint}/units/` and `aidlc/sprints/{sprint}/elaboration-log.md`.
 
 ## Validation Checks
 
@@ -13,7 +13,7 @@ All unit files from `aidlc/units/` and `aidlc/elaboration-log.md`.
 3. Functionality Gaps — all intent functionality covered by units
 4. Bounded Context Integrity — no significant overlap between units
 5. NFR Completeness — all NFR targets from questioning in units
-6. Plan Consistency — `aidlc/plan.md` exists, merge sequence matches DAG, all units in execution order
+6. Plan Consistency — `aidlc/sprints/{sprint}/plan.md` exists, merge sequence matches DAG, all units in execution order
 
 ## How to Count Issues
 
