@@ -29,6 +29,7 @@ Follow all instructions in the workflow reference:
 - [Unit format](references/unit-format.md) — EARS notation and unit template
 - [Decomposer](references/decomposer.md) — unit generation rules
 - [Validator](references/validator.md) — cross-validation checks
+- [Structure review](references/structure-review.md) — optional independent review after validation
 - [Plan generator](references/plan-generator.md) — execution plan generation
 - [Spec handoff](references/spec-handoff.md) — spec creation, per-unit elaboration, requirements coverage validation
 - [Requirements validation](references/requirements-validation.md) — validates requirements.md against unit definitions
@@ -37,7 +38,7 @@ Follow all instructions in the workflow reference:
 
 Use these templates when creating session files:
 
-- **elaboration-log-template** → `aidlc/elaboration-log.md`
-- **status-template** → `aidlc/status.md`
-- **unit-template** → each `aidlc/units/NN-name.md`
-- **plan-template** → `aidlc/plan.md`
+- **elaboration-log-template** → `aidlc/sprints/{sprint}/elaboration-log.md`
+- **status-template** → `aidlc/sprints/{sprint}/status.md`
+- **unit-template** → each `aidlc/sprints/{sprint}/units/NN-name.md`
+- **plan-template** → `aidlc/sprints/{sprint}/plan.md`
